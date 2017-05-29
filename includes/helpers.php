@@ -145,7 +145,6 @@ function fnDropDown($TableName,$ColumnName,$ColumnID,$VariableName)
 {
     echo '<option value="" >Select</option>';
     $sql = "select * from ".strtolower($TableName)." where Deleted=0";        
-    $sql.= " order by ID";
     
     $res=mysql_query($sql);
     $numrows=mysql_num_rows($res);
@@ -195,5 +194,11 @@ function isSuperAdmin()
     {
         return false;
     }
+}
+
+function slugify($string) {
+   $string = str_replace(' ', '-', $string); // Replaces all spaces with hyphens.
+
+   return preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
 }
 ?>

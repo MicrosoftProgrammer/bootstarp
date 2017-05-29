@@ -3,7 +3,7 @@
 $host = "localhost";	
 $dbusername = "root";
 $dbpassword = "";	
-$dbname = "everestphase1";
+$dbname = "warehouse";
 
 function db_connect()
 {

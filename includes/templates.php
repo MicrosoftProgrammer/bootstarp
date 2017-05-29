@@ -20,6 +20,63 @@ function fnSideBar(){
                         <li>
                             <a href="../dashboard/index.php"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
                         </li>
+                        <li>
+                            <a href="#"><i class="fa fa-cogs fa-fw"></i> Configuration<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="../productfield/viewproductfield.php"><i class="fa fa-bars fa-fw"></i> Product Fields</a>
+                                </li>
+                                <li>
+                                    <a href="../productfieldtype/viewproductfieldtype.php"><i class="fa fa-exchange fa-fw"></i> Product Field Types</a>
+                                </li>
+                                <li>
+                                    <a href="../productfieldvalue/viewproductfieldvalue.php"><i class="fa fa-flag fa-fw"></i> Product Field Type Values</a>
+                                </li>
+                                <li>
+                                    <a href="../mapping/fieldmapping.php"><i class="fa fa-map fa-fw"></i> Category Field Mapping</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-shopping-cart fa-fw"></i> Products<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="../category/viewcategories.php"><i class="fa fa-cog fa-fw"></i> Categories</a>
+                                </li>
+                                <li>
+                                    <a href="#"><i class="fa fa-list fa-fw"></i> Products
+                                    <span class="fa arrow"></span></a>
+                                    <ul class="nav nav-third-level">
+                                        <li>
+                                            <a href="morris.html"><i class="fa fa-tag fa-fw"></i> Add Product</a>
+                                        </li>
+                                        <li>
+                                            <a href="#"><i class="fa fa-tags fa-fw"></i> Add Bulk</a>
+                                                
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>  
+                        <li>
+                            <a href="#"><i class="fa fa-users fa-fw"></i> Users<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="../user/viewusers.php"><i class="fa fa-user fa-fw"></i>User</a>
+                                </li>
+                                <li>
+                                    <a href="morris.html"><i class="fa fa-sitemap fa-fw"></i>Permissions</a>
+                                </li>
+                            </ul>
+                        </li>  
+                        <li>
+                            <a href="#"><i class="fa fa-files-o fa-fw"></i> Reports<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li><a href="../reports/report.php?type=TC" class=""><i class="fa fa-file-o fa-fw">&nbsp;</i>Stock Report</a></li>
+                                <li><a href="../reports/report.php?type=TCA"><i class="fa fa-file fa-fw">&nbsp;</i>Invoice Generator</a></li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>                                                                    
                     </ul>
                 </div>
             </div>';
