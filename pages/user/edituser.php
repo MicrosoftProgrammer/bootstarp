@@ -3,6 +3,11 @@
     include('../../includes/helpers.php');
     include('../../includes/templates.php');
 
+    if(!isSuperAdmin())
+    {
+        header("location:../../login.php");
+    }
+
     $sql="SELECT * FROM users where UserID='".$_REQUEST['Id']."'";
     $res=mysql_query($sql);
     echo mysql_error();
@@ -14,18 +19,27 @@
 
     if ($_REQUEST["mode"]=="update")
     { 
-        $name = $_REQUEST["UserName"];
-        $description = $_REQUEST["UserDescription"];
+        $Name = str_replace("'","`",$_REQUEST["Name"]);
+        $Password = str_replace("'","`",$_REQUEST["Password"]);
+        $Email = str_replace("'","`",$_REQUEST["Email"]);
+        $ContactNo = str_replace("'","`",$_REQUEST["ContactNo"]);
+        $UserType = str_replace("'","`",$_REQUEST["UserType"]);
         
-        $sql="select * from users where UserName='".$name."' and UserID!=".$_REQUEST['Id'];
+        $sql="select * from users where Email='".$Email."' and UserID!=".$_REQUEST['Id'];
         $res=mysql_query($sql);
         $num=mysql_num_rows($res);
 
         if($num==0)
         {
             $sql = "UPDATE users SET ";
-            $sql.= "UserName	=	'".$_REQUEST['UserName']."', ";
-            $sql.= "UserDescription	=	'".$_REQUEST['UserDescription']."'";
+            $sql.= "Name	=	'".$Name."', ";
+            if($Password!=""){
+                $Password = md5($Password);
+                $sql.= "Password	=	'".$Password."',";
+            }
+            $sql.= "Email	=	'".$Email."',";
+            $sql.= "ContactNo	=	'".$ContactNo."', ";
+            $sql.= "UserType	=	'".$UserType."'";            
             $sql.= " where UserID='".$_REQUEST['Id']."'";	
             mysql_query($sql);				
 
@@ -75,14 +89,30 @@
                                 <div class="col-md-12">
                                      <form name="adminForm" method="post" action="edituser.php?mode=update&Id=<?php echo($_REQUEST['Id']); ?>" enctype="multipart/form-data">   
                                         <div class="form-group col-md-6">
-                                            <label>User Name</label>
-                                            <input type="text" class="form-control" name="UserName" required value="<?php echo $obj->UserName; ?>" />                                            
+                                            <label>Name</label>
+                                            <input type="text" class="form-control" name="Name" required value="<?php echo $obj->Name; ?>" />                                            
+                                        </div>                                        
+                                        <div class="form-group col-md-6">
+                                            <label>Email</label>
+                                             <input type="email" class="form-control" name="Email" required value="<?php echo $obj->Email; ?>"/>
                                         </div>
-                                        
-                                        <div class="form-group col-md-12">
-                                            <label>User Description</label>
-                                             <textarea class="form-control" name="UserDescription" ><?php echo $obj->UserDescription; ?></textarea>
+                                        <div class="form-group col-md-6">
+                                            <label>Password</label>
+                                             <input type="password" class="form-control" name="Password" value=""/>
+                                             <p class="help-block">Leave blank, if you are not wishing to change password</p>
                                         </div>
+                                        <div class="form-group col-md-6">
+                                            <label>Contact No</label>
+                                             <input type="number" class="form-control" name="ContactNo" required value="<?php echo $obj->ContactNo; ?>"/>
+                                        </div>  
+                                        <div class="form-group col-md-6">
+                                            <label>User Type</label>
+                                             <select class="form-control" name="UserType" required>
+                                                <option value=''>Select</option>
+                                                <option <?php if($obj->UserType=="2") echo "selected"; ?> value='2'>Admin</option>
+                                                <option <?php if($obj->UserType=="3") echo "selected"; ?> value='3'>User</option>
+                                             </select>
+                                        </div>                                                                                                                        
                                         <div class="form-group col-md-12">
                                             <button type="submit" class="btn btn-primary">Submit</button>
                                             <button type="reset" class="btn btn-danger">Reset</button>

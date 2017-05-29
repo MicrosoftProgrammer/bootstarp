@@ -19,8 +19,10 @@ function fnSideBar(){
                         </li>
                         <li>
                             <a href="../dashboard/index.php"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
-                        </li>
-                        <li>
+                        </li>';
+
+            if($_SESSION["UserType"]=="1"){
+                $html =$html.'<li>
                             <a href="#"><i class="fa fa-cogs fa-fw"></i> Configuration<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
@@ -38,6 +40,19 @@ function fnSideBar(){
                             </ul>
                         </li>
                         <li>
+                            <a href="#"><i class="fa fa-users fa-fw"></i> Users<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="../user/viewusers.php"><i class="fa fa-user fa-fw"></i>User</a>
+                                </li>
+                                <li>
+                                    <a href="morris.html"><i class="fa fa-sitemap fa-fw"></i>Permissions</a>
+                                </li>
+                            </ul>
+                        </li>';
+                }
+            
+                $html =$html.'<li>
                             <a href="#"><i class="fa fa-shopping-cart fa-fw"></i> Products<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
@@ -59,17 +74,6 @@ function fnSideBar(){
                             </ul>
                         </li>  
                         <li>
-                            <a href="#"><i class="fa fa-users fa-fw"></i> Users<span class="fa arrow"></span></a>
-                            <ul class="nav nav-second-level">
-                                <li>
-                                    <a href="../user/viewusers.php"><i class="fa fa-user fa-fw"></i>User</a>
-                                </li>
-                                <li>
-                                    <a href="morris.html"><i class="fa fa-sitemap fa-fw"></i>Permissions</a>
-                                </li>
-                            </ul>
-                        </li>  
-                        <li>
                             <a href="#"><i class="fa fa-files-o fa-fw"></i> Reports<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li><a href="../reports/report.php?type=TC" class=""><i class="fa fa-file-o fa-fw">&nbsp;</i>Stock Report</a></li>
@@ -86,14 +90,21 @@ function fnSideBar(){
 
 function fnTopLinks(){
     $html ='<ul class="nav navbar-top-links navbar-right">
-                <li class="dropdown">
+                <li class="dropdown">                
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    Welcome , '.$_SESSION["Name"].'
                         <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-user">
-                        <li><a href="../settings/settings.php"><i class="fa fa-gear fa-fw"></i> Settings</a>
+                    <li><a href="../user/profile.php"><i class="fa fa-tag fa-fw"></i> My Profile</a>
                         </li>
-                        <li class="divider"></li>
+                        ';
+                if($_SESSION["UserType"]=="1"){
+                  $html =$html.'<li><a href="../dashboard/settings.php"><i class="fa fa-gear fa-fw"></i> Settings</a>
+                        </li>
+                  ';
+                }
+          $html =$html.' <li class="divider"></li>
                         <li><a href="../../login.php?mode=logout"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
                         </li>
                     </ul>

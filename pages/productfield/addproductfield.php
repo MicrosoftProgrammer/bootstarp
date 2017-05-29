@@ -4,6 +4,11 @@
     include('../../includes/helpers.php');
     include('../../includes/templates.php');
 
+    if(!isSuperAdmin())
+    {
+        header("location:../../login.php");
+    }
+
     if ($_REQUEST["mode"]=="Add")
     { 
         $ProductFieldName = str_replace("'","`",$_REQUEST["ProductFieldName"]);

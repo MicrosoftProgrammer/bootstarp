@@ -3,6 +3,11 @@
     include('../../includes/helpers.php');
     include('../../includes/templates.php');
 
+    if(!isSuperAdmin())
+    {
+        header("location:../../login.php");
+    }
+
 if ($_REQUEST['mode']=="del")
 {
 	for ($i=0;$i<count($_REQUEST['chkSelect']);$i++)

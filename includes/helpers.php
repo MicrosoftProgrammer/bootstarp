@@ -17,7 +17,7 @@ function fnDataTableCSS(){
 }
 
 function fnCss(){
-    if(!isAdmin())
+    if(!LoggedInUser())
     {
         header("location:../../login.php");
     }
@@ -172,28 +172,27 @@ function GetData($TableName,$ColumnID,$QueryID,$ReturnName)
     return $obj->$ReturnName;
 }
 
-function isAdmin()
+function LoggedInUser()
 {
-    if($_SESSION["admin"]=="1" &&  $_SESSION["id"]!="")
+    if($_SESSION["UserID"]=="")
     {
-        return true;
+        return false;
     }
     else
     {
-        return false;
+        return true;
     }
 }
 
-function isSuperAdmin()
-{
-    if($_SESSION["superadmin"]=="1")
+function isSuperAdmin(){
+    if($_SESSION["UserType"]=="1")
     {
         return true;
     }
     else
     {
         return false;
-    }
+    }   
 }
 
 function slugify($string) {

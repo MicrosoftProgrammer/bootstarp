@@ -26,7 +26,13 @@ function db_connect()
 
 db_connect();
 
-$_SESSION["CompanyName"] = "Company Name";
+$sql ="select * from settings";
+$res = mysql_query($sql);
+$obj = mysql_fetch_object($res);
+
+$_SESSION["CompanyName"] = $obj->CompanyName;
+$_SESSION["Email"] = $obj->Email;
+$_SESSION["FromEmail"] = $obj->FromEmail;
 
 function backup_tables($tables = '*')
 {

@@ -4,6 +4,11 @@
     include('../../includes/helpers.php');
     include('../../includes/templates.php');
 
+    if(!isSuperAdmin())
+    {
+        header("location:../../login.php");
+    }
+
     if ($_REQUEST['mode']=="update")
     {
         $CategoryID=$_REQUEST["Category"];

@@ -4,19 +4,27 @@
     include('../../includes/helpers.php');
     include('../../includes/templates.php');
 
+    if(!isSuperAdmin())
+    {
+        header("location:../../login.php");
+    }
+
     if ($_REQUEST["mode"]=="Add")
     { 
-    $UserName = str_replace("'","`",$_REQUEST["UserName"]);
-    $UserDescription = str_replace("'","`",$_REQUEST["UserDescription"]);
+    $Name = str_replace("'","`",$_REQUEST["Name"]);
+    $Password = str_replace("'","`",$_REQUEST["Password"]);
+    $Email = str_replace("'","`",$_REQUEST["Email"]);
+    $ContactNo = str_replace("'","`",$_REQUEST["ContactNo"]);
+    $UserType = str_replace("'","`",$_REQUEST["UserType"]);
         
-    $sql="select * from users where UserName='".$UserName."'";
+    $sql="select * from users where Email='".$Email."'";
     $res=mysql_query($sql);
     $num=mysql_num_rows($res);
-
+    $Password = md5($Password);
     if($num==0)
     {
-        $sql = "INSERT INTO users (UserName,UserDescription)
-        VALUES ('$UserName','$UserDescription')";        
+        $sql = "INSERT INTO users (Name,Password,Email,ContactNo,UserType)
+        VALUES ('$Name','$Password','$Email','$ContactNo','$UserType')";        
         mysql_query($sql);
         
         header("location:viewusers.php?mode=added");
@@ -65,14 +73,29 @@
                                 <div class="col-md-12">
                                    <form name="adminForm" method="post" action="adduser.php?mode=Add" enctype="multipart/form-data">   
                                         <div class="form-group col-md-6">
-                                            <label>User Name</label>
-                                            <input type="text" class="form-control" name="UserName" required value="<?php echo $_REQUEST['UserName']; ?>" />                                            
-                                        </div>
-                                        
+                                            <label>Name</label>
+                                            <input type="text" class="form-control" name="Name" required value="<?php echo $_REQUEST['Name']; ?>" />                                            
+                                        </div>                                        
                                         <div class="form-group col-md-6">
-                                            <label>User Description</label>
-                                             <textarea class="form-control" name="UserDescription" ><?php echo $_REQUEST['UserDescription']; ?></textarea>
+                                            <label>Email</label>
+                                             <input type="email" class="form-control" name="Email" required value="<?php echo $_REQUEST['Email']; ?>"/>
                                         </div>
+                                        <div class="form-group col-md-6">
+                                            <label>Password</label>
+                                             <input type="password" class="form-control" name="Password" required value="<?php echo $_REQUEST['Password']; ?>"/>
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label>Contact No</label>
+                                             <input type="number" class="form-control" name="ContactNo" required value="<?php echo $_REQUEST['ContactNo']; ?>"/>
+                                        </div>  
+                                        <div class="form-group col-md-6">
+                                            <label>User Type</label>
+                                             <select class="form-control" name="UserType" required>
+                                                <option value=''>Select</option>
+                                                <option value='2'>Admin</option>
+                                                <option value='3'>User</option>
+                                             </select>
+                                        </div>                                                                                                                        
                                         <div class="form-group col-md-12">
                                             <button type="submit" class="btn btn-primary">Submit</button>
                                             <button type="reset" class="btn btn-danger">Reset</button>

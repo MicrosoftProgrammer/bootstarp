@@ -3,6 +3,11 @@
     include('../../includes/helpers.php');
     include('../../includes/templates.php');
 
+    if(!isSuperAdmin())
+    {
+        header("location:../../login.php");
+    }
+
     $sql="SELECT * FROM productfields where ProductFieldID='".$_REQUEST['Id']."'";
     $res=mysql_query($sql);
     echo mysql_error();

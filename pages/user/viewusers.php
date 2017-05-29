@@ -3,6 +3,11 @@
     include('../../includes/helpers.php');
     include('../../includes/templates.php');
 
+    if(!isSuperAdmin())
+    {
+        header("location:../../login.php");
+    }
+
 if ($_REQUEST['mode']=="del")
 {
 	for ($i=0;$i<count($_REQUEST['chkSelect']);$i++)
@@ -80,11 +85,16 @@ if ($_REQUEST['mode']=="del")
                                         </th>
                                         <th>
                                             Name
-                                        </th>
-                                    
+                                        </th>                                    
                                         <th>
-                                            Description
+                                            Email
                                         </th>
+                                        <th>
+                                            Contact No
+                                        </th>
+                                        <th>
+                                            User Type
+                                        </th>  
                                         <th>
                                             Action
                                         </th>
@@ -92,8 +102,8 @@ if ($_REQUEST['mode']=="del")
                                 </thead>
                                 <tbody>
                                 <?php
-                                        $sql = "select * from users where Deleted=0";
-                                        $sql.= " order by UserName";
+                                        $sql = "select * from users where Deleted=0 and UserType!=1";
+                                        $sql.= " order by userID";
                                         $res=mysql_query($sql);
                                         $numrows=mysql_num_rows($res);
                                         	if($numrows>0)
@@ -110,15 +120,24 @@ if ($_REQUEST['mode']=="del")
                                                         </td>                                  
                                                         
                                                         <td>
-                                                            <?php echo $obj->UserName; ?>
+                                                            <?php echo $obj->Name; ?>
                                                         </td>
                                                         <td>
-                                                            <?php echo $obj->UserDescription; ?>
+                                                            <?php echo $obj->Email; ?>
+                                                        </td>
+                                                         <td>
+                                                            <?php echo $obj->ContactNo; ?>
+                                                        </td>
+                                                         <td>
+                                                            <?php if($obj->UserType=="1") echo "Super Admin";
+                                                            else if($obj->UserType=="2") echo "Admin"; 
+                                                            else if($obj->UserType=="3") echo "User";  ?>
                                                         </td>
                                                         <td class="action">
                                                             <a href='../user/edituser.php?mode=edit&Id=<?php echo $obj->UserID; ?>'>
                                                                 <i class="fa fa-edit">&nbsp;</i>
                                                             </a>
+                                                          
                                                             <a  href="javascript:fnDelete('<?php echo $obj->UserID; ?>');" title="Delete">
                                                                 <i class="fa fa-remove">&nbsp;</i>
                                                             </a>                                                     

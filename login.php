@@ -5,12 +5,26 @@
 
     if ($_REQUEST["mode"]=="login")
     {
-        $_SESSION["admin"]="1";
-        $_SESSION["id"]="1";
-        $_SESSION["name"]="Name";
-        $_SESSION["superadmin"]="1";
-            
-        header("location:pages/dashboard/index.php");
+        $Email = $_REQUEST["Email"];
+        $Password = $_REQUEST["Password"];
+        $sql="select * from users where Deleted=0 and Email='".$Email."' and Password='".md5($Password)."'";
+        $res=mysql_query($sql);
+        $num=mysql_num_rows($res);
+        
+        if($num==0)
+        {
+            $text="Invalid Email / Password.";
+        }
+        else
+        {
+            $obj=mysql_fetch_object($res);
+            $_SESSION["UserType"]=$obj->UserType;
+            $_SESSION["Name"]=$obj->Name;
+            $_SESSION["Email"]=$obj->Email;
+            $_SESSION["UserID"]=$obj->UserID;
+
+            header("location:pages/dashboard/index.php");
+        }
     }
 
     if ($_REQUEST["mode"]=="logout")
@@ -72,7 +86,7 @@
                         <form name="adminForm" method="post" action="login.php?mode=login">
                             <fieldset>
                                 <div class="form-group">
-                                    <input name="UserName" required type="text" class="form-control" placeholder="User Name" autofocus/>
+                                    <input name="Email" required type="email" class="form-control" placeholder="User Name" autofocus/>
                                 </div>
                                 <div class="form-group">
                                     <input class="form-control" required placeholder="Password" name="Password" type="password" />
