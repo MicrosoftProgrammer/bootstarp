@@ -200,4 +200,28 @@ function slugify($string) {
 
    return preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
 }
+
+function post_img($fileName,$tempFile,$targetFolder)
+{	
+    if ($fileName!="")
+	{
+		if(!(is_dir($targetFolder)))
+			mkdir($targetFolder);
+		$counter=0;
+		$NewFileName=$fileName;
+		$NewFileName=str_replace(",","-",$NewFileName);
+		$NewFileName=str_replace(" ","_",$NewFileName);	
+		if(file_exists($targetFolder."/".$NewFileName))
+		{
+			do
+			{ 
+				$counter=$counter+1;
+				$NewFileName=$counter."".$NewFileName;
+			}
+			while(file_exists($targetFolder."/".$NewFileName));
+		}
+		copy($tempFile, $targetFolder."/".$NewFileName);	
+		return $NewFileName;
+	}
+}
 ?>

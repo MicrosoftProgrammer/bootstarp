@@ -5,6 +5,7 @@ function fnSideBar(){
                 <div class="sidebar-nav navbar-collapse">
                     <ul class="nav" id="side-menu">
                         <li class="sidebar-search">
+                        <img src="../../images/'.$_SESSION["Logo"].'" alt="Logo" class="img-responsive" />
                         <form name="searchForm" action="" method="post">
                             <div class="input-group custom-search-form">
                                 <input type="text" name="Keyword" required class="form-control" placeholder="Search...">
@@ -66,7 +67,11 @@ function fnSideBar(){
                                             <a href="morris.html"><i class="fa fa-tag fa-fw"></i> Add Product</a>
                                         </li>
                                         <li>
-                                            <a href="#"><i class="fa fa-tags fa-fw"></i> Add Bulk</a>
+                                            <a href="../product/bulkimport.php"><i class="fa fa-tags fa-fw"></i> Add Bulk</a>
+                                                
+                                        </li>
+                                        <li>
+                                            <a href="../product/viewproducts.php"><i class="fa fa-search fa-fw"></i> View Products</a>
                                                 
                                         </li>
                                     </ul>
@@ -123,7 +128,9 @@ function fnMobileMenu(){
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#">'.$_SESSION["CompanyName"].'</a>
+                
+                <a class="navbar-brand" href="#">                
+                '.$_SESSION["CompanyName"].'</a>
             </div>';
 
     return $html;

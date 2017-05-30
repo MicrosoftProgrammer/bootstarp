@@ -33,6 +33,7 @@ $obj = mysql_fetch_object($res);
 $_SESSION["CompanyName"] = $obj->CompanyName;
 $_SESSION["Email"] = $obj->Email;
 $_SESSION["FromEmail"] = $obj->FromEmail;
+$_SESSION["Logo"] = $obj->Logo;
 
 function backup_tables($tables = '*')
 {

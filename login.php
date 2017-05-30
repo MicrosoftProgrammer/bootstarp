@@ -79,7 +79,7 @@
                                 </div>
                             <?php } ?>  
                     <div class="panel-heading">
-                        <img src="images/logo.png" alt="Logo" class="img-responsive" />
+                        <img src="images/<?php echo $_SESSION['Logo']; ?>" alt="Logo" class="img-responsive" />
                         <h1>Company Name</h1>
                     </div>
                     <div class="panel-body">
