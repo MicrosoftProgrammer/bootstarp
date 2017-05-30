@@ -114,7 +114,22 @@ if ($_REQUEST['mode']=="del")
                                                             <?php echo $obj->CategoryName; ?>
                                                         </td>
                                                         <td>
-                                                            <?php echo $obj->Fields; ?>
+                                                            <?php 
+                                                            $count=0;
+                                                            echo "<table class='table table-hover table-bordered'>";
+                                                            $data = json_decode($obj->Fields, TRUE);
+                                                           foreach($data as $key => $value) {
+                                                               echo '<tr>';
+                                                            echo "<th>".$key."</th>";
+                                                            echo "<td>".$value."</td>";
+                                                             echo '</tr>';
+                                                             $count++;
+                                                             if($count==2){
+                                                                 break;
+                                                             }
+                                                           } 
+                                                           echo "</table>";
+                                                           ?>
                                                         </td>
                                                         <td class="action">
                                                             <a href='../product/editproduct.php?mode=edit&Id=<?php echo $obj->ProductID; ?>'>
@@ -122,7 +137,10 @@ if ($_REQUEST['mode']=="del")
                                                             </a>
                                                             <a  href="javascript:fnDelete('<?php echo $obj->ProductID; ?>');" title="Delete">
                                                                 <i class="fa fa-remove">&nbsp;</i>
-                                                            </a>                                                     
+                                                            </a>    
+                                                            <a  href="../product/viewproduct.php?ProductID=<?php echo $obj->ProductID; ?>" title="View">
+                                                                <i class="fa fa-search">&nbsp;</i>
+                                                            </a>                                                 
                                                         </td>
                                                     </tr>  
                                                     <?php

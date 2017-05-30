@@ -64,7 +64,7 @@ function fnSideBar(){
                                     <span class="fa arrow"></span></a>
                                     <ul class="nav nav-third-level">
                                         <li>
-                                            <a href="morris.html"><i class="fa fa-tag fa-fw"></i> Add Product</a>
+                                            <a href="../product/addproduct.php"><i class="fa fa-tag fa-fw"></i> Add Product</a>
                                         </li>
                                         <li>
                                             <a href="../product/bulkimport.php"><i class="fa fa-tags fa-fw"></i> Add Bulk</a>
