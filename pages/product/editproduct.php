@@ -1,11 +1,11 @@
-<?php
-        
+<?php        
     include('../../includes/connection.php');
     include('../../includes/helpers.php');
     include('../../includes/templates.php');
 
-    if ($_REQUEST["mode"]=="Add")
-    { 
+
+    if ($_REQUEST["mode"]=="update")
+    {         
         $keys = implode (", ", array_map('add_quotes', array_keys($_POST)));
         $sql = "SELECT ProductFieldName FROM productfields where `ProductFieldKey`in($keys)
          ORDER BY FIELD(ProductFieldKey,$keys)";
@@ -22,20 +22,28 @@
        $json = array_combine($keys, array_values($_POST));
        $json=json_encode($json);
 
-        $CategoryID = $_REQUEST["Category"];
-
-        $sql = "INSERT INTO products (CategoryID,Fields)
-        VALUES ('$CategoryID','$json')";        
-        mysql_query($sql);
+            $sql = "UPDATE products SET ";
+            $sql.= "Fields	=	'".$json."'";
+            $sql.= " where ProductID=".$_REQUEST['Id']."";
         
-        header("location:viewproducts.php?mode=added");
-   
-   }
+        mysql_query($sql);				
+        header("location:viewproducts.php?mode=edited");           
+    }
+
+        $sql="SELECT * FROM products where ProductID='".$_REQUEST['Id']."'";
+    $res=mysql_query($sql);
+    echo mysql_error();
+    $numrows=mysql_num_rows($res); 
+    if ($numrows>0) 
+    {
+        $obj= mysql_fetch_object($res);	
+        $productfield = json_decode($obj->Fields, true);
+    }
 ?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
-    <title><?php echo $_SESSION["CompanyName"]; ?></title>
+        <title><?php echo $_SESSION["CompanyName"]; ?></title>
         <?php echo fnCss(); ?>
     </head>
     <body>
@@ -48,7 +56,7 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-lg-12">
-                        <h1 class="page-header">Add Product</h1>
+                        <h1 class="page-header">Edit Product</h1>
                     </div>
                     <!-- /.col-lg-12 -->
                 </div>
@@ -56,8 +64,8 @@
                 <div class="col-lg-12">
                     <div class="panel panel-primary">
                         <div class="panel-heading">
-                            Add Product
-                                <a href="../product/viewcategories.php" class="pull-right text-white">View Product</a>
+                            Edit Product
+                                <a href="../product/viewproducts.php" class="pull-right text-white">View Product</a>
                         </div>
                         <div class="panel-body">
                             <?php if($error!=""){ ?>
@@ -68,15 +76,9 @@
                             <?php } ?>
                             <div class="row">
                                 <div class="col-md-12">
-                                   <form name="adminForm" method="post" action="addproduct.php?mode=Add" enctype="multipart/form-data">   
-                                       <div class="form-group col-md-4">
-                                            <label>Category Name</label>
-                                            <select class="form-control" name="Category" onchange="fnSubmit();" required>
-                                                <?php fnDropDown("categories","CategoryName","CategoryID","Category"); ?>
-                                            </select>                                               
-                                        </div>
+                                     <form name="adminForm" method="post" action="editproduct.php?mode=update&Id=<?php echo($_REQUEST['Id']); ?>" enctype="multipart/form-data">   
                                         <?php
-                                            $CategoryID = $_REQUEST["Category"];
+                                            $CategoryID = $obj->CategoryID;
                                             if($CategoryID!==""){
                                                 $sql="select *, pft.ProductFieldType as Type from productfields pf 
                                                 inner join fieldmapping fm on pf.ProductFieldID = fm.ProductFieldID
@@ -105,9 +107,12 @@
                                                       
                                                         echo ' <div class="form-group col-md-4">
                                                                     <label>'.$obj->ProductFieldName.'</label>
-                                                                    <input type="'.$type.'" class="form-control" name="'.$obj->ProductFieldKey.'" 
-                                                                    placeholder="'.$obj->ProductFieldName.'"
-                                                                    '.$isRequired.'/>                                            
+                                                                    <input type="'.$type.'" 
+                                                                            class="form-control" 
+                                                                            name="'.$obj->ProductFieldKey.'" 
+                                                                            placeholder="'.$obj->ProductFieldName.'"
+                                                                            value="'.$productfield[$obj->ProductFieldName].'"
+                                                                            '.$isRequired.'/>                                            
                                                                 </div>';
                                                     }
                                                     else  if($obj->Type=="TextArea"){
@@ -115,7 +120,7 @@
                                                                     <label>'.$obj->ProductFieldName.'</label>
                                                                     <textarea class="form-control" rows="4" name="'.$obj->ProductFieldKey.'" 
                                                                     placeholder="'.$obj->ProductFieldName.'"
-                                                                    '.$isRequired.'></textarea>                                        
+                                                                    '.$isRequired.'>'.$productfield[$obj->ProductFieldName].'</textarea>                                        
                                                                 </div>';
                                                     } 
                                                     else  if($obj->Type=="CheckBox"){
@@ -158,10 +163,4 @@
         </div>
     </body>
     <?php echo fnScript(); ?>
-            <script>
-        function fnSubmit(){
-            document.adminForm.action="addproduct.php";
-            document.adminForm.submit();
-        }
-    </script>
 </html>

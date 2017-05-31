@@ -15,7 +15,7 @@ header('Cache-Control: must-revalidate');
 header('Pragma: public');
 
 $sql="select * from productfields pf inner join fieldmapping fm on pf.ProductFieldID = fm.ProductFieldID
-where fm.CategoryID=".$CategoryID." order by pf.ProductFieldID";
+where fm.CategoryID=".$CategoryID." and fm.Deleted=0 order by fm.DisplayOrder";
 $res = mysql_query($sql);
 $header = array();
 

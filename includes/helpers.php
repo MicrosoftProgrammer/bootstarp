@@ -164,6 +164,31 @@ function fnDropDown($TableName,$ColumnName,$ColumnID,$VariableName)
     }
 }
 
+function fnFieldDropDown($FieldMappingID,$VariableName)
+{
+    $html= '<option value="" >Select</option>';
+    $sql = "select * from productfieldvalue where Deleted=0 and FieldMappingID=".$FieldMappingID;        
+    
+    $res=mysql_query($sql);
+    $numrows=mysql_num_rows($res);
+    if($numrows>0)
+    {
+        while($obj=mysql_fetch_object($res))
+        {
+            if($_REQUEST[$VariableName]==$obj->ProductFieldValue)
+            {
+                $html.= '<option value="'.$obj->ProductFieldValue.'" selected="selected">'.$obj->ProductFieldValue.'</option>';
+            }
+            else
+            {
+                $html.= '<option value="'.$obj->ProductFieldValue.'">'.$obj->ProductFieldValue.'</option>';
+            }
+        }
+    }
+
+    return $html;
+}
+
 function GetData($TableName,$ColumnID,$QueryID,$ReturnName)
 {
     $sql = "select * from ".strtolower($TableName)." where ".$ColumnID."=".$QueryID;
@@ -197,8 +222,15 @@ function isSuperAdmin(){
 
 function slugify($string) {
    $string = str_replace(' ', '-', $string); // Replaces all spaces with hyphens.
+   $string = preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
+   $string = preg_replace('/-+/', '-', $string); // Replaces multiple hyphens with single one.
+   $string = str_replace('-', '', $string);
 
-   return preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
+   return $string;
+}
+
+function add_quotes($str) {
+    return sprintf("'%s'", $str);
 }
 
 function post_img($fileName,$tempFile,$targetFolder)

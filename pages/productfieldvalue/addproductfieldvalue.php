@@ -12,15 +12,19 @@
     if ($_REQUEST["mode"]=="Add")
     { 
         $ProductFieldValue = str_replace("'","`",$_REQUEST["ProductFieldValue"]);
+        $FieldMappingID =$_REQUEST["FieldMappingID"];
+        $Category =$_REQUEST["Category"];
             
-        $sql="select * from productfieldvalue where ProductFieldValue='".$ProductFieldValue."'";
+        $sql="select * from productfieldvalue where ProductFieldValue='".$ProductFieldValue."' and
+        FieldMappingID='".$FieldMappingID."' and
+        CategoryID='".$Category."'";
         $res=mysql_query($sql);
         $num=mysql_num_rows($res);
 
         if($num==0)
         {
-            $sql = "INSERT INTO productfieldvalue (ProductFieldValue)
-            VALUES ('$ProductFieldValue')";        
+            $sql = "INSERT INTO productfieldvalue (ProductFieldValue,FieldMappingID,CategoryID)
+            VALUES ('$ProductFieldValue','$FieldMappingID','$Category')";        
             mysql_query($sql);
             
             header("location:viewproductfieldvalue.php?mode=added");
@@ -68,6 +72,34 @@
                             <div class="row">
                                 <div class="col-md-12">
                                    <form name="adminForm" method="post" action="addproductfieldvalue.php?mode=Add" enctype="multipart/form-data">                                    
+                                      <div class="form-group col-md-6">
+                                            <label>Category Name</label>
+                                            <select class="form-control" name="Category" onchange="fnSubmit();" required>
+                                                <?php fnDropDown("categories","CategoryName","CategoryID","Category"); ?>
+                                            </select>                                               
+                                        </div>
+                                           <div class="form-group col-md-6">
+                                            <label>Product Field Type</label>
+                                            <select class="form-control" name="FieldMappingID"  required>                                                
+                                                <?php 
+                                                $CategoryID = $_REQUEST["Category"];
+                                                    echo '<option value="" >Select</option>';
+                                                    $sql = "select * from productfields pf 
+                                                            inner join fieldmapping fm on pf.ProductFieldID = fm.ProductFieldID
+                                                            where fm.CategoryID=".$CategoryID." and fm.Deleted=0 and ProductFieldType in ('2','3','9') order by fm.DisplayOrder";        
+                                                    $res=mysql_query($sql);
+                                                    $numrows=mysql_num_rows($res);
+                                                    if($numrows>0)
+                                                    {
+                                                        while($obj=mysql_fetch_object($res))
+                                                        {
+                                                            echo '<option value="'.$obj->FieldMappingID.'">'.$obj->ProductFieldName.'</option>';
+                                                        }
+                                                    }
+                                                
+                                                ?>
+                                            </select>                                               
+                                        </div>
                                         <div class="form-group col-md-6">
                                             <label>Product Field Value</label>
                                             <input type="text" class="form-control" name="ProductFieldValue" required value="<?php echo $_REQUEST['ProductFieldValue']; ?>" />                                            
@@ -94,4 +126,10 @@
         </div>
     </body>
     <?php echo fnScript(); ?>
+            <script>
+        function fnSubmit(){
+            document.adminForm.action="addproductfieldvalue.php";
+            document.adminForm.submit();
+        }
+    </script>
 </html>

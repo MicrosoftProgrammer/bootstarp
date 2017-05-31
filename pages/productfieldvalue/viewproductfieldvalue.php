@@ -84,9 +84,14 @@ if ($_REQUEST['mode']=="del")
                                             <input type="checkbox" id="checkAll" />
                                         </th>
                                         <th>
+                                            Product Field 
+                                        </th>
+                                     <th>
+                                             Field Type 
+                                        </th>
+                                         <th>
                                             Product Field Value
                                         </th>
-                                    
                                         <th>
                                             Action
                                         </th>
@@ -94,8 +99,12 @@ if ($_REQUEST['mode']=="del")
                                 </thead>
                                 <tbody>
                                 <?php
-                                        $sql = "select * from productfieldvalue where Deleted=0";
-                                        $sql.= " order by ProductFieldValueID";
+                                        $sql = "select * from productfieldvalue pfv                                                
+                                                inner join fieldmapping fm on pfv.FieldMappingID = fm.FieldMappingID 
+                                                inner join productfields pf on pf.ProductFieldID = fm.ProductFieldID
+                                                inner join productfieldtype pft on pft.ProductFieldTypeID = pf.ProductFieldType
+                                                where pfv.Deleted=0";
+                                        $sql.= " order by pf.ProductFieldID";
                                         $res=mysql_query($sql);
                                         $numrows=mysql_num_rows($res);
                                         	if($numrows>0)
@@ -112,6 +121,12 @@ if ($_REQUEST['mode']=="del")
                                                         </td>                                  
                                                         
                                                         <td>
+                                                            <?php echo $obj->ProductFieldName; ?>
+                                                        </td>
+                                                         <td>
+                                                            <?php echo $obj->ProductFieldType; ?>
+                                                        </td>
+                                                         <td>
                                                             <?php echo $obj->ProductFieldValue; ?>
                                                         </td>
                                                         <td class="action">

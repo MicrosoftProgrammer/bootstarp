@@ -19,16 +19,22 @@
 
     if ($_REQUEST["mode"]=="update")
     { 
-        $name = $_REQUEST["ProductFieldValue"];
-        
-        $sql="select * from productfieldvalue where ProductFieldValue='".$name."' and ProductFieldValueID!=".$_REQUEST['Id'];
+        $ProductFieldValue = str_replace("'","`",$_REQUEST["ProductFieldValue"]);
+        $FieldMappingID =$_REQUEST["FieldMappingID"];
+        $Category =$_REQUEST["Category"];
+            
+        $sql="select * from productfieldvalue where ProductFieldValue='".$ProductFieldValue."' and
+        FieldMappingID='".$FieldMappingID."' and
+        CategoryID='".$Category."' and ProductFieldValueID!=".$_REQUEST['Id'];
         $res=mysql_query($sql);
         $num=mysql_num_rows($res);
 
         if($num==0)
         {
             $sql = "UPDATE productfieldvalue SET ";
-            $sql.= "ProductFieldValue	=	'".$_REQUEST['ProductFieldValue']."'";
+            $sql.= "ProductFieldValue	=	'".$ProductFieldValue."',";
+            $sql.= "FieldMappingID	=	'".$FieldMappingID."',";
+            $sql.= "CategoryID	=	'".$Category."'";
             $sql.= " where ProductFieldValueID='".$_REQUEST['Id']."'";	
             mysql_query($sql);				
 
@@ -77,6 +83,41 @@
                             <div class="row">
                                 <div class="col-md-12">
                                      <form name="adminForm" method="post" action="editproductfieldvalue.php?mode=update&Id=<?php echo($_REQUEST['Id']); ?>" enctype="multipart/form-data">   
+                                      <div class="form-group col-md-6">
+                                            <label>Category Name</label>
+                                            <select class="form-control" name="Category" onchange="fnSubmit();" required>
+                                                <?php
+                                                    if($_REQUEST["Category"]=="")
+                                                        $_REQUEST["Category"] =$obj->CategoryID;
+                                                 fnDropDown("categories","CategoryName","CategoryID","Category"); ?>
+                                            </select>                                               
+                                        </div>
+                                           <div class="form-group col-md-6">
+                                            <label>Product Field Type</label>
+                                            <select class="form-control" name="FieldMappingID"  required>                                                
+                                                <?php 
+                                                $CategoryID = $_REQUEST["Category"];
+                                                    echo '<option value="" >Select</option>';
+                                                    $sql = "select * from productfields pf 
+                                                            inner join fieldmapping fm on pf.ProductFieldID = fm.ProductFieldID
+                                                            where fm.CategoryID=".$CategoryID." and fm.Deleted=0 and ProductFieldType in ('2','3','9') order by fm.DisplayOrder";        
+                                                    $res=mysql_query($sql);
+                                                    $numrows=mysql_num_rows($res);
+                                                    if($numrows>0)
+                                                    {
+                                                        while($obj1=mysql_fetch_object($res))
+                                                        {
+                                                            $selected ="";
+                                                            if($obj1->FieldMappingID==$obj->FieldMappingID)
+                                                                $selected ="selected";
+
+                                                            echo '<option '.$selected.' value="'.$obj1->FieldMappingID.'">'.$obj1->ProductFieldName.'</option>';
+                                                        }
+                                                    }
+                                                
+                                                ?>
+                                            </select>                                               
+                                        </div>
                                         <div class="form-group col-md-6">
                                             <label>Product Field Value</label>
                                             <input type="text" class="form-control" name="ProductFieldValue" required value="<?php echo $obj->ProductFieldValue; ?>" />                                            
@@ -104,4 +145,10 @@
         </div>
     </body>
     <?php echo fnScript(); ?>
+                <script>
+        function fnSubmit(){
+            document.adminForm.action="editproductfieldvalue.php";
+            document.adminForm.submit();
+        }
+    </script>
 </html>

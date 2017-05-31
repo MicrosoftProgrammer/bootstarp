@@ -12,6 +12,7 @@
     if ($_REQUEST["mode"]=="Add")
     { 
         $ProductFieldName = str_replace("'","`",$_REQUEST["ProductFieldName"]);
+        $ProductFieldName = str_replace(","," ",$ProductFieldName);
         $ProductFieldType = $_REQUEST["ProductFieldType"];
         if(isset($_REQUEST['IsRequired']))
             $IsRequired=1;
