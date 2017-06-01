@@ -72,9 +72,9 @@ function fnSideBar(){
                         <li>
                             <a href="#"><i class="fa fa-files-o fa-fw"></i> Reports<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
-                                <li><a href="../reports/report.php?type=TC" class=""><i class="fa fa-file-o fa-fw">&nbsp;</i>Product Report</a></li>
-                                <li><a href="../reports/report.php?type=TC" class=""><i class="fa fa-file-excel-o fa-fw">&nbsp;</i>Overview Report</a></li>
-                                <li><a href="../reports/report.php?type=TCA"><i class="fa fa-file fa-fw">&nbsp;</i>Invoice Generator</a></li>
+                                <li><a href="../reports/productreport.php" class=""><i class="fa fa-file-o fa-fw">&nbsp;</i>Product Report</a></li>
+                                <li><a href="../reports/overviewreport.php" class=""><i class="fa fa-file-excel-o fa-fw">&nbsp;</i>Overview Report</a></li>
+                                <li><a href="#"><i class="fa fa-file fa-fw">&nbsp;</i>Invoice Generator</a></li>
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>                                                                    

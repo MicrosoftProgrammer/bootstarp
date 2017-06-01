@@ -3,3 +3,4 @@ bower_components
 backup/*.*
 dist
 vendor
+uploads/*.*

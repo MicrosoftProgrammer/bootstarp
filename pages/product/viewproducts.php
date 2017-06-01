@@ -99,8 +99,7 @@ if ($_REQUEST['mode']=="del")
                                                                     </select>                                               
                                                             </div>';
                                                     }
-                                                }
-                                                    
+                                                }          
                                     } ?>
                                 
                                  </div>
