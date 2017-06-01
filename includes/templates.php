@@ -6,16 +6,7 @@ function fnSideBar(){
                     <ul class="nav" id="side-menu">
                         <li class="sidebar-search">
                         <img src="../../images/'.$_SESSION["Logo"].'" alt="Logo" class="img-responsive" />
-                        <form name="searchForm" action="" method="post">
-                            <div class="input-group custom-search-form">
-                                <input type="text" name="Keyword" required class="form-control" placeholder="Search...">
-                                <span class="input-group-btn">
-                                    <button class="btn btn-default" type="submit">
-                                        <i class="fa fa-search"></i>
-                                    </button>
-                                </span>
-                            </div>
-                        </form>
+
                             <!-- /input-group -->
                         </li>
                         <li>
@@ -81,7 +72,8 @@ function fnSideBar(){
                         <li>
                             <a href="#"><i class="fa fa-files-o fa-fw"></i> Reports<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
-                                <li><a href="../reports/report.php?type=TC" class=""><i class="fa fa-file-o fa-fw">&nbsp;</i>Stock Report</a></li>
+                                <li><a href="../reports/report.php?type=TC" class=""><i class="fa fa-file-o fa-fw">&nbsp;</i>Product Report</a></li>
+                                <li><a href="../reports/report.php?type=TC" class=""><i class="fa fa-file-excel-o fa-fw">&nbsp;</i>Overview Report</a></li>
                                 <li><a href="../reports/report.php?type=TCA"><i class="fa fa-file fa-fw">&nbsp;</i>Invoice Generator</a></li>
                             </ul>
                             <!-- /.nav-second-level -->

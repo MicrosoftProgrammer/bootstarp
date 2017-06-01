@@ -2,7 +2,7 @@
     include('../../includes/connection.php');
     include('../../includes/helpers.php');
     include('../../includes/templates.php');
-
+$filter = array();
 if ($_REQUEST['mode']=="del")
 {
 	for ($i=0;$i<count($_REQUEST['chkSelect']);$i++)
@@ -72,6 +72,38 @@ if ($_REQUEST['mode']=="del")
                                 </div>
                             </div>
                             <form name="adminForm" method="post"> 
+                                <div class="col-md-12">
+                                    <div class="form-group col-md-3">
+                                        <label>Category Name</label>
+                                            <select class="form-control" name="Category" onchange="fnSubmit();" required>
+                                                <?php fnDropDown("categories","CategoryName","CategoryID","Category"); ?>
+                                            </select>                                               
+                                    </div>
+                                    <?php if($_REQUEST["Category"]!="") {
+                                        
+                                        $CategoryID = $_REQUEST["Category"];
+                                            $sql="select *, pft.ProductFieldType as Type from productfields pf 
+                                                inner join fieldmapping fm on pf.ProductFieldID = fm.ProductFieldID
+                                                inner join productfieldtype pft on pf.ProductFieldType = pft.ProductFieldTypeID   
+                                                where fm.CategoryID=".$CategoryID." and fm.Deleted=0 order by fm.DisplayOrder";
+                                                $res = mysql_query($sql);
+                                                while($obj=mysql_fetch_object($res)){
+                                                    if($obj->ShowInFilter=="1"){
+                                                        array_push($filter,
+                                                        array("Key"=>$obj->ProductFieldKey,
+                                                        "Name"=>$obj->ProductFieldName));
+                                                        echo ' <div class="form-group col-md-3">
+                                                                <label>'.$obj->ProductFieldName.'</label>
+                                                                    <select class="form-control" name="'.$obj->ProductFieldKey.'" onchange="fnSubmit();">
+                                                                        '.fnGetFilter($obj->ProductFieldName,$obj->ProductFieldKey,$CategoryID ).'
+                                                                    </select>                                               
+                                                            </div>';
+                                                    }
+                                                }
+                                                    
+                                    } ?>
+                                
+                                 </div>
                             <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
                                 <thead>
                                     <tr>
@@ -94,6 +126,9 @@ if ($_REQUEST['mode']=="del")
                                 <?php
                                         $sql = "select * from products p inner join categories c on p.CategoryID =c.CategoryID 
                                         where p.Deleted=0";
+                                        if($_REQUEST["Category"]!=""){
+                                            $sql= $sql." and p.CategoryID=".$_REQUEST["Category"];
+                                        }
                                         $sql.= " order by p.ProductID";
                                         $res=mysql_query($sql);
                                         $numrows=mysql_num_rows($res);
@@ -103,7 +138,24 @@ if ($_REQUEST['mode']=="del")
                                                 while($obj=mysql_fetch_object($res))
                                                 { 
                                                     $cnt++;
+                                                    $showdata =true;
+                                                    if(count($filter)>0){
+                                                         $data = json_decode($obj->Fields, TRUE);
+                                                        
+                                                         for($k=0;$k<count($filter);$k++){
+                                                            $filterkey = $_REQUEST[$filter[$k]["Key"]];
+                                                  
+                                                            $filterdata = $filter[$k]["Name"];
+                                                            if($filterkey !=""){
+                                                                if($filterkey!=$data[$filterdata]){
+                                                                    $showdata= false;
+                                                                }
+                                                            }
+                                                         }
+                                                    }
+
                                                     if($cnt%2==0) $class=""; else $class="class=alt";
+                                                    if($showdata) {
                                                     ?>
                                                     <tr <?php echo $class; ?>>
                                                         <td>
@@ -145,6 +197,7 @@ if ($_REQUEST['mode']=="del")
                                                     </tr>  
                                                     <?php
                                                 }
+                                                }
                                             }
                                             else
                                             {
@@ -178,4 +231,10 @@ if ($_REQUEST['mode']=="del")
     </body>
     <?php echo fnScript(); ?>
     <?php echo fnDataTableScript(); ?>
+            <script>
+        function fnSubmit(){
+            document.adminForm.action="viewproducts.php";
+            document.adminForm.submit();
+        }
+    </script>
 </html>

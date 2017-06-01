@@ -45,6 +45,7 @@
     <head>
         <title><?php echo $_SESSION["CompanyName"]; ?></title>
         <?php echo fnCss(); ?>
+        <?php echo fnDatePickerCss(); ?>
     </head>
     <body>
         <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
@@ -105,6 +106,7 @@
                                                                 break;                                                              
                                                         }
                                                       
+                                                      if($obj->Type!="Date") {
                                                         echo ' <div class="form-group col-md-4">
                                                                     <label>'.$obj->ProductFieldName.'</label>
                                                                     <input type="'.$type.'" 
@@ -114,6 +116,24 @@
                                                                             value="'.$productfield[$obj->ProductFieldName].'"
                                                                             '.$isRequired.'/>                                            
                                                                 </div>';
+                                                      }
+                                                      else{
+                                                          echo ' <div class="form-group col-md-4">
+                                                                    <label>'.$obj->ProductFieldName.'</label>
+
+                                                                     <div class="input-group date">
+                                                                    <input type="text" 
+                                                                            class="form-control " 
+                                                                            name="'.$obj->ProductFieldKey.'" 
+                                                                            placeholder="'.$obj->ProductFieldName.'"
+                                                                            value="'.$productfield[$obj->ProductFieldName].'"
+                                                                            '.$isRequired.'/>  
+                                                                    <span class="input-group-addon">
+                                                                        <span class="fa fa-calendar"></span>
+                                                                     </span>   
+                                                                     </div>                                       
+                                                                </div>';
+                                                      }
                                                     }
                                                     else  if($obj->Type=="TextArea"){
                                                         echo ' <div class="form-group col-md-4">
@@ -163,4 +183,12 @@
         </div>
     </body>
     <?php echo fnScript(); ?>
+     <?php echo fnDatePickerScript(); ?>
+     <script type="text/javascript">
+            $(function () {
+                $('.date').datetimepicker({
+                    format: 'DD/MMM/YYYY'
+                });
+            });
+        </script>
 </html>

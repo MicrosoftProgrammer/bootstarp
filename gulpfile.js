@@ -65,6 +65,9 @@ gulp.task('copy', function() {
     gulp.src(['bower_components/datatables-responsive/css/*', 'bower_components/datatables-responsive/js/*'])
         .pipe(gulp.dest('vendor/datatables-responsive'))
 
+    gulp.src(['bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css'])
+        .pipe(gulp.dest('vendor/datepicker'))        
+
     gulp.src(['bower_components/flot/*.js'])
         .pipe(gulp.dest('vendor/flot'))
 
@@ -88,6 +91,12 @@ gulp.task('copy', function() {
 
     gulp.src(['bower_components/jquery-ui/jquery-ui.js', 'bower_components/jquery-ui/jquery-ui.min.js'])
         .pipe(gulp.dest('vendor/jqueryui'))        
+
+    gulp.src(['bower_components/moment/min/moment.min.js'])
+        .pipe(gulp.dest('vendor/moment'))     
+
+    gulp.src(['bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js'])
+        .pipe(gulp.dest('vendor/datepicker'))                     
 
 })
 

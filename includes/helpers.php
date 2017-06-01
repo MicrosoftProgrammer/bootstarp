@@ -112,23 +112,6 @@ function fnDataTableScript(){
     return $html;
 }
 
-function fnDatepickerScript(){
-    $html =' 
-    <script src="../../vendor/bootstarp-datepicker/js/bootstrap-datepicker.min.js"></script>
-    <script>
-        $(".datepicker").datepicker({
-            format: "dd/mm/yyyy",
-            autoclose : true
-        });
-    </script>';
-    return $html;
-}
-
-function fnDatepickerCss(){
-    $html ='<link href="../../vendor/bootstarp-datepicker/css/bootstrap-datepicker.min.css" rel="stylesheet">
-    <link href="../../vendor/bootstarp-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet">';
-    return $html;
-}
 
 function fnGraphCSS(){
     $html ='<link href="../../vendor/morrisjs/morris.css" rel="stylesheet">';
@@ -138,6 +121,17 @@ function fnGraphCSS(){
 function fnGraphScript(){
     $html ='  <script src="../../vendor/raphael/raphael.min.js"></script>
     <script src="../../vendor/morrisjs/morris.min.js"></script>';
+    return $html;
+}
+
+function fnDatePickerCSS(){
+    $html ='<link href="../../vendor/datepicker/bootstrap-datetimepicker.min.css" rel="stylesheet">';
+    return $html;
+}
+
+function fnDatePickerScript(){
+    $html ='  <script src="../../vendor/moment/moment.min.js"></script>
+    <script src="../../vendor/datepicker/bootstrap-datetimepicker.min.js"></script>';
     return $html;
 }
 
@@ -162,6 +156,37 @@ function fnDropDown($TableName,$ColumnName,$ColumnID,$VariableName)
             }
         }
     }
+}
+
+function fnGetFilter($FieldName,$FieldKey,$CategoryID)
+{
+    $html= '<option value="" >Select</option>';
+    $sql = "select * from products where CategoryID=".$CategoryID;
+    $sql.= " and Deleted=0 order by ProductID";     
+    
+    $res=mysql_query($sql);
+    $numrows=mysql_num_rows($res);
+    if($numrows>0)
+    {
+        $filter= array();
+        while($obj=mysql_fetch_object($res))
+        {
+             $data = json_decode($obj->Fields, TRUE);
+             if($data[$FieldName]!="" && !in_array($data[$FieldName],$filter)) {
+                array_push($filter,$data[$FieldName]);
+                if($_REQUEST[$FieldKey]==$data[$FieldName])
+                {
+                    $html.= '<option value="'.$data[$FieldName].'" selected="selected">'.$data[$FieldName].'</option>';
+                }
+                else
+                {
+                    $html.= '<option value="'.$data[$FieldName].'">'.$data[$FieldName].'</option>';
+                }
+             }
+        }
+    }
+
+    return $html;
 }
 
 function fnFieldDropDown($FieldMappingID,$VariableName)
@@ -255,5 +280,10 @@ function post_img($fileName,$tempFile,$targetFolder)
 		copy($tempFile, $targetFolder."/".$NewFileName);	
 		return $NewFileName;
 	}
+}
+
+function DateConverter($var){
+    $date = str_replace('/', '-', $var);
+    echo date('m-d-Y', strtotime($date));
 }
 ?>
