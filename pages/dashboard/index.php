@@ -27,7 +27,7 @@
                 </div>
                 <div class="row">
                     <?php 
-                        $sql = "select c.CategoryName,count(p.ProductID) as cnt from products p inner join categories c on c.CategoryID=p.CategoryID
+                        $sql = "select c.CategoryID,c.CategoryName,count(p.ProductID) as cnt from products p inner join categories c on c.CategoryID=p.CategoryID
                         where p.Deleted=0 group by c.CategoryName";
 
                         $res=mysql_query($sql);
@@ -50,7 +50,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <a href="../product/viewproduct.phps">
+                                        <a href="../product/viewproducts.php?Category='.$obj->CategoryID.'">
                                             <div class="panel-footer">
                                                 <span class="pull-left">View Details</span>
                                                 <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
