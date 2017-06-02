@@ -286,4 +286,12 @@ function DateConverter($var){
     $date = str_replace('/', '-', $var);
     echo date('m-d-Y', strtotime($date));
 }
+
+function _group_by($array, $key) {
+    $return = array();
+    foreach($array as $val) {
+        $return[$val[$key]][] = $val;
+    }
+    return $return;
+}
 ?>

@@ -8,6 +8,12 @@
         header("location:../../login.php");
     }
 
+    if ($_REQUEST["mode"]=="Backup")
+    { 
+        backup_tables();
+        $text="Database Backup Done.";
+    }
+
     if ($_REQUEST["mode"]=="update")
     { 
         $CompanyName = str_replace("'","`",$_REQUEST["CompanyName"]);
@@ -97,7 +103,11 @@
                                         <div class="form-group col-md-6">
                                             <label>Contact No</label>
                                              <input type="text" class="form-control" name="ContactNo" required value="<?php echo $obj->ContactNo; ?>"/>
-                                        </div>                                                                            
+                                        </div>   
+                                        <div class="form-group col-md-6">
+                                            <label>Address</label>
+                                             <textarea class="form-control" rows="4" required name="Address"><?php echo $obj->Address; ?></textarea>
+                                        </div>                                                                                                                  
                                         <div class="form-group col-md-6">
                                             <label>Email</label>
                                              <input type="email" class="form-control" name="Email" required  value="<?php echo $obj->Email; ?>"/>
@@ -106,13 +116,11 @@
                                             <label>From Email</label>
                                              <input type="email" class="form-control" name="FromEmail" required value="<?php echo $obj->FromEmail; ?>"/>
                                         </div>   
-                                        <div class="form-group col-md-6">
-                                            <label>Address</label>
-                                             <textarea class="form-control" required name="Address"><?php echo $obj->Address; ?></textarea>
-                                        </div>                                                                                                                                                               
+                                                                                                                                                              
                                         <div class="form-group col-md-12">
                                             <button type="submit" class="btn btn-primary">Submit</button>
                                             <button type="reset" class="btn btn-danger">Reset</button>
+                                            <a href="settings.php?mode=Backup" class="btn btn-success pull-right">Backup Database</a>
                                         </div>
                                     </form>
                                 </div>

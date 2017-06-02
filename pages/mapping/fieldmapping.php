@@ -23,17 +23,53 @@
             if($num==0){
                 $sql = "insert into fieldmapping(CategoryID,ProductFieldID) values('$CategoryID','$ProductFieldID')";
                 mysql_query($sql);
+
+                $sql = "select * from products where CategoryID=".$CategoryID;
+                $res=mysql_query($sql);
+                $num=mysql_num_rows($res);
+
+                if($num>0){
+                    while($obj1=mysql_fetch_object($res)){
+                        $data = json_decode($obj1->Fields, TRUE);
+                        $productField = GetData("productfields","ProductFieldID",$ProductFieldID,"ProductFieldName");
+                        $data[$productField] = "";
+                        mysql_query("update products set Fields='".json_encode($data)."' where ProductID=".$obj1->ProductID);
+
+                    }
+                }
             }
             else {
                 $obj = mysql_fetch_object($res);
                 $sql = "update fieldmapping set Deleted = 0 where CategoryID=".$CategoryID." and ProductFieldID=".$ProductFieldID;
-                mysql_query($sql);                  
+                mysql_query($sql);                 
             }
         }
 
         $list = implode (", ", $_REQUEST['field']);
         $sql ="update fieldmapping set Deleted=1 where CategoryID=".$CategoryID." and ProductFieldID not in(".$list.")";
         mysql_query($sql);
+
+                $sql = "select * from products where CategoryID=".$CategoryID;
+                $res=mysql_query($sql);
+                $num=mysql_num_rows($res);
+
+                if($num>0){
+                    while($obj1=mysql_fetch_object($res)){
+                        $data = json_decode($obj1->Fields, TRUE);
+                        $sql2 = "select * from productfields pf inner join fieldmapping fm
+                            on fm.ProductFieldID = pf.ProductFieldID
+                          where fm.CategoryID=".$CategoryID." and fm.ProductFieldID not in(".$list.")";
+                        $res2=mysql_query($sql2);
+                        $num2=mysql_num_rows($res2);
+                        if($num2>0){
+                            while($obj2=mysql_fetch_object($res2)){
+                                unset($data[$obj2->ProductFieldName]);
+                            }
+                        }
+                        mysql_query("update products set Fields='".json_encode($data)."' where ProductID=".$obj1->ProductID);
+
+                    }
+                } 
 
         $text="Field Updated Successfully";
     }

@@ -3,7 +3,7 @@
     include('../../includes/connection.php');
     include('../../includes/helpers.php');
     include('../../includes/templates.php');
-
+$filter = array();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -67,7 +67,9 @@
                                                                     </select>                                               
                                                             </div>';
                                                     }
-                                                }          
+                                                }
+
+                                                echo '<textarea name="filters" style="display:none;">'.json_encode($filter).'</textarea>';          
                                     } ?>
 
                                         <div class="form-group col-md-12">

@@ -4,3 +4,4 @@ backup/*.*
 dist
 vendor
 uploads/*.*
+backup/*.*

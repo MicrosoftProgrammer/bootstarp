@@ -3,7 +3,7 @@
     include('../../includes/connection.php');
     include('../../includes/helpers.php');
     include('../../includes/templates.php');
-
+$filter = array();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -21,7 +21,7 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-lg-12">
-                        <h1 class="page-header">Report</h1>
+                        <h1 class="page-header">Overview Report</h1>
                     </div>
                     <!-- /.col-lg-12 -->
                 </div>
@@ -29,7 +29,7 @@
                 <div class="col-lg-12">
                     <div class="panel panel-primary">
                         <div class="panel-heading">
-                            Product Report
+                            Product Overview Report
                         </div>
                         <div class="panel-body">
                             <?php if($error!=""){ ?>
@@ -40,7 +40,7 @@
                             <?php } ?>
                             <div class="row">
                                 <div class="col-md-12">
-                                   <form name="adminForm" method="post" action="overviewreport.php" enctype="multipart/form-data">   
+                                   <form name="adminForm" method="post" action="reportgenerator.php?mode=Overview" enctype="multipart/form-data">   
                                         <div class="form-group col-md-3">
                                             <label>Category Name</label>
                                             <select class="form-control" name="Category" onchange="fnSubmit();" required>
@@ -48,6 +48,10 @@
                                             </select>                                               
                                         </div>
                                     <?php if($_REQUEST["Category"]!="") {
+
+                                        $html ='<div class="form-group col-md-3">
+                                            <label>Sum By</label>
+                                            <select class="form-control" name="Sum"  required>';
                                         
                                         $CategoryID = $_REQUEST["Category"];
                                             $sql="select *, pft.ProductFieldType as Type from productfields pf 
@@ -55,19 +59,32 @@
                                                 inner join productfieldtype pft on pf.ProductFieldType = pft.ProductFieldTypeID   
                                                 where fm.CategoryID=".$CategoryID." and fm.Deleted=0 order by fm.DisplayOrder";
                                                 $res = mysql_query($sql);
+                                                echo ' <div class="form-group col-md-12">
+                                                        <label>Group By</label>';
+                                                        $x=0;
                                                 while($obj=mysql_fetch_object($res)){
+                                                    if($obj->Type=="Number") {
+                                                        $html=$html.'<option value="'.$obj->ProductFieldName.'">'.$obj->ProductFieldName.'</option>';
+                                                    }
+
                                                     if($obj->ShowInFilter=="1"){
                                                         array_push($filter,
                                                         array("Key"=>$obj->ProductFieldKey,
                                                         "Name"=>$obj->ProductFieldName));
-                                                        echo ' <div class="form-group col-md-3">
-                                                                <label>'.$obj->ProductFieldName.'</label>
-                                                                    <select class="form-control" name="'.$obj->ProductFieldKey.'" onchange="fnSubmit();">
-                                                                        '.fnGetFilter($obj->ProductFieldName,$obj->ProductFieldKey,$CategoryID ).'
-                                                                    </select>                                               
-                                                            </div>';
+                                                        $checked ="";
+                                                        if($x==0)
+                                                            $checked ="checked";
+                                                        echo '         
+                                                        <label class="radio-inline">
+                                                            <input type="radio" name="groups" id="'.$obj->ProductFieldKey.'" value="'.$obj->ProductFieldKey.'" '.$checked.' >'.$obj->ProductFieldName.'
+                                                        </label>';
+                                                        $x++;
                                                     }
-                                                }          
+                                                }
+
+                                                $html=$html.'</select></div>';
+                                                
+                                                echo '</div>'.$html.'<textarea name="filters" style="display:none;">'.json_encode($filter).'</textarea>';          
                                     } ?>
 
                                         <div class="form-group col-md-12">
@@ -97,5 +114,7 @@
             document.adminForm.action="overviewreport.php";
             document.adminForm.submit();
         }
+
+        
     </script>
 </html>
