@@ -19,10 +19,12 @@
         $sql="select * from productfields pf inner join fieldmapping fm on pf.ProductFieldID = fm.ProductFieldID
         where fm.CategoryID=".$CategoryID." and fm.Deleted=0 order by fm.DisplayOrder";
         $res = mysql_query($sql);
-        $header = array();
-
+        $header = array();   
+        $styles = array( 'font'=>'Arial','font-size'=>10,'font-style'=>'bold', 'fill'=>'#eee', 'halign'=>'center', 'border'=>'left,right,top,bottom');       
+        $headerstyles = array( 'font'=>'Arial','font-size'=>10,'font-style'=>'bold', 'fill'=>'#eeffee', 'halign'=>'center', 'border'=>'left,right,top,bottom');              
+        
         while($obj=mysql_fetch_object($res)){
-            $header[$obj->ProductFieldName]='string';
+            array_push($header,$obj->ProductFieldName);
         }
 
         $data = array();
@@ -35,6 +37,10 @@
         $sql.= " order by p.ProductID";
         $res=mysql_query($sql);
         $numrows=mysql_num_rows($res);
+
+        $writer = new XLSXWriter();
+        $writer->setAuthor($_SESSION["CompanyName"]); 
+        $writer->writeSheetRow($CategoryName,$header,$headerstyles);           
 
         if($numrows>0)
         {
@@ -62,18 +68,15 @@
                     $datum = json_decode($obj->Fields, TRUE);
                     $dataVal = array();
                     $count =0;
-                    foreach (array_keys($header) as $key) {
+                    foreach ($header as $key) {
                         $dataVal[$count]= $datum[$key];
                         $count++;
                     }
-                    array_push($data,$dataVal);
+                    $writer->writeSheetRow($CategoryName,$dataVal,$styles); 
                 }
             }
         }                                         
  
-        $writer = new XLSXWriter();
-        $writer->setAuthor($_SESSION["CompanyName"]);
-        $writer->writeSheet($data,$CategoryName,$header);
         $writer->writeToStdOut(); 
     }
     else if($_REQUEST["mode"]=="Overview"){
@@ -101,7 +104,7 @@
 
         $groupby = $_REQUEST["groups"];
         $groupby = $fieldArray[$groupby];
-        $header = array($groupby=>'string',"Stock Count"=>'number') ;    
+        $header = array($groupby,"Stock Count") ;    
 
         $sql = "select * from products p inner join categories c on p.CategoryID =c.CategoryID 
         where p.Deleted=0";
@@ -111,6 +114,12 @@
         $sql.= " order by p.ProductID";
         $res=mysql_query($sql);
         $numrows=mysql_num_rows($res);
+
+        $styles = array( 'font'=>'Arial','font-size'=>10,'font-style'=>'bold', 'fill'=>'#eee', 'halign'=>'center', 'border'=>'left,right,top,bottom');       
+        $headerstyles = array( 'font'=>'Arial','font-size'=>10,'font-style'=>'bold', 'fill'=>'#eeffee', 'halign'=>'center', 'border'=>'left,right,top,bottom');                      
+        $writer = new XLSXWriter();
+        $writer->setAuthor($_SESSION["CompanyName"]); 
+        $writer->writeSheetRow($CategoryName,$header,$headerstyles);         
 
         if($numrows>0)
         {
@@ -141,13 +150,12 @@
                 $dataVal = array();
                 $dataVal[$groupby]= $label;
                 $dataVal["Stock Count"] = $count;
-                array_push($data,$dataVal);
+                $writer->writeSheetRow($CategoryName,$dataVal,$styles);                
             }        
         }  
-                                         
-        $writer = new XLSXWriter();
-        $writer->setAuthor($_SESSION["CompanyName"]);
-        $writer->writeSheet($data,$CategoryName,$header);
+
+
+  
         $writer->writeToStdOut(); 
     }
 ?>

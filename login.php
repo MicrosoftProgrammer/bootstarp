@@ -22,6 +22,7 @@
             $_SESSION["Name"]=$obj->Name;
             $_SESSION["Email"]=$obj->Email;
             $_SESSION["UserID"]=$obj->UserID;
+            $_SESSION["Permissions"]=$obj->Permissions;
 
             header("location:pages/dashboard/index.php");
         }
@@ -33,6 +34,7 @@
         $_SESSION["superadmin"]="";
         $_SESSION["id"]="";
         $_SESSION["name"]="";
+        $_SESSION["Permissions"]="";
     }
 
 ?>
