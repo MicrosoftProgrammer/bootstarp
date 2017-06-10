@@ -3,15 +3,43 @@
     include('../../includes/helpers.php');
     include('../../includes/templates.php');
 $filter = array();
-if ($_REQUEST['mode']=="del")
-{
-	for ($i=0;$i<count($_REQUEST['chkSelect']);$i++)
-	{
-		mysql_query("update products set Deleted=1 where ProductID=".$_REQUEST['chkSelect'][$i]."");
-	}
+ $TransactionID="";
 
-	header("location:invoice.php?mode=deleted");
-	die();
+ if($_REQUEST["Product"]!=""){
+     $sql="select * from producttransactions where ProductID=".$_REQUEST["Product"];
+     $res=mysql_query($sql);
+     $obj=mysql_fetch_object($res);
+     if($obj->ProductStatus=="0"){
+         $TransactionID=$obj->TransactionID;
+     }
+ }
+
+if ($_REQUEST['mode']=="Add" && $TransactionID=="")
+{
+        $Owner = str_replace("'","`",$_REQUEST["OwnerDetails"]);
+        $ProductID = $_REQUEST["Product"];
+        $RentedDate = ConvertToStdDate(str_replace("/","-",$_REQUEST["RentedDate"]));
+        $ReturnedDate = ConvertToStdDate(str_replace("/","-",$_REQUEST["ReturnedDate"]));
+        $InvoiceNo	 = str_replace("'","`",$_REQUEST["InvoiceNo"]);
+        $JobRef	 = str_replace("'","`",$_REQUEST["JobRef"]);
+        $LPORef	 = str_replace("'","`",$_REQUEST["LPORef"]);
+        $QuotaRef	 = str_replace("'","`",$_REQUEST["QuotaRef"]);
+        $ChargeDetails	 = str_replace("'","`",$_REQUEST["ChargeDetails"]);
+        $Amount	 = $_REQUEST["Amount"];
+        $IsSold = 0;
+        
+        if(isset($_REQUEST['IsSold']))
+            $IsSold=1;
+
+        $sql="insert into producttransactions(Owner,ProductID,RentedDate,ReturnedDate,InvoiceNo,JobRef,
+        LPORef,QuotaRef,ChargeDetails,Amount,IsSold) values(
+            '$Owner','$ProductID','$RentedDate','$ReturnedDate','$InvoiceNo','$JobRef',
+            '$LPORef','$QuotaRef','$ChargeDetails','$Amount','$IsSold'
+        )";
+
+    mysql_query($sql);
+    $TransactionID= mysql_insert_id();
+	$_REQUEST["mode"]="added";
 }
 ?>
 <!DOCTYPE html>
@@ -40,7 +68,6 @@ if ($_REQUEST['mode']=="del")
                     <div class="panel panel-primary">
                         <div class="panel-heading">
                             Rent/Sell Product
-                            <a href="../product/addproduct.php" class="pull-right text-white">Add Product</a>
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
@@ -51,10 +78,10 @@ if ($_REQUEST['mode']=="del")
                                     Success! <strong><?php echo "Product Added Successfully"; ?></strong>
                                 </div>
                             <?php } ?>
-                            <?php if($_REQUEST["mode"]=="edited"){ ?>
+                            <?php if($TransactionID!=""){ ?>
                                 <div class="alert alert-success alert-dismissable">
-                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true"><i class="fa fa-remove"></i></button>
-                                    Success! <strong><?php echo "Product Updated Successfully"; ?></strong>
+                                    <a href="invoicegenerator.php?TransactionID=<?php echo $TransactionID; ?>" target="_blank"><i class="fa fa-print"></i>
+                                    Success! <strong><?php echo "Click to Print Invoice"; ?></strong></a>
                                 </div>
                             <?php } ?>         
                             <?php if($_REQUEST["mode"]=="deleted"){ ?>
@@ -64,14 +91,7 @@ if ($_REQUEST['mode']=="del")
                                 </div>
                             <?php } ?>                                                     
                             
-                           <div id="viewModal" class="modal fade">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <!-- Content will be loaded here from "remote.php" file -->
-                                    </div>
-                                </div>
-                            </div>
-                            <form name="adminForm" method="post"> 
+                            <form name="adminForm" action="invoice.php?mode=Add" method="post"> 
                                 <div class="col-md-12">
                                     <div class="form-group col-md-3">
                                         <label>Category Name</label>
@@ -100,22 +120,13 @@ if ($_REQUEST['mode']=="del")
                                                             </div>';
                                                     }
                                                 }          
-                                    } ?>
-                                
-                                 </div>
-                            <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
-                                <thead>
-                                    <tr>
-                                        <th>
-                                            Product Description
-                                        </th>
-                                        <th>
-                                            Action
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                <?php
+                                    } ?>      
+                                                                                           
+                                    <div class="form-group col-md-3">
+                                        <label>Product Name</label>
+                                            <select class="form-control" name="Product" onchange="fnSubmit();"  required>  
+                                            <option value="">Select</option>                                        
+                                    <?php
                                         $sql = "select * from products p inner join categories c on p.CategoryID =c.CategoryID 
                                         where p.Deleted=0";
                                         if($_REQUEST["Category"]!=""){
@@ -148,57 +159,86 @@ if ($_REQUEST['mode']=="del")
 
                                                     if($cnt%2==0) $class=""; else $class="class=alt";
                                                     if($showdata) {
-                                                    ?>
-                                                    <tr <?php echo $class; ?>>
-                                                        <td>
-                                                            <?php 
                                                             $count=0;
-                                                            echo "<table class='table table-hover table-bordered'>";
                                                             $data = json_decode($obj->Fields, TRUE);
                                                            foreach($data as $key => $value) {
-                                                               echo '<tr>';
-                                                            echo "<th>".$key."</th>";
-                                                            echo "<td>".$value."</td>";
-                                                             echo '</tr>';
-                                                             $count++;
-                                                             if($count==2){
-                                                                 break;
-                                                             }
+                                                               $selected="";
+                                                               if($obj->ProductID==$_REQUEST["Product"])
+                                                                {
+                                                                    $selected="selected";
+                                                                }
+                                                                echo "<option ".$selected." value='".$obj->ProductID."'>".$key." = ".$value."</option>";                                                          
+                                                                 break;                                                            
                                                            } 
-                                                           echo "</table>";
-                                                           ?>
-                                                        </td>
-                                                        <td class="action"> 
-                                                            <a  href="../product/viewproduct.php?ProductID=<?php echo $obj->ProductID; ?>" title="View">
-                                                                <i class="fa fa-search">&nbsp;</i> View Product
-                                                            </a>   
-                                                            <?php if($data["Status"]=="In Stock") { ?>
-                                                            <a  href="../reports/addtransaction.php?ProductID=<?php echo $obj->ProductID; ?>" title="Add Transaction">
-                                                                <i class="fa fa-plus">&nbsp;</i> Rent Product
-                                                            </a>                                                              
-                                                            <?php } ?>                                              
-                                                        </td>
-                                                    </tr>  
-                                                    <?php
-                                                }
                                                 }
                                             }
-                                            else
-                                            {
-                                                echo '<tr class="alt"><td colspan="8"><b style="color:red;">No Product found.</b></td></tr>';
-                                            }                                
-                                ?>
-                                </tbody>
-                            </table>
-                            <?php if($numrows>0) { ?>
-                             <div class="form-group col-md-4">
-                                            <label>Bulk Actions</label>
-                                            <select class="form-control" onChange="fnBulk(this.value);" name ="bulk">
-                                                <option value="">Select</option>
-                                                <option value="del">Delete</option>
-                                            </select>
-                                        </div>
-                            <?php } ?>  
+                                        }                                    
+                                    ?>
+                                        </select>                                               
+                                    </div>
+                                     <?php if($TransactionID=="") { ?>  
+                                    <div class="form-group col-md-4">
+                                        <label>Owner</label>
+                                        <input type="text" class="form-control" name="OwnerDetails" required value="<?php echo $_REQUEST['OwnerDetails']; ?>" />                                            
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label>Rented Date</label>
+                                        <div class="input-group date">
+                                            <input type="text" 
+                                                    class="form-control " 
+                                                    name="RentedDate" 
+                                                    required/>  
+                                            <span class="input-group-addon">
+                                                <span class="fa fa-calendar"></span>
+                                            </span>   
+                                        </div>                                       
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label>Return Date</label>
+                                        <div class="input-group date">
+                                            <input type="text" 
+                                                    class="form-control " 
+                                                    name="ReturnedDate" 
+                                                    required/>  
+                                            <span class="input-group-addon">
+                                                <span class="fa fa-calendar"></span>
+                                            </span>   
+                                        </div>                                       
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label>Invoice No</label>
+                                        <input type="text" class="form-control" name="InvoiceNo" required value="<?php echo $_REQUEST['InvoiceNo']; ?>" />                                            
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label>Job Ref</label>
+                                        <input type="text" class="form-control" name="JobRef" required value="<?php echo $_REQUEST['JobRef']; ?>" />                                            
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label>LPO Ref</label>
+                                        <input type="text" class="form-control" name="LPORef" required value="<?php echo $_REQUEST['LPORef']; ?>" />                                            
+                                    </div>  
+                                    <div class="form-group col-md-4">
+                                        <label>Quota Ref</label>
+                                        <input type="text" class="form-control" name="QuotaRef" required value="<?php echo $_REQUEST['QuotaRef']; ?>" />                                            
+                                    </div>    
+                                    <div class="form-group col-md-4">
+                                        <label>Charge Details</label>
+                                        <textarea type="text" class="form-control" rows="5" name="ChargeDetails" required><?php echo $_REQUEST["ChargeDetails"]; ?></textarea>                                            
+                                    </div>  
+                                    <div class="form-group col-md-4">
+                                        <label>Amount</label>
+                                        <input type="text" class="form-control" name="Amount" required value="<?php echo $_REQUEST['Amount']; ?>" />                                            
+                                    </div>     
+                                    <div class="form-group col-md-4">
+                                        <label>Is Sold</label>
+                                        <input type="checkbox" class="form-control" name="IsSold" required value="<?php echo $_REQUEST['IsSold']; ?>" />                                            
+                                    </div>  
+                                        <div class="form-group col-md-12">
+                                            <button type="submit" class="btn btn-primary">Submit</button>
+                                            <button type="reset" class="btn btn-danger">Reset</button>
+                                        </div>  
+                                    <?php } ?>                                                                                                                                                                                                                                                                                                                                                             
+                                </div>
                             </form>                            
                             <!-- /.table-responsive -->    
                         </div>
@@ -214,11 +254,19 @@ if ($_REQUEST['mode']=="del")
         </div>
     </body>
     <?php echo fnScript(); ?>
-    <?php echo fnDataTableScript(); ?>
+
             <script>
         function fnSubmit(){
             document.adminForm.action="invoice.php";
             document.adminForm.submit();
         }
     </script>
+             <?php echo fnDatePickerScript(); ?>
+     <script type="text/javascript">
+            $(function () {
+                $('.date').datetimepicker({
+                    format: 'DD/MMM/YYYY'
+                });
+            });
+        </script>
 </html>
