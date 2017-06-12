@@ -12,7 +12,8 @@ function fnMetaHeaders(){
 }
 
 function fnDataTableCSS(){
-    $html ='<link href="../../vendor/datatables-plugins/dataTables.bootstrap.css" rel="stylesheet">';
+    $html ='<link href="../../vendor/datatables-plugins/dataTables.bootstrap.css" rel="stylesheet">
+    <link href="../../vendor/datatables-responsive/dataTables.responsive.css" rel="stylesheet">';
     return $html;
 }
 

@@ -13,6 +13,8 @@ if ($_REQUEST['mode']=="del")
 	header("location:viewproducts.php?mode=deleted");
 	die();
 }
+
+$cols="";
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -20,6 +22,25 @@ if ($_REQUEST['mode']=="del")
         <title><?php echo $_SESSION["CompanyName"]; ?></title>
         <?php echo fnCss(); ?>
         <?php echo fnDataTableCSS(); ?>
+        <style>
+            th.search input{
+                width:80% !important;
+            }
+
+            #fieldList {
+                display: none;
+            }
+
+            #button:hover #fieldList {
+                display: block;
+                background:#347FA9;
+                color:white;position:
+                absolute;z-index:9;
+                padding-left: 10px;
+                border-radius: 6px
+            }
+
+        </style>
     </head>
     <body>
         <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
@@ -104,27 +125,8 @@ if ($_REQUEST['mode']=="del")
                                     } ?>
                                 
                                  </div>
-                            <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
-                                <thead>
-                                    <tr>
-                                        <th>
-                                            <input type="checkbox" id="checkAll" />
-                                        </th>
-                                        <th>
-                                            Category
-                                        </th>
-                                    
-                                        <th>
-                                            Description
-                                        </th>
-                                        <th>
-                                            Action
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                <?php
-                                        $sql = "select * from products p inner join categories c on p.CategoryID =c.CategoryID 
+                            <?php if($_REQUEST["Category"]!="") { 
+                                    $sql = "select * from products p inner join categories c on p.CategoryID =c.CategoryID 
                                         where p.Deleted=0";
                                         if($_REQUEST["Category"]!=""){
                                             $sql= $sql." and p.CategoryID=".$_REQUEST["Category"];
@@ -132,6 +134,87 @@ if ($_REQUEST['mode']=="del")
                                         $sql.= " order by p.ProductID";
                                         $res=mysql_query($sql);
                                         $numrows=mysql_num_rows($res);
+                                        
+
+                            
+                            ?>
+                                                                    <?php
+                                            if($numrows>0)
+                                            {
+                                                $objFields=mysql_fetch_object($res);
+                                                $count=0;
+                                                $data = json_decode($objFields->Fields, TRUE);
+                                                echo '<div class="form-group  pull-right" id="button"><a href="javascript:void(0)"  type="button" class="btn btn-primary" >Column Customization</a>';
+                                                echo '<div class="form-group" id="fieldList">';
+                                                foreach(array_keys($data) as $key) {
+                                                    $checked="";
+                                                    if($count>6){
+                                                        $cols= $cols.$count.",";
+                                                    }
+                                                    else{
+                                                        $checked="checked";
+                                                    }
+  $count++;
+                                                    echo '
+                                                    <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" '.$checked.' onclick="fnShowHide('.$count.');" value="">'.$key.'
+                                    </label>
+                                </div>';
+
+                                                  
+                                                    
+                                                }
+                                              echo '</div></div><br clear="all" />' ; 
+                                            }
+                                        ?>
+                            <table width="100%" class="table table-striped table-bordered table-hover" id="example">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <input type="checkbox" id="checkAll" />
+                                        </th>
+                                        <?php
+                                            if($numrows>0)
+                                            {
+                                                $objFields=mysql_fetch_object($res);
+                                                $count=0;
+                                                $data = json_decode($objFields->Fields, TRUE);
+                                                
+                                                    foreach(array_keys($data) as $key) {
+                                                        echo "<th>".$key."</th>";
+                                                        $count++;
+                                                    }
+                                                
+                                            }
+                                        ?>
+                                        <th>
+                                            Action
+                                        </th>
+                                    </tr>
+                                        <tr>
+                                        <th>
+                                        </th>
+                                        <?php
+                                            if($numrows>0)
+                                            {
+                                                $objFields=mysql_fetch_object($res);
+                                                $count=0;
+                                                $data = json_decode($objFields->Fields, TRUE);
+                                                
+                                                    foreach(array_keys($data) as $key) {
+                                                        echo "<th class='search'>".$key."</th>";
+                                                        $count++;
+                                                    }
+                                                
+                                            }
+                                        ?>
+                                        <th>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                <?php
                                         	if($numrows>0)
                                             {
                                                 $cnt=0;
@@ -155,34 +238,25 @@ if ($_REQUEST['mode']=="del")
                                                     }
 
                                                     if($cnt%2==0) $class=""; else $class="class=alt";
-                                                    if($showdata) {
+                                                    $data = json_decode($obj->Fields, TRUE);
+                                                    if($showdata && count($data)>=6) {
+                                                        
                                                     ?>
                                                     <tr <?php echo $class; ?>>
                                                         <td>
-                                                            <input type="checkbox" name="chkSelect[]"  class="check"value="<?php echo $obj->ProductID; ?>">
-                                                        </td>                                  
+                                                            <input type="checkbox" name="chkSelect[]"  class="check" value="<?php echo $obj->ProductID; ?>">
+                                                        </td>                                                                                      
                                                         
-                                                        <td>
-                                                            <?php echo $obj->CategoryName; ?>
-                                                        </td>
-                                                        <td>
                                                             <?php 
                                                             $count=0;
-                                                            echo "<table class='table table-hover table-bordered'>";
-                                                            $data = json_decode($obj->Fields, TRUE);
-                                                           foreach($data as $key => $value) {
-                                                               echo '<tr>';
-                                                            echo "<th>".$key."</th>";
-                                                            echo "<td>".$value."</td>";
-                                                             echo '</tr>';
-                                                             $count++;
-                                                             if($count==2){
-                                                                 break;
-                                                             }
-                                                           } 
-                                                           echo "</table>";
+                                                            
+                                                            if(count($data)>=6){
+                                                                foreach(array_values($data) as $value) {
+                                                                    echo "<td>".$value."</td>";
+                                                                }
+                                                           }
                                                            ?>
-                                                        </td>
+                                                        
                                                         <td class="action">
                                                             <a href='../product/editproduct.php?mode=edit&Id=<?php echo $obj->ProductID; ?>'>
                                                                 <i class="fa fa-edit">&nbsp;</i>
@@ -214,7 +288,9 @@ if ($_REQUEST['mode']=="del")
                                                 <option value="del">Delete</option>
                                             </select>
                                         </div>
-                            <?php } ?>  
+                            <?php }
+                            } ?>  
+                             
                             </form>                            
                             <!-- /.table-responsive -->    
                         </div>
@@ -231,10 +307,54 @@ if ($_REQUEST['mode']=="del")
     </body>
     <?php echo fnScript(); ?>
     <?php echo fnDataTableScript(); ?>
-            <script>
+    <script>
+        $('#example thead th.search').each(function() {
+            var title = $('#example thead th').eq($(this).index()).text();
+            $(this).html('<input type="text" class="form-control" placeholder="Search ' + title + '" />');
+        });
+        
+        // DataTable
+        var example = 
+            $('#example').DataTable({
+                //"responsive" :true,
+                "columnDefs": [ {
+                    "targets": 0,
+                    "orderable": false
+                },
+            {
+                "targets": [ <?php echo $cols; ?> ],
+                "visible": false
+            }
+             ],
+                order: [ 1, 'desc' ]            
+            });
+
+        example.columns().eq(0).each(function(colIdx) {
+            $('input', example.column(colIdx).header()).on('keyup change', function() {
+                example
+                    .column(colIdx)
+                    .search(this.value)
+                    .draw();
+            });
+        
+            $('input', example.column(colIdx).header()).on('click', function(e) {
+                e.stopPropagation();
+            });
+        });
+
+        function fnShowHide( iCol )
+        {
+            /* Get the DataTables object again - this is not a recreation, just a get of the object */
+            var oTable = $('#example').dataTable();
+            
+            var bVis = oTable.fnSettings().aoColumns[iCol].bVisible;
+            oTable.fnSetColumnVis( iCol, bVis ? false : true );
+        }
+
         function fnSubmit(){
             document.adminForm.action="viewproducts.php";
             document.adminForm.submit();
         }
+
     </script>
 </html>
