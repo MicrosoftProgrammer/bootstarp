@@ -104,7 +104,7 @@
 
         $groupby = $_REQUEST["groups"];
         $groupby = $fieldArray[$groupby];
-        $header = array($groupby,"Stock Count") ;    
+        $header = array($groupby, $_REQUEST["Sum"]) ;    
 
         $sql = "select * from products p inner join categories c on p.CategoryID =c.CategoryID 
         where p.Deleted=0";

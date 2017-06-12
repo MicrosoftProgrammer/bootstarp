@@ -92,9 +92,12 @@ if ($_REQUEST['mode']=="del")
                                          <th>
                                             Is Required
                                         </th>
-                                     <th>
+                                        <th>
                                             Is Filter
                                         </th>
+                                        <th>
+                                            Mandatory
+                                        </th>                                        
                                         <th>
                                             Action
                                         </th>
@@ -132,6 +135,9 @@ if ($_REQUEST['mode']=="del")
                                                         <td>
                                                             <?php if($obj->ShowInFilter) echo "Yes"; else echo "No"; ?>
                                                         </td>
+                                                        <td>
+                                                            <?php if($obj->MandatoryField) echo "Yes"; else echo "No"; ?>
+                                                        </td>                                                        
                                                         <td class="action">
                                                             <a href='../productfield/editproductfield.php?mode=edit&Id=<?php echo $obj->ProductFieldID; ?>'>
                                                                 <i class="fa fa-edit">&nbsp;</i>

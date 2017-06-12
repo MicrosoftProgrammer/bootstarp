@@ -17,9 +17,12 @@
             $keys = $keys.$row->ProductFieldName.",";
         }
 
+        $data = $_POST;
+unset($data["Category"]);
+
        $keys = substr($keys, 0, -1);     
        $keys = explode (",", $keys);      
-       $json = array_combine($keys, array_values($_POST));
+       $json = array_combine($keys, array_values($data));
        $json=json_encode($json);
 
         $CategoryID = $_REQUEST["Category"];
@@ -58,7 +61,7 @@
                     <div class="panel panel-primary">
                         <div class="panel-heading">
                             Add Product
-                                <a href="../product/viewcategories.php" class="pull-right text-white">View Product</a>
+                                <a href="../product/viewproducts.php" class="pull-right text-white">View Product</a>
                         </div>
                         <div class="panel-body">
                             <?php if($error!=""){ ?>

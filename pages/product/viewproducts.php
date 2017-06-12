@@ -40,7 +40,8 @@ if ($_REQUEST['mode']=="del")
                     <div class="panel panel-primary">
                         <div class="panel-heading">
                             View Product
-                            <a href="../product/addproduct.php" class="pull-right text-white">Add Product</a>
+                            <a href="../product/bulkimport.php" class="pull-right text-white">Bulk Import</a>
+                            <a href="../product/addproduct.php" style="margin-right:30px;" class="pull-right text-white">Add Product</a>
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">

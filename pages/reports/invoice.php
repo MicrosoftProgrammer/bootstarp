@@ -231,7 +231,7 @@ if ($_REQUEST['mode']=="Add" && $TransactionID=="")
                                     </div>     
                                     <div class="form-group col-md-4">
                                         <label>Is Sold</label>
-                                        <input type="checkbox" class="form-control" name="IsSold" required value="<?php echo $_REQUEST['IsSold']; ?>" />                                            
+                                        <input type="checkbox" class="form-control" name="IsSold" value="<?php echo $_REQUEST['IsSold']; ?>" />                                            
                                     </div>  
                                         <div class="form-group col-md-12">
                                             <button type="submit" class="btn btn-primary">Submit</button>

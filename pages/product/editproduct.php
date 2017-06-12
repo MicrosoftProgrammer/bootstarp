@@ -150,6 +150,11 @@
                                                                 </div>';
                                                     } 
                                                     else  if($obj->Type=="Select"){
+                                             
+                                                        if($_REQUEST[$obj->ProductFieldKey]=="")
+                                                        {
+                                                            $_REQUEST[$obj->ProductFieldKey]=$productfield[$obj->ProductFieldName];
+                                                        }
                                                         echo ' <div class="form-group col-md-4">
                                                                     <label>'.$obj->ProductFieldName.'</label>
                                                                     <select '.$isRequired.' class="form-control" name="'.$obj->ProductFieldKey.'">

@@ -24,6 +24,11 @@
         else
             $ShowInFilter=0;
 
+        if(isset($_REQUEST['MandatoryField']))
+            $MandatoryField=1;
+        else
+            $MandatoryField=0;            
+
         $ProductFieldKey = slugify($ProductFieldName);
             
         $sql="select * from productfields where ProductFieldName='".$ProductFieldName."'";
@@ -32,8 +37,8 @@
 
         if($num==0)
         {
-            $sql = "INSERT INTO productfields (ProductFieldName,ProductFieldType,IsRequired,ProductFieldKey,ShowInFilter)
-            VALUES ('$ProductFieldName','$ProductFieldType','$IsRequired','$ProductFieldKey','$ShowInFilter')";        
+            $sql = "INSERT INTO productfields (ProductFieldName,ProductFieldType,IsRequired,ProductFieldKey,ShowInFilter,MandatoryField)
+            VALUES ('$ProductFieldName','$ProductFieldType','$IsRequired','$ProductFieldKey','$ShowInFilter','$MandatoryField')";        
             mysql_query($sql);
             header("location:viewproductfield.php?mode=added");
         }
@@ -90,7 +95,7 @@
                                                 <?php fnDropDown("ProductFieldType","ProductFieldType","ProductFieldTypeID","ProductFieldType"); ?>
                                             </select>                                            
                                         </div>    
-                                        <div class="form-group col-md-6">
+                                        <div class="form-group col-md-4">
                                             <label>Is Required</label>
                                             <div class="checkbox">
                                                 <label>
@@ -98,14 +103,22 @@
                                                 </label>
                                             </div>                                          
                                         </div>   
-                                        <div class="form-group col-md-6">
+                                        <div class="form-group col-md-4">
                                             <label>Show In Filter</label>
                                             <div class="checkbox">
                                                 <label>
                                                     <input name="ShowInFilter" type="checkbox" value="1">
                                                 </label>
                                             </div>                                          
-                                        </div>                                    
+                                        </div>   
+                                        <div class="form-group col-md-4">
+                                            <label>Mandatory Field</label>
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input name="MandatoryField" type="checkbox" value="1">
+                                                </label>
+                                            </div>                                          
+                                        </div>                                                                                                                   
                                         <div class="form-group col-md-12">
                                             <button type="submit" class="btn btn-primary">Submit</button>
                                             <button type="reset" class="btn btn-danger">Reset</button>

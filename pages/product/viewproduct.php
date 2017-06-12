@@ -30,6 +30,7 @@
                     <div class="panel panel-primary">
                         <div class="panel-heading">
                             View Product Detail
+                             
                             <a href="../product/viewproducts.php" class="pull-right text-white">View Products</a>
                         </div>
                         <!-- /.panel-heading -->

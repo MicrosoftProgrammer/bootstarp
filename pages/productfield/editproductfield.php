@@ -30,6 +30,12 @@
             $ShowInFilter=1;
         else
             $ShowInFilter=0;
+
+        if(isset($_REQUEST['MandatoryField']))
+            $MandatoryField=1;
+        else
+            $MandatoryField=0;        
+
         $ProductFieldKey = slugify($ProductFieldName);
         
         $sql="select * from productfields where ProductFieldName='".$ProductFieldName."' and ProductFieldID!=".$_REQUEST['Id'];
@@ -42,6 +48,7 @@
             $sql.= "ProductFieldName	=	'".$ProductFieldName."',";
             $sql.= "ProductFieldType	=	'".$ProductFieldType."',";
             $sql.= "IsRequired	=	'".$IsRequired."',";
+            //$sql.= "MandatoryField	=	'".$MandatoryField."',";
             $sql.= "ShowInFilter	=	'".$ShowInFilter."',";
             $sql.= "ProductFieldKey	=	'".$ProductFieldKey."'";
             $sql.= " where ProductFieldID='".$_REQUEST['Id']."'";	
@@ -105,7 +112,7 @@
                                                 fnDropDown("ProductFieldType","ProductFieldType","ProductFieldTypeID","ProductFieldType"); ?>
                                             </select>                                            
                                         </div>    
-                                        <div class="form-group col-md-6">
+                                        <div class="form-group col-md-4">
                                             <label>Is Required</label>
                                             <div class="checkbox">
                                                 <label>
@@ -113,14 +120,22 @@
                                                 </label>
                                             </div>                                          
                                         </div>     
-                                        <div class="form-group col-md-6">
+                                        <div class="form-group col-md-4">
                                             <label>Show In Filter</label>
                                             <div class="checkbox">
                                                 <label>
                                                     <input name="ShowInFilter" <?php if($obj->ShowInFilter=="1") echo "checked"; ?> type="checkbox" value="1">
                                                 </label>
                                             </div>                                          
-                                        </div>                                                                              
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label>Mandatory Field</label>
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input disabled name="MandatoryField" <?php if($obj->MandatoryField=="1") echo "checked"; ?> type="checkbox" value="1">
+                                                </label>
+                                            </div>                                          
+                                        </div>                                                                                                                          
                                         <div class="form-group col-md-12">
                                             <button type="submit" class="btn btn-primary">Submit</button>
                                             <button type="reset" class="btn btn-danger">Reset</button>

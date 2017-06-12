@@ -202,7 +202,7 @@ function fnFieldDropDown($FieldMappingID,$VariableName)
         {
             if($_REQUEST[$VariableName]==$obj->ProductFieldValue)
             {
-                $html.= '<option value="'.$obj->ProductFieldValue.'" selected="selected">'.$obj->ProductFieldValue.'</option>';
+                $html.= '<option value="'.$obj->ProductFieldValue.'" selected>'.$obj->ProductFieldValue.'</option>';
             }
             else
             {

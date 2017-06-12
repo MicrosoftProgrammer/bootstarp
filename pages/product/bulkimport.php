@@ -66,6 +66,8 @@
                     <div class="panel panel-primary">
                         <div class="panel-heading">
                             Bulk Product Import
+
+                               <a href="../product/viewproducts.php" class="pull-right text-white">View Product</a>
                               
                         </div>
                         <div class="panel-body">
