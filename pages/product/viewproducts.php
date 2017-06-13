@@ -23,6 +23,15 @@ $cols="";
         <?php echo fnCss(); ?>
         <?php echo fnDataTableCSS(); ?>
         <style>
+
+        table{
+            overflow-x:scroll !important;
+            display :inline-block;
+        }
+
+        table th{
+             white-space: nowrap;
+        }
             th.search input{
                 width:80% !important;
             }
@@ -144,8 +153,13 @@ $cols="";
                                                 $objFields=mysql_fetch_object($res);
                                                 $count=0;
                                                 $data = json_decode($objFields->Fields, TRUE);
-                                                echo '<div class="form-group  pull-right" id="button"><a href="javascript:void(0)"  type="button" class="btn btn-primary" >Column Customization</a>';
-                                                echo '<div class="form-group" id="fieldList">';
+                                                echo '<div class="form-group  pull-right" id="button"><a href="javascript:void(0)"  type="button" class="btn btn-primary" >Show/Hide Columns</a>';
+                                                echo '<div class="form-group" id="fieldList">
+                                                                    <label>
+                                        <input id="fieldcheck" type="checkbox">Select All
+                                    </label>
+                                    <hr>
+                                                ';
                                                 foreach(array_keys($data) as $key) {
                                                     $checked="";
                                                     if($count>6){
@@ -158,7 +172,7 @@ $cols="";
                                                     echo '
                                                     <div class="checkbox">
                                     <label>
-                                        <input type="checkbox" '.$checked.' onclick="fnShowHide('.$count.');" value="">'.$key.'
+                                        <input class="fieldcheck" type="checkbox" '.$checked.' onclick="fnShowHide('.$count.');" value="">'.$key.'
                                     </label>
                                 </div>';
 
@@ -310,7 +324,7 @@ $cols="";
     <script>
         $('#example thead th.search').each(function() {
             var title = $('#example thead th').eq($(this).index()).text();
-            $(this).html('<input type="text" class="form-control" placeholder="Search ' + title + '" />');
+            $(this).html('<input type="text" class="form-control" placeholder="Search" />');
         });
         
         // DataTable

@@ -18,21 +18,42 @@
         }
 
         $data = $_POST;
-unset($data["Category"]);
+        unset($data["Category"]);
 
        $keys = substr($keys, 0, -1);     
        $keys = explode (",", $keys);      
-       $json = array_combine($keys, array_values($data));
+       $json = array_combine($keys, array_values(array_map('trim',$data)));
        $json=json_encode($json);
+       print_r(json_decode($json,TRUE));
 
         $CategoryID = $_REQUEST["Category"];
 
         $sql = "INSERT INTO products (CategoryID,Fields)
         VALUES ('$CategoryID','$json')";        
         mysql_query($sql);
+
+        $Owner = str_replace("'","`",$_REQUEST["Owner"]);
+        $ProductID = mysql_insert_id();
+        $PurchaseDate = ConvertToStdDate(str_replace("/","-",$_REQUEST["PurchaseDate"]));
+        $DueDate = ConvertToStdDate(str_replace("/","-",$_REQUEST["DueDate"]));
+        $InvoiceNo	 = str_replace("'","`",$_REQUEST["InvoiceNo"]);
+        $JobRef	 = str_replace("'","`",$_REQUEST["JobRef"]);
+        $LPORef	 = str_replace("'","`",$_REQUEST["LPORef"]);
+        $QuotaRef	 = str_replace("'","`",$_REQUEST["QuotaRef"]);
+        $ChargeDetails	 = str_replace("'","`",$_REQUEST["ChargeDetails"]);
+        $PurchaseValue	 = $_REQUEST["PurchaseValue"];
+
+        if($InvoiceNo!=""){
+            $sql="insert into producttransactions(Owner,ProductID,PurchaseDate,DueDate,InvoiceNo,JobRef,
+                    LPORef,QuotaRef,ChargeDetails,PurchaseValue) values(
+                        '$Owner','$ProductID','$PurchaseDate','$DueDate','$InvoiceNo','$JobRef',
+                        '$LPORef','$QuotaRef','$ChargeDetails','$PurchaseValue'
+                    )";
+
+            mysql_query($sql);     
+        }
         
-        header("location:viewproducts.php?mode=added");
-   
+        header("location:viewproducts.php?mode=added");   
    }
 ?>
 <!DOCTYPE html>
@@ -110,6 +131,7 @@ unset($data["Category"]);
                                                         echo ' <div class="form-group col-md-4">
                                                                     <label>'.$obj->ProductFieldName.'</label>
                                                                     <input type="'.$type.'" class="form-control" name="'.$obj->ProductFieldKey.'" 
+                                                                    value="'.$_REQUEST[$obj->ProductFieldKey].'" 
                                                                     placeholder="'.$obj->ProductFieldName.'"
                                                                     '.$isRequired.'/>                                            
                                                                 </div>';
@@ -137,6 +159,12 @@ unset($data["Category"]);
                                                                     <textarea class="form-control" rows="4" name="'.$obj->ProductFieldKey.'" 
                                                                     placeholder="'.$obj->ProductFieldName.'"
                                                                     '.$isRequired.'></textarea>                                        
+                                                                </div>';
+                                                    } 
+                                                    else  if($obj->Type=="file"){
+                                                        echo ' <div class="form-group col-md-4">
+                                                                    <label>'.$obj->ProductFieldName.'</label>
+                                                                    <input type="file" class="form-control" name="'.$obj->ProductFieldKey.'" />                                         
                                                                 </div>';
                                                     } 
                                                     else  if($obj->Type=="CheckBox"){

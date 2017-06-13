@@ -448,4 +448,11 @@ function convert_number_to_words($number) {
 
     return strtoupper($string);
 }
+
+function removeBOM($data) {
+    if (0 === strpos(bin2hex($data), 'efbbbf')) {
+       return substr($data, 3);
+    }
+    return $data;
+}
 ?>

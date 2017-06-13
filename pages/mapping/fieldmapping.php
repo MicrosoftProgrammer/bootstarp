@@ -12,6 +12,12 @@
     if ($_REQUEST['mode']=="update")
     {
         $CategoryID=$_REQUEST["Category"];
+        $ProductFieldName=$_REQUEST["ProductFieldName"];
+        $ProductFieldKey=$_REQUEST["ProductFieldKey"];
+        $sql="update categories set ProductPrimaryName='$ProductFieldName',
+        ProductPrimaryKey='$ProductFieldKey' where CategoryID=".$CategoryID;        
+        mysql_query($sql);
+
         for ($i=0;$i<count($_REQUEST['field']);$i++)
         {
             $ProductFieldID = $_REQUEST['field'][$i];
@@ -110,29 +116,67 @@
                             <div class="row">
                                 <div class="col-md-12">
                                    <form name="adminForm" method="post" action="fieldmapping.php?mode=update" enctype="multipart/form-data">   
-                                        <div class="form-group col-md-12">
+                                        <div class="form-group col-md-4">
                                             <label>Category Name</label>
                                             <select class="form-control" id="Category" name="Category" onchange="fnSubmit();" required>
                                                 <?php fnDropDown("categories","CategoryName","CategoryID","Category"); ?>
                                             </select>                                               
                                         </div>
-                                        
+                                         <div class="form-group col-md-12">
                                         <?php if($_REQUEST['Category']!="") { 
                                         $sql= "select *,fm.deleted as unmapped,pf.ProductFieldID as ProductFieldID from productfields pf left join fieldmapping fm
                                         on fm.ProductFieldID = pf.ProductFieldID where pf.Deleted=0 order by fm.CategoryID,fm.DisplayOrder";
                                         $res=mysql_query($sql);
-
                                         echo '<ul>
                                                 <li id="draggable" class="ui-state-highlight">Drag and Drop to change order</li>
                                             </ul>';
-                                        echo "<ul id='sortable'>";                                        
-                                        while($obj =mysql_fetch_object($res)) {                                        
+                                        echo "<ul id='sortable'>";  
+                                        $fieldnames = array();   
+                                        $fieldkeys = array();                                     
+                                        while($obj =mysql_fetch_object($res)) {   
+                                            if($obj->unmapped==0 && ($obj->CategoryID==$_REQUEST['Category'] || $obj->MandatoryField=="1")){            
+                                                array_push($fieldnames,$obj->ProductFieldName);
+                                                array_push($fieldkeys,$obj->ProductFieldKey);                        
+                                            }
                                         ?>                                        
                                         <li <?php if($obj->unmapped=="0" && $obj->CategoryID==$_REQUEST['Category']) echo 'id='.$obj->FieldMappingID.''; ?> class="form-group col-md-3 <?php if($obj->unmapped!="0" || $obj->CategoryID!=$_REQUEST['Category']) echo 'unsortable'; ?>" style="list-style:none">
                                             <label class="checkbox-inline">
-                                                <input name="field[]" <?php if($obj->unmapped=="0" && $obj->CategoryID==$_REQUEST['Category']) echo "checked"; ?> value="<?php echo $obj->ProductFieldID; ?>" type="checkbox"><?php echo $obj->ProductFieldName; ?>
+                                                <input <?php if($obj->MandatoryField=="1") echo 'class="mandatory"';?> name="field[]" <?php if($obj->unmapped==0 && ($obj->CategoryID==$_REQUEST['Category'] || $obj->MandatoryField=="1")) echo "checked"; ?> value="<?php echo $obj->ProductFieldID; ?>" type="checkbox"><?php echo $obj->ProductFieldName; ?>
                                             </label>
                                         </li>
+                                        <?php } ?>
+                                        </div>
+                                        <?php if(count($fieldnames) >0) { 
+                                               $sql="select * from categories where CategoryID=".$_REQUEST["Category"];
+                                                $res = mysql_query($sql);
+                                                $obj = mysql_fetch_object($res); 
+                                        ?>
+                                          <div class="form-group col-md-4">
+                                            <label>Product Primary Name</label>
+                                            <select class="form-control" id="ProductFieldName" name="ProductFieldName" required>
+                                            <?php 
+                                                foreach($fieldnames as $fieldname){
+                                                    if($obj->ProductPrimaryName==$fieldname)
+                                                        echo '<option selected value="'.$fieldname.'">'.$fieldname.'</option>';
+                                                    else
+                                                        echo '<option value="'.$fieldname.'">'.$fieldname.'</option>';
+                                                }
+                                             ?>
+                                            </select>                                               
+                                        </div>
+                                          <div class="form-group col-md-4">
+                                            <label>Product Primary Key</label>
+                                            <select class="form-control" id="ProductFieldKey" name="ProductFieldKey" required>
+                                            <?php 
+                                                foreach($fieldkeys as $fieldkey){
+                                                    if($obj->ProductPrimaryKey==$fieldkey)
+                                                        echo '<option selected value="'.$fieldkey.'">'.$fieldkey.'</option>';
+                                                    else
+                                                        echo '<option value="'.$fieldkey.'">'.$fieldkey.'</option>';
+                                                }
+                                             ?>                                            
+                                            </select>                                               
+                                        </div>
                                         <?php } ?>
                                         <div class="form-group col-md-12">
                                             <button type="submit" class="btn btn-primary">Submit</button>
@@ -166,7 +210,16 @@
         }
 
 
-        	$( function() {
+    $( function() {
+        $(".mandatory").on("click", function (e) {
+            var checkbox = $(this);
+            if (!checkbox.is(":checked")) {
+                // do the confirmation thing here
+                e.preventDefault();
+                return true;
+            }
+        });
+
 		$( "#sortable" ).sortable({
              items: "li:not(.unsortable)",
 			revert: true,
@@ -188,12 +241,14 @@
                 });
             }
 		});
+
 		$( "#draggable" ).draggable({
 			connectToSortable: "#sortable",
 			helper: "clone",
 			revert: "invalid"
 		});
 		$( "ul, li" ).disableSelection();
-	} );
+	});
+
     </script>
 </html>
