@@ -10,6 +10,7 @@ $filter = array();
     <head>
     <title><?php echo $_SESSION["CompanyName"]; ?></title>
         <?php echo fnCss(); ?>
+        <?php echo fnDataTableCSS(); ?>
     </head>
     <body>
         <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
@@ -21,7 +22,7 @@ $filter = array();
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-lg-12">
-                        <h1 class="page-header">Report</h1>
+                        <h1 class="page-header">Product Transaction Report</h1>
                     </div>
                     <!-- /.col-lg-12 -->
                 </div>
@@ -29,7 +30,7 @@ $filter = array();
                 <div class="col-lg-12">
                     <div class="panel panel-primary">
                         <div class="panel-heading">
-                            Product Report
+                            Product Transaction Datewise/Month Report
                         </div>
                         <div class="panel-body">
                             <?php if($error!=""){ ?>
@@ -40,7 +41,7 @@ $filter = array();
                             <?php } ?>
                             <div class="row">
                                 <div class="col-md-12">
-                                   <form name="adminForm" method="post"  enctype="multipart/form-data">   
+                                   <form name="adminForm" method="post" action="reportgenerator.php?mode=Product" enctype="multipart/form-data">   
                                         <div class="form-group col-md-3">
                                             <label>Category Name</label>
                                             <select class="form-control" name="Category" onchange="fnSubmit();" required>
@@ -48,7 +49,6 @@ $filter = array();
                                             </select>                                               
                                         </div>
                                     <?php if($_REQUEST["Category"]!="") {
-
                                         
                                         $CategoryID = $_REQUEST["Category"];
                                             $sql="select *, pft.ProductFieldType as Type from productfields pf 
@@ -69,15 +69,39 @@ $filter = array();
                                                             </div>';
                                                     }
                                                 }
-                                                                                        echo ' <div class="form-group col-md-12">
+                                                                        
+                                                echo '<textarea name="filters" style="display:none;">'.json_encode($filter).'</textarea>';          
+                                    } ?>
+                                    <div class="form-group col-md-4">
+                                        <label>From Date</label>
+                                        <div class="input-group date">
+                                            <input type="text" 
+                                                    class="form-control " 
+                                                    name="FromDate" 
+                                                    required/>  
+                                            <span class="input-group-addon">
+                                                <span class="fa fa-calendar"></span>
+                                            </span>   
+                                        </div>                                       
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label>To Date</label>
+                                        <div class="input-group date">
+                                            <input type="text" 
+                                                    class="form-control " 
+                                                    name="ToDate" 
+                                                    required/>  
+                                            <span class="input-group-addon">
+                                                <span class="fa fa-calendar"></span>
+                                            </span>   
+                                        </div>                                       
+                                    </div>
+                                         <div class="form-group col-md-12">
                                                                <a href="javascript:void(0)" onclick="fnReport(1)" class="btn btn-primary" type="button"><i class="fa fa-file-excel-o fa-2x"></i></a>
                                                                <a href="javascript:void(0)" onclick="fnReport(2)" class="btn btn-primary" type="button"><i class="fa fa-file fa-2x"></i></a>       
                                                                <a href="javascript:void(0)" onclick="fnReport(3)" class="btn btn-primary" type="button"><i class="fa fa-file-word-o fa-2x"></i></a>  
                                                                <a href="javascript:void(0)" onclick="fnReport(4)" class="btn btn-primary" type="button"><i class="fa fa-file-pdf-o fa-2x"></i></a>                                          
-                                                            </div>';
-                                                echo '<textarea name="filters" style="display:none;">'.json_encode($filter).'</textarea>';          
-                                    } ?>
-
+                                                            </div>
                                     </form>
                                 </div>
                                 <!-- /.col-lg-6 (nested) -->
@@ -98,26 +122,33 @@ $filter = array();
     <?php echo fnScript(); ?>
             <script>
         function fnSubmit(){
-            document.adminForm.action="productreport.php";
+            document.adminForm.action="datewisereport.php";
             document.adminForm.submit();
         }
 
         function fnReport(arg){
             if(arg==1){
-                document.adminForm.action="../reports/reportgenerator.php?mode=Product";
+                document.adminForm.action="../reports/reportgenerator.php?mode=date";
                 document.adminForm.submit();
             }
             if(arg==2){
-                document.adminForm.action="../reports/types/csv.php?mode=Product";
+                document.adminForm.action="../reports/types/csv.php?mode=date";
                 document.adminForm.submit();  
             }            
             if(arg==3){
-                document.adminForm.action="../reports/types/word.php?mode=Product";
+                document.adminForm.action="../reports/types/word.php?mode=date";
                 document.adminForm.submit();  
             }
-        }        
-
+        }   
 
         
     </script>
+                 <?php echo fnDatePickerScript(); ?>
+     <script type="text/javascript">
+            $(function () {
+                $('.date').datetimepicker({
+                    format: 'DD/MMM/YYYY'
+                });
+            });
+        </script>
 </html>

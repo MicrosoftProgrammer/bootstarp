@@ -40,7 +40,7 @@ $filter = array();
                             <?php } ?>
                             <div class="row">
                                 <div class="col-md-12">
-                                   <form name="adminForm" method="post" action="reportgenerator.php?mode=Overview" enctype="multipart/form-data">   
+                                   <form name="adminForm" method="post" enctype="multipart/form-data">   
                                         <div class="form-group col-md-3">
                                             <label>Category Name</label>
                                             <select class="form-control" name="Category" onchange="fnSubmit();" required>
@@ -84,13 +84,18 @@ $filter = array();
 
                                                 $html=$html.'</select></div>';
                                                 
-                                                echo '</div>'.$html.'<textarea name="filters" style="display:none;">'.json_encode($filter).'</textarea>';          
+                                                echo '</div>'.$html.'<textarea name="filters" style="display:none;">'.json_encode($filter).'</textarea>';   
+                                                                                                                                        echo ' <div class="form-group col-md-12">
+                                                               <a href="javascript:void(0)" onclick="fnReport(1)" class="btn btn-primary" type="button"><i class="fa fa-file-excel-o fa-2x"></i></a>
+                                                               <a href="javascript:void(0)" onclick="fnReport(2)" class="btn btn-primary" type="button"><i class="fa fa-file fa-2x"></i></a>       
+                                                               <a href="javascript:void(0)" onclick="fnReport(3)" class="btn btn-primary" type="button"><i class="fa fa-file-word-o fa-2x"></i></a>  
+                                                               <a href="javascript:void(0)" onclick="fnReport(4)" class="btn btn-primary" type="button"><i class="fa fa-file-pdf-o fa-2x"></i></a>                                          
+                                                            </div>';       
+
+                                                
                                     } ?>
 
-                                        <div class="form-group col-md-12">
-                                            <button type="submit" class="btn btn-primary">Submit</button>
-                                            <button type="reset" class="btn btn-danger">Reset</button>
-                                        </div>
+
                                     </form>
                                 </div>
                                 <!-- /.col-lg-6 (nested) -->
@@ -109,12 +114,25 @@ $filter = array();
         </div>
     </body>
     <?php echo fnScript(); ?>
-            <script>
+    <script>
         function fnSubmit(){
             document.adminForm.action="overviewreport.php";
             document.adminForm.submit();
         }
 
-        
+        function fnReport(arg){
+            if(arg==1){
+                document.adminForm.action="../reports/reportgenerator.php?mode=Overview";
+                document.adminForm.submit();
+            }
+            if(arg==2){
+                document.adminForm.action="../reports/types/csv.php?mode=Overview";
+                document.adminForm.submit();  
+            }            
+            if(arg==3){
+                document.adminForm.action="../reports/types/word.php?mode=Overview";
+                document.adminForm.submit();  
+            }
+        }           
     </script>
 </html>
