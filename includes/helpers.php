@@ -223,6 +223,16 @@ function GetData($TableName,$ColumnID,$QueryID,$ReturnName)
     return $obj->$ReturnName;
 }
 
+function GetProductData($ProductID)
+{
+  $sql = "select * from products p inner join categories c on p.CategoryID =c.CategoryID 
+        where p.ProductID=".$ProductID;
+    $res=mysql_query($sql);
+    $obj=mysql_fetch_object($res);
+    $data = json_decode($obj->Fields,TRUE);
+    return $data[$obj->ProductPrimaryName];
+}
+
 function LoggedInUser()
 {
     if($_SESSION["UserID"]=="")

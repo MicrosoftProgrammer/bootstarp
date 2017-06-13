@@ -23,8 +23,7 @@
        $keys = substr($keys, 0, -1);     
        $keys = explode (",", $keys);      
        $json = array_combine($keys, array_values(array_map('trim',$data)));
-       $json=json_encode($json);
-       print_r(json_decode($json,TRUE));
+       $json=json_encode($json);       
 
         $CategoryID = $_REQUEST["Category"];
 

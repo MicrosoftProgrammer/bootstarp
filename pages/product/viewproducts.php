@@ -130,7 +130,9 @@ $cols="";
                                                                     </select>                                               
                                                             </div>';
                                                     }
-                                                }          
+                                                }    
+
+                                                 echo '<textarea name="filters" style="display:none;">'.json_encode($filter).'</textarea>';                
                                     } ?>
                                 
                                  </div>
@@ -150,15 +152,24 @@ $cols="";
                                                                     <?php
                                             if($numrows>0)
                                             {
+                                                echo ' <div class="form-group col-md-3">
+                                                               <a href="javascript:void(0)" onclick="fnReport(1)" class="btn btn-primary" type="button"><i class="fa fa-file-excel-o fa-2x"></i></a>
+                                                               <a href="javascript:void(0)" onclick="fnReport(2)" class="btn btn-primary" type="button"><i class="fa fa-file fa-2x"></i></a>       
+                                                               <a href="javascript:void(0)" onclick="fnReport(3)" class="btn btn-primary" type="button"><i class="fa fa-file-word-o fa-2x"></i></a>  
+                                                               <a href="javascript:void(0)" onclick="fnReport(4)" class="btn btn-primary" type="button"><i class="fa fa-file-pdf-o fa-2x"></i></a>                                          
+                                                            </div>';
+
                                                 $objFields=mysql_fetch_object($res);
                                                 $count=0;
                                                 $data = json_decode($objFields->Fields, TRUE);
                                                 echo '<div class="form-group  pull-right" id="button"><a href="javascript:void(0)"  type="button" class="btn btn-primary" >Show/Hide Columns</a>';
                                                 echo '<div class="form-group" id="fieldList">
+                                                <div class="checkbox">
                                                                     <label>
                                         <input id="fieldcheck" type="checkbox">Select All
                                     </label>
                                     <hr>
+                                    </div>
                                                 ';
                                                 foreach(array_keys($data) as $key) {
                                                     $checked="";
@@ -369,6 +380,29 @@ $cols="";
             document.adminForm.action="viewproducts.php";
             document.adminForm.submit();
         }
+
+        $("#fieldcheck").click(function(){
+            $('.fieldcheck').not(this).prop('checked', this.checked);
+                var oTable = $('#example').dataTable();
+                for(i=0;i<oTable.fnSettings().aoColumns.length;i++){
+                    oTable.fnSetColumnVis( i, this.checked );
+                }            
+        });
+
+        function fnReport(arg){
+            if(arg==1){
+                document.adminForm.action="../reports/reportgenerator.php?mode=Product";
+                document.adminForm.submit();
+            }
+            if(arg==2){
+                document.adminForm.action="../reports/types/csv.php?mode=Product";
+                document.adminForm.submit();  
+            }            
+            if(arg==3){
+                document.adminForm.action="../reports/types/word.php?mode=Product";
+                document.adminForm.submit();  
+            }
+        }        
 
     </script>
 </html>

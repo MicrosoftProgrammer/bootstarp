@@ -47,7 +47,7 @@
                     </td>
                     <td style="border: 1px solid #ddd;" >
                         <b>Invoice No :</b><?php echo $obj->InvoiceNo; ?><br/>
-                        <b>Date       :</b> <?php echo $obj->TransactionDate; ?><br/>
+                        <b>Date       :</b> <?php echo ConvertToCustomDate($obj->PurchaseDate); ?><br/>
                         <b>Job Ref    :</b> <?php echo $obj->JobRef; ?><br/>
                         <b>LPO Ref    :</b> <?php echo $obj->LPORef; ?><br/>
                         <b>Quota Ref    :</b> <?php echo $obj->QuotaRef;  ?>
@@ -69,14 +69,14 @@
                      <br>
                       <br>
                                        </td>
-                    <td style="border: 1px solid #ddd;"><?php echo ConvertToRupees($obj->Amount); ?></td>
+                    <td style="border: 1px solid #ddd;"><?php echo ConvertToRupees($obj->PurchaseValue); ?></td>
                 </tr>
                 
                 <tr>
                     <td colspan="2" style="border: 1px solid #ddd;">
-                        Total : <strong><?php echo convert_number_to_words($obj->Amount); ?></strong> Only
+                        Total : <strong><?php echo convert_number_to_words($obj->PurchaseValue); ?></strong> Only
                     </td>
-                     <td style="border: 1px solid #ddd;"><strong><?php echo ConvertToRupees($obj->Amount); ?></strong></td>
+                     <td style="border: 1px solid #ddd;"><strong><?php echo ConvertToRupees($obj->PurchaseValue); ?></strong></td>
                 </tr> 
                 <tr>
                     <td style="border: 1px solid #ddd;" colspan="2"><b><?php echo $_SESSION["CompanyName"]; ?></b>
