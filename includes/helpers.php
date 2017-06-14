@@ -90,6 +90,9 @@ function fnScript(){
                 alert("Please select atleast one item");
             } 
         }
+        $("body").append(`<footer>
+            <p>Copyright &copy; '.date("Y").' '.$_SESSION["CompanyName"].'. All Rights Reservered</p>
+        </footer>`);
     </script>';    
     return $html;
 }
@@ -103,7 +106,7 @@ function fnDataTableScript(){
     $(document).ready(function() {
         $("#dataTables-example").DataTable({
             responsive: true,
-            order: [],
+             order: [ 1, "asc" ],
             columnDefs: [ { orderable: false, targets: [0] } ]
         });
     });

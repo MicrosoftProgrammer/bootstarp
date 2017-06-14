@@ -67,7 +67,7 @@
                 <div id="graph" class="row">
                     <div class="col-lg-12">
                     <!-- /.panel -->
-                        <div class="panel panel-default">
+                        <div class="panel panel-primary">
                             <div class="panel-heading">
                                 <i class="fa fa-bar-chart-o fa-fw"></i> Category
                             </div>

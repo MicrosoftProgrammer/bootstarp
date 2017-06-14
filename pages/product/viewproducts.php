@@ -220,7 +220,7 @@ $cols="";
                                             Action
                                         </th>
                                     </tr>
-                                        <tr>
+                                        <tr class="searchtr">
                                         <th>
                                         </th>
                                         <?php

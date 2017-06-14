@@ -4,7 +4,7 @@
 // Global Styles
 
 body {
-    background-color: @gray-lightest;
+    background-color: @blue-hardest;
 }
 
 // Wrappers
@@ -24,13 +24,33 @@ body {
         position: inherit;
         margin: 0 0 0 250px;
         padding: 0 30px;
-        border-left: 1px solid darken(@gray-lightest, 6.5%);
+        border-left: 1px solid darken(@blue-lightest, 6.5%);
     }
 }
 
 // Navigation
 
 // --Topbar
+
+.navbar-default{
+    background: @blue-hardest;
+    a {
+        color :@white-color !important;
+        :hover{
+           text-decoration: underline;
+        }
+    }
+}
+
+.nav>li>a:focus, .nav>li>a:hover {
+    text-decoration: none;
+    color: @blue-hardest !important;
+    background-color: @white-color !important;
+}
+
+.navbar-brand{
+    color : @white-color !important;
+}
 
 .navbar-top-links {
     margin-right: 0;
@@ -60,6 +80,10 @@ body {
 .navbar-top-links .dropdown-menu li a {
     padding: 3px 20px;
     min-height: 0;
+    :hover{
+        background-color: @white-color !important;
+        color : @blue-hardest !important;
+    }
 }
 
 .navbar-top-links .dropdown-menu li a div {
@@ -88,6 +112,7 @@ body {
 .navbar-top-links .dropdown-user {
     right: 0;
     left: auto;
+    background: @brand-primary;
 }
 
 // --Sidebar
@@ -104,10 +129,15 @@ body {
 }
 
 .sidebar ul li {
-    border-bottom: 1px solid darken(@gray-lightest, 6.5%);
+    border-bottom: 1px solid darken(@blue-lightest, 6.5%);
     a {
         &.active {
-            background-color: @gray-lighter;
+            background-color: @white-color;
+            color :@blue-hardest !important;
+        }
+        :hover {
+            background-color: @white-color;
+            color :@blue-hardest !important;
         }
     }
 }
@@ -249,7 +279,7 @@ table.dataTable thead .sorting_asc,
 table.dataTable thead .sorting_desc,
 table.dataTable thead .sorting_asc_disabled,
 table.dataTable thead .sorting_desc_disabled {
-    background: transparent;
+    color: @gray-lightest;
 }
 
 table.dataTable thead .sorting_asc:after {
@@ -269,6 +299,23 @@ table.dataTable thead .sorting:after {
     float: right;
     font-family: fontawesome;
     color: rgba(50,50,50,.5);
+}
+
+table.table-striped thead th{
+    background-color: #002031 !important;
+    color: @white-color;
+}
+
+.table-striped>tbody>tr:nth-of-type(odd) {
+    background-color: #E8EEFA !important;
+}
+
+.table-striped>tbody>tr:nth-of-type(even) {
+    background-color: #FBFBFB !important;
+}
+
+table.table-striped thead tr.searchtr th{
+        background-color: #E7E7E7 !important;
 }
 
 // Circle Buttons 
@@ -318,6 +365,21 @@ table.dataTable thead .sorting:after {
 
 .huge {
     font-size: 40px;
+}
+
+.panel-primary {
+    border-color: @brand-primary;
+    > .panel-heading {
+        border-color: @brand-primary;
+        color: white;
+        background-color: @brand-primary;
+    }
+    > a {
+        color: @white-color !important;
+        &:hover {
+            color: @white-color !important;
+        }
+    }
 }
 
 .panel-green {
@@ -551,4 +613,16 @@ table.dataTable thead .sorting:after {
     color: @white-color;
 }
 
+footer{
+    padding: 10px;
+    background-color: @blue-lightest;
+    color : white;
+    p {
+        text-align: center;
+    }
+}
 
+.dropdown-user li:hover,.dropdown-user li a:hover{
+    background-color: transparent !important;
+    text-decoration: underline;
+}
