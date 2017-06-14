@@ -14,46 +14,76 @@
         $CategoryID= $_REQUEST["Category"];
         $i=0;
         $header = array();
+      
         foreach ($Sheets as $Index => $Name)
         {
+             
             $Reader -> ChangeSheet($Index);
 
             foreach ($Reader as $Row)
             {
+               
                if($i==0){
                     $header =$Row;
                }
                else{
+              
                    $jsonArray = array();
-                    foreach (array_combine( $header, $Row ) as $name => $value) {                        
-                        $jsonArray[$name] = $value;
+                   if(count($header)== count($Row)){
+                        foreach (array_combine( $header, $Row ) as $name => $value) {       
+                            $value = str_replace('"','`',$value);                 
+                            $jsonArray[$name] = trim($value);
+                        }
+                    }
+                    else{
+                          foreach($header as $key => $value){
+                            if(!isset($Row[$key])) $Row[$key] = "";
+                          }
+                          if(count($header) == count($Row)){
+                                foreach (array_combine( $header, $Row ) as $name => $value) {       
+                                    $value = str_replace('"','`',$value);                 
+                                    $jsonArray[$name] = trim($value);
+                                }
+                          }
                     }
 
-                    $json = json_encode($jsonArray);
-                    $sql ="insert into products(CategoryID,Fields) values('$CategoryID','$json')";
-                    mysql_query($sql);
+                    if(count($jsonArray)>0){
+                        $json = json_encode($jsonArray);
+                        $sql ="insert into products(CategoryID,Fields) values('$CategoryID','$json')";
+                        mysql_query($sql);
 
-                    $Owner = str_replace("'","`",$jsonArray["Owner"]);
-                    $ProductID = mysql_insert_id();
-                    $PurchaseDate = ConvertToStdDate(str_replace("/","-",$jsonArray["Purchase Date"]));
-                    $DueDate = ConvertToStdDate(str_replace("/","-",$jsonArray["Due Date"]));
-                    $InvoiceNo	 = str_replace("'","`",$jsonArray["Invoice No"]);
-                    $JobRef	 = str_replace("'","`",$jsonArray["Job Ref"]);
-                    $LPORef	 = str_replace("'","`",$jsonArray["LPO Ref"]);
-                    $QuotaRef	 = str_replace("'","`",$jsonArray["Quota Ref"]);
-                    $ChargeDetails	 = str_replace("'","`",$jsonArray["Charge Details"]);
-                    $PurchaseValue	 = $jsonArray["Purchase Value"];
+                        $Owner = str_replace("'","`",$jsonArray["Owner"]);
+                        $ProductID = mysql_insert_id();
+                        $PurchaseDate = ConvertToStdDate(str_replace("/","-",$jsonArray["Purchase Date"]));
+                        $DueDate = ConvertToStdDate(str_replace("/","-",$jsonArray["Due Date"]));
+                        $InvoiceNo	 = str_replace("'","`",$jsonArray["Invoice No"]);
+                        $JobRef	 = str_replace("'","`",$jsonArray["Job Ref"]);
+                        $LPORef	 = str_replace("'","`",$jsonArray["LPO Ref"]);
+                        $QuotaRef	 = str_replace("'","`",$jsonArray["Quota Ref"]);
+                        $ChargeDetails	 = str_replace("'","`",$jsonArray["Charge Details"]);
+                        $PurchaseValue	 = $jsonArray["Purchase Value"];
 
-                    if($InvoiceNo!=""){
-                        $sql="insert into producttransactions(Owner,ProductID,PurchaseDate,DueDate,InvoiceNo,JobRef,
-                        LPORef,QuotaRef,ChargeDetails,PurchaseValue) values(
-                            '$Owner','$ProductID','$PurchaseDate','$DueDate','$InvoiceNo','$JobRef',
-                            '$LPORef','$QuotaRef','$ChargeDetails','$PurchaseValue'
-                        )";
-                        mysql_query($sql);     
-                    }
+                        $status = 0;
+                        if($jsonArray["Status"]=="Returned"){
+                            $status = 1;
+                        }
+
+                        if($InvoiceNo!=""){
+                            $sql="insert into producttransactions(Owner,ProductID,PurchaseDate,DueDate,InvoiceNo,JobRef,
+                            LPORef,QuotaRef,ChargeDetails,PurchaseValue,Status) values(
+                                '$Owner','$ProductID','$PurchaseDate','$DueDate','$InvoiceNo','$JobRef',
+                                '$LPORef','$QuotaRef','$ChargeDetails','$PurchaseValue','$status'
+                            )";
+                            mysql_query($sql);     
+                        }
+                }
+                else{
+                    print_r($Row);
+                    exit();
+                }
                }
-              $i++;
+                $i++;
+                
             }
         }
 

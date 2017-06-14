@@ -171,14 +171,16 @@ $cols="";
                                     <hr>
                                     </div>
                                                 ';
+                                                $count=0;
                                                 foreach(array_keys($data) as $key) {
                                                     $checked="";
                                                     if($count>6){
-                                                        $cols= $cols.$count.",";
+                                                        $cols= $cols.(string)$count.",";
                                                     }
                                                     else{
                                                         $checked="checked";
                                                     }
+                                                  
   $count++;
                                                     echo '
                                                     <div class="checkbox">
@@ -192,6 +194,7 @@ $cols="";
                                                 }
                                               echo '</div></div><br clear="all" />' ; 
                                             }
+                                             $cols = rtrim($cols,",");
                                         ?>
                             <table width="100%" class="table table-striped table-bordered table-hover" id="example">
                                 <thead>
@@ -240,9 +243,11 @@ $cols="";
                                 </thead>
                                 <tbody>
                                 <?php
+                              
                                         	if($numrows>0)
                                             {
                                                 $cnt=0;
+                                                $res=mysql_query($sql);
                                                 while($obj=mysql_fetch_object($res))
                                                 { 
                                                     $cnt++;
@@ -264,22 +269,26 @@ $cols="";
 
                                                     if($cnt%2==0) $class=""; else $class="class=alt";
                                                     $data = json_decode($obj->Fields, TRUE);
-                                                    if($showdata && count($data)>=6) {
+                                                    
+                                        
+                                                    if($showdata && count($data)>0) {
                                                         
                                                     ?>
+                                                       
                                                     <tr <?php echo $class; ?>>
                                                         <td>
+                                                     
                                                             <input type="checkbox" name="chkSelect[]"  class="check" value="<?php echo $obj->ProductID; ?>">
                                                         </td>                                                                                      
                                                         
                                                             <?php 
                                                             $count=0;
                                                             
-                                                            if(count($data)>=6){
+                                                           
                                                                 foreach(array_values($data) as $value) {
                                                                     echo "<td>".$value."</td>";
                                                                 }
-                                                           }
+                                                           
                                                            ?>
                                                         
                                                         <td class="action">
@@ -333,6 +342,7 @@ $cols="";
     <?php echo fnScript(); ?>
     <?php echo fnDataTableScript(); ?>
     <script>
+    
         $('#example thead th.search').each(function() {
             var title = $('#example thead th').eq($(this).index()).text();
             $(this).html('<input type="text" class="form-control" placeholder="Search" />');

@@ -51,6 +51,7 @@ if ($_REQUEST['mode']=="Add" && $TransactionID=="")
         $data["Charge Details"] = $ChargeDetails;
         $data["Purchase Value"] =  $PurchaseValue;
         $data["Invoice No"] =  $InvoiceNo;
+        $data["Status"] =  "Rented";
 
         $sql= "update products set Fields='".json_encode($data)."' where ProductID=".$_REQUEST["Product"];
         mysql_query($sql);

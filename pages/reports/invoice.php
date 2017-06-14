@@ -19,9 +19,18 @@ if ($_REQUEST['mode']=="ret")
 	for ($i=0;$i<count($_REQUEST['chkSelect']);$i++)
 	{
 		mysql_query("update producttransactions set Status=1 where TransactionID=".$_REQUEST['chkSelect'][$i]."");
+        $sql="select * from products p inner join producttransactions pt on p.ProductID = pt.ProductID where pt.TransactionID=".$_REQUEST['chkSelect'][$i];
+        $obj=mysql_fetch_object($res);
+        $data = json_decode($obj->Fields,TRUE);
+        $data["Status"] = "Returned";
+
+        $sql= "update products set Fields='".json_encode($data)."' where ProductID=".$obj->ProductID;
+        echo $sql;
+        mysql_query($sql);
+
 	}
 
-	header("location:invoice.php?mode=updated");
+//	header("location:invoice.php?mode=updated");
 	die();
 }
 ?>
@@ -149,7 +158,7 @@ if ($_REQUEST['mode']=="ret")
                                                                 <i class="fa fa-print">&nbsp;</i>
                                                             </a>  
                                                             <?php if($obj->ProductStatus=="0") { ?>     
-                                                            <a href="javascript:fnStatus('<?php echo $obj->TransactionID; ?>');" title="Delete">
+                                                            <a href="javascript:fnStatus('<?php echo $obj->TransactionID; ?>');" title="Status">
                                                                 <i class="fa fa-arrow-left" aria-hidden="true"></i>
                                                             </a>      
                                                             <?php } ?>                                                                                                                                                                  
