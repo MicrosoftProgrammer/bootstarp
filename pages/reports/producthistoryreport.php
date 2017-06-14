@@ -9,7 +9,7 @@ $filter = array();
 <html lang="en">
     <head>
     <title><?php echo $_SESSION["CompanyName"]; ?></title>
-        <?php echo fnCss(); ?>
+        <?php echo fnCss(); ?>       
     </head>
     <body>
         <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
@@ -73,7 +73,7 @@ $filter = array();
                                     } ?>
                                      <div class="form-group col-md-4">
                                         <label>Product Name</label>
-                                            <select class="form-control" name="Product" onchange="fnSubmit();"  required>  
+                                            <select class="form-control" name="Product" onchange="fnSubmit();" >  
                                             <option value="">Select</option>                                        
                                     <?php
                                         $sql = "select * from products p inner join categories c on p.CategoryID =c.CategoryID 
@@ -154,7 +154,7 @@ $filter = array();
 
         function fnReport(arg){
             if(arg==1){
-                document.adminForm.action="../reports/reportgenerator.php?mode=ProductHistory";
+                document.adminForm.action="../reports/types/excel.php?mode=ProductHistory";
                 document.adminForm.submit();
             }
             if(arg==2){

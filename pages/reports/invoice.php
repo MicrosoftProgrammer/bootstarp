@@ -20,17 +20,16 @@ if ($_REQUEST['mode']=="ret")
 	{
 		mysql_query("update producttransactions set Status=1 where TransactionID=".$_REQUEST['chkSelect'][$i]."");
         $sql="select * from products p inner join producttransactions pt on p.ProductID = pt.ProductID where pt.TransactionID=".$_REQUEST['chkSelect'][$i];
+        $res = mysql_query($sql);
         $obj=mysql_fetch_object($res);
         $data = json_decode($obj->Fields,TRUE);
         $data["Status"] = "Returned";
 
         $sql= "update products set Fields='".json_encode($data)."' where ProductID=".$obj->ProductID;
-        echo $sql;
-        mysql_query($sql);
-
+        mysql_query($sql);    
 	}
 
-//	header("location:invoice.php?mode=updated");
+	header("location:invoice.php?mode=updated");
 	die();
 }
 ?>

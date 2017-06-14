@@ -10,7 +10,7 @@ $filter = array();
     <head>
     <title><?php echo $_SESSION["CompanyName"]; ?></title>
         <?php echo fnCss(); ?>
-        <?php echo fnDataTableCSS(); ?>
+         <?php echo fnDatePickerCss(); ?>
     </head>
     <body>
         <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
@@ -73,6 +73,57 @@ $filter = array();
                                                 echo '<textarea name="filters" style="display:none;">'.json_encode($filter).'</textarea>';          
                                     } ?>
                                     <div class="form-group col-md-4">
+                                        <label>Product Name</label>
+                                            <select class="form-control" name="Product" onchange="fnSubmit();" >  
+                                            <option value="">Select</option>                                        
+                                    <?php
+                                        $sql = "select * from products p inner join categories c on p.CategoryID =c.CategoryID 
+                                        where p.Deleted=0";
+                                        if($_REQUEST["Category"]!=""){
+                                            $sql= $sql." and p.CategoryID=".$_REQUEST["Category"];
+                                        }
+                                        
+                                        $res=mysql_query($sql);
+                                        $numrows=mysql_num_rows($res);
+                                        	if($numrows>0)
+                                            {
+                                                $cnt=0;
+                                                while($obj=mysql_fetch_object($res))
+                                                { 
+                                                    $cnt++;
+                                                    $showdata =true;
+                                                    if(count($filter)>0){
+                                                         $data = json_decode($obj->Fields, TRUE);
+                                                        
+                                                         for($k=0;$k<count($filter);$k++){
+                                                            $filterkey = $_REQUEST[$filter[$k]["Key"]];
+                                                  
+                                                            $filterdata = $filter[$k]["Name"];
+                                                            if($filterkey !=""){
+                                                                if($filterkey!=$data[$filterdata]){
+                                                                    $showdata= false;
+                                                                }
+                                                            }
+                                                         }
+                                                    }
+
+                                                    if($cnt%2==0) $class=""; else $class="class=alt";
+                                                    if($showdata) {
+                                                            $count=0;
+                                                            $data = json_decode($obj->Fields, TRUE);
+                                                               $selected="";
+                                                               if($obj->ProductID==$_REQUEST["Product"])
+                                                                {
+                                                                    $selected="selected";
+                                                                }
+                                                                echo "<option ".$selected." value='".$obj->ProductID."'>".$data[$obj->ProductPrimaryName]."</option>";                                                          
+                                                }
+                                            }
+                                        }                                    
+                                    ?>
+                                        </select>                                               
+                                    </div>
+                                    <div class="form-group col-md-4">
                                         <label>From Date</label>
                                         <div class="input-group date">
                                             <input type="text" 
@@ -128,7 +179,7 @@ $filter = array();
 
         function fnReport(arg){
             if(arg==1){
-                document.adminForm.action="../reports/reportgenerator.php?mode=date";
+                document.adminForm.action="../reports/types/excel.php?mode=date";
                 document.adminForm.submit();
             }
             if(arg==2){

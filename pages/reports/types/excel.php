@@ -1,18 +1,35 @@
 <?php
+
     include('../../../includes/connection.php');
     include('../../../includes/helpers.php');
     include('../../../includes/templates.php');
+    include_once('../../../includes/excel/xlsxwriter.class.php');
 
     $filename="";
     $CategoryID=$_REQUEST["Category"];
     $CategoryName = GetData("categories","CategoryID",$CategoryID,"CategoryName");
-    $filename = slugify($CategoryName)."_".date("Y-m-d H:i:s")."_".$_REQUEST["mode"];  
+    $filename = slugify($CategoryName)."_".date("Y-m-d H:i:s")."_".$_REQUEST["mode"].".xlsx";      
 
-    header("Content-Type: application/csv");
-    header("Content-Disposition: attachment;Filename=".$filename.".csv");
+    header('Content-disposition: attachment; filename="'.XLSXWriter::sanitize_filename($filename).'"');
+    header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+    header('Content-Transfer-Encoding: binary');
+    header('Cache-Control: must-revalidate');
+    header('Pragma: public');
 
+    if($_REQUEST["mode"]=="Product"){
+        $sql="select * from productfields pf inner join fieldmapping fm on pf.ProductFieldID = fm.ProductFieldID
+        where fm.CategoryID=".$CategoryID." and fm.Deleted=0 order by fm.DisplayOrder";
+        $res = mysql_query($sql);
+        $header = array();   
+        $styles = array( 'font'=>'Arial','font-size'=>10,'font-style'=>'bold', 'fill'=>'#eee', 'halign'=>'center', 'border'=>'left,right,top,bottom');       
+        $headerstyles = array( 'font'=>'Arial','font-size'=>10,'font-style'=>'bold', 'fill'=>'#eeffee', 'halign'=>'center', 'border'=>'left,right,top,bottom');              
+        
+        while($obj=mysql_fetch_object($res)){
+            array_push($header,$obj->ProductFieldName);
+        }
 
-  if($_REQUEST["mode"]=="Product"){
+        $data = array();
+
         $sql = "select * from products p inner join categories c on p.CategoryID =c.CategoryID 
         where p.Deleted=0";
         if($_REQUEST["Category"]!=""){
@@ -22,53 +39,46 @@
         $res=mysql_query($sql);
         $numrows=mysql_num_rows($res);
 
+        $writer = new XLSXWriter();
+        $writer->setAuthor($_SESSION["CompanyName"]); 
+        $writer->writeSheetRow($CategoryName,$header,$headerstyles);           
+
         if($numrows>0)
         {
-            $objFields=mysql_fetch_object($res);
-            $count=0;
-            $data = json_decode($objFields->Fields, TRUE);
-            
-            foreach(array_keys($data) as $key) {
-                echo $key.",";
-                $count++;
-            }
-            
-            echo "\n";
-
             $cnt=0;
             while($obj=mysql_fetch_object($res))
             { 
-                $cnt++;
                 $showdata =true;
+                $filter=json_decode($_REQUEST['filters'],TRUE);
                 if(count($filter)>0){
-                    $data = json_decode($obj->Fields, TRUE);
+                    $allFields = json_decode($obj->Fields, TRUE);
                 
                     for($k=0;$k<count($filter);$k++) {
-                    $filterkey = $_REQUEST[$filter[$k]["Key"]];        
-                    $filterdata = $filter[$k]["Name"];
-
-                        if($filterkey !=""){
-                            if($filterkey!=$data[$filterdata]){
+                        $filterkey = $_REQUEST[$filter[$k]["Key"]];
+                
+                        $filterdata = $filter[$k]["Name"];
+                        if($filterkey !="") {
+                            if($filterkey!=$allFields[$filterdata]){
                                 $showdata= false;
                             }
                         }
                     }
                 }
 
-                if($cnt%2==0) $class=""; else $class="class=alt";
-                $data = json_decode($obj->Fields, TRUE);
-                if($showdata && count($data)>=6) {                                                    
-                    $count=0;
-                    
-                    if(count($data)>=6){
-                        foreach(array_values($data) as $value) {
-                            echo str_replace(",","`",$value).",";
-                        }
+                if($showdata){
+                    $datum = json_decode($obj->Fields, TRUE);
+                    $dataVal = array();
+                    $count =0;
+                    foreach ($header as $key) {
+                        $dataVal[$count]= $datum[$key];
+                        $count++;
                     }
+                    $writer->writeSheetRow($CategoryName,$dataVal,$styles); 
                 }
-                echo "\n";            
             }
-        }  
+        }                                         
+ 
+        $writer->writeToStdOut(); 
     }
     else if($_REQUEST["mode"]=="Overview"){
 
@@ -85,10 +95,7 @@
 
         $groupby = $_REQUEST["groups"];
         $groupby = $fieldArray[$groupby];
-
-        echo str_replace(",","`",$groupby).",";
-        echo str_replace(",","`",$_REQUEST["Sum"]).",";
-        echo "\n"; 
+        $header = array($groupby, $_REQUEST["Sum"]) ;    
 
         $sql = "select * from products p inner join categories c on p.CategoryID =c.CategoryID 
         where p.Deleted=0";
@@ -97,7 +104,13 @@
         }
         $sql.= " order by p.ProductID";
         $res=mysql_query($sql);
-        $numrows=mysql_num_rows($res);         
+        $numrows=mysql_num_rows($res);
+
+        $styles = array( 'font'=>'Arial','font-size'=>10,'font-style'=>'bold', 'fill'=>'#eee', 'halign'=>'center', 'border'=>'left,right,top,bottom');       
+        $headerstyles = array( 'font'=>'Arial','font-size'=>10,'font-style'=>'bold', 'fill'=>'#eeffee', 'halign'=>'center', 'border'=>'left,right,top,bottom');                      
+        $writer = new XLSXWriter();
+        $writer->setAuthor($_SESSION["CompanyName"]); 
+        $writer->writeSheetRow($CategoryName,$header,$headerstyles);         
 
         if($numrows>0)
         {
@@ -125,18 +138,25 @@
 
             $data = array();
             foreach ($sums as $label => $count) {
-                echo str_replace(",","`",$label).",";
-                echo str_replace(",","`",$count).",";
-                echo "\n";  
+                $dataVal = array();
+                $dataVal[$groupby]= $label;
+                $dataVal["Stock Count"] = $count;
+                $writer->writeSheetRow($CategoryName,$dataVal,$styles);                
             }        
         }  
+
+
+  
+        $writer->writeToStdOut(); 
     }
     else if($_REQUEST["mode"]=="ProductHistory"){
         $sql="select * from productfields pf inner join fieldmapping fm on pf.ProductFieldID = fm.ProductFieldID
         where fm.CategoryID=".$CategoryID." and fm.Deleted=0 order by fm.DisplayOrder";
         $res = mysql_query($sql);
-        echo "S.No,Product Name,Invoice No,Owner,Purchase Date,Purchase Value,Due Date,Job Ref,LPO Ref,Quota Ref,Charge Details,Status";   
-        echo "\n";
+        $header = array("S.No","Product Name","Invoice No","Owner","Purchase Date","Purchase Value","Due Date","Job Ref","LPO Ref","Quota Ref","Charge Details","Status");   
+        $styles = array( 'font'=>'Arial','font-size'=>10,'font-style'=>'bold', 'fill'=>'#eee', 'halign'=>'center', 'border'=>'left,right,top,bottom');       
+        $headerstyles = array( 'font'=>'Arial','font-size'=>10,'font-style'=>'bold', 'fill'=>'#eeffee', 'halign'=>'center', 'border'=>'left,right,top,bottom');              
+
         $data = array();
 
         $sql = "select * from producttransactions pt inner join products p on p.ProductID=pt.ProductID 
@@ -152,6 +172,11 @@
 
         $res=mysql_query($sql);
         $numrows=mysql_num_rows($res);
+
+        $writer = new XLSXWriter();
+        $writer->setAuthor($_SESSION["CompanyName"]); 
+        $writer->writeSheetRow($CategoryName,$header,$headerstyles);           
+
         if($numrows>0)
         {
             $cnt=0;
@@ -177,30 +202,38 @@
 
                 if($showdata){
                     $datum = json_decode($obj->Fields, TRUE);
-                    echo $cnt.",";
-                    echo str_replace(",","`",$datum[$obj->ProductPrimaryName]).",";
-                    echo str_replace(",","`",$obj->Owner).",";
-                    echo str_replace(",","`",$obj->InvoiceNo).",";
-                    echo str_replace(",","`",ConvertToCustomDate($obj->PurchaseDate)).",";
-                    echo str_replace(",","`",$obj->PurchaseValue).",";
-                    echo str_replace(",","`",ConvertToCustomDate($obj->DueDate)).",";
-                    echo str_replace(",","`",$obj->JobRef).",";
-                    echo str_replace(",","`",$obj->LPORef).",";
-                    echo str_replace(",","`",$obj->QuotaRef).",";
-                    echo str_replace(",","`",$obj->ChargeDetails).",";
-                    echo $obj->Status==1 ? "Returned" : "Rented";
-                    echo "\n";
+                    $dataVal = array();
+                    $dataVal[0]=$cnt;
+                    $dataVal[1]=$datum[$obj->ProductPrimaryName];
+                    $dataVal[2]=$obj->Owner;
+                    $dataVal[3]=$obj->InvoiceNo;
+                    $dataVal[4]=ConvertToCustomDate($obj->PurchaseDate);
+                    $dataVal[5]=$obj->PurchaseValue;
+                    $dataVal[6]=ConvertToCustomDate($obj->DueDate);
+                    $dataVal[7]=$obj->JobRef;
+                    $dataVal[8]=$obj->LPORef;
+                    $dataVal[9]=$obj->QuotaRef;
+                    $dataVal[10]=$obj->ChargeDetails;
+                    $dataVal[11]=$obj->Status==1 ? "Returned" : "Rented";
+
+                    $writer->writeSheetRow($CategoryName,$dataVal,$styles); 
                 }
             }
         }                                         
+ 
+        $writer->writeToStdOut(); 
     }
     else if($_REQUEST["mode"]=="date"){
+        $CategoryID=$_REQUEST["Category"];
+        $CategoryName = GetData("categories","CategoryID",$CategoryID,"CategoryName");
+        $filename = slugify($CategoryName)."-History.xlsx";
+
         $sql="select * from productfields pf inner join fieldmapping fm on pf.ProductFieldID = fm.ProductFieldID
         where fm.CategoryID=".$CategoryID." and fm.Deleted=0 order by fm.DisplayOrder";
         $res = mysql_query($sql);
-        
-        echo "S.No,Product Name,Invoice No,Owner,Purchase Date,Purchase Value,Due Date,Job Ref,LPO Ref,Quota Ref,Charge Details,Status";   
-        echo "\n";
+        $header = array("S.No","Product Name","Invoice No","Owner","Purchase Date","Purchase Value","Due Date","Job Ref","LPO Ref","Quota Ref","Charge Details","Status");   
+        $styles = array( 'font'=>'Arial','font-size'=>10,'font-style'=>'bold', 'fill'=>'#eee', 'halign'=>'center', 'border'=>'left,right,top,bottom');       
+        $headerstyles = array( 'font'=>'Arial','font-size'=>10,'font-style'=>'bold', 'fill'=>'#eeffee', 'halign'=>'center', 'border'=>'left,right,top,bottom');              
 
         $data = array();
 
@@ -226,6 +259,10 @@
         $res=mysql_query($sql);
         $numrows=mysql_num_rows($res);
 
+        $writer = new XLSXWriter();
+        $writer->setAuthor($_SESSION["CompanyName"]); 
+        $writer->writeSheetRow($CategoryName,$header,$headerstyles);           
+
         if($numrows>0)
         {
             $cnt=0;
@@ -251,21 +288,25 @@
 
                 if($showdata){
                     $datum = json_decode($obj->Fields, TRUE);
-                    echo $cnt.",";
-                    echo str_replace(",","`",$datum[$obj->ProductPrimaryName]).",";
-                    echo str_replace(",","`",$obj->Owner).",";
-                    echo str_replace(",","`",$obj->InvoiceNo).",";
-                    echo str_replace(",","`",ConvertToCustomDate($obj->PurchaseDate)).",";
-                    echo str_replace(",","`",$obj->PurchaseValue).",";
-                    echo str_replace(",","`",ConvertToCustomDate($obj->DueDate)).",";
-                    echo str_replace(",","`",$obj->JobRef).",";
-                    echo str_replace(",","`",$obj->LPORef).",";
-                    echo str_replace(",","`",$obj->QuotaRef).",";
-                    echo str_replace(",","`",$obj->ChargeDetails).",";
-                    echo $obj->Status==1 ? "Returned" : "Rented";
-                    echo "\n";
+                    $dataVal = array();
+                    $dataVal[0]=$cnt;
+                    $dataVal[1]=$datum[$obj->ProductPrimaryName];
+                    $dataVal[2]=$obj->Owner;
+                    $dataVal[3]=$obj->InvoiceNo;
+                    $dataVal[4]=ConvertToCustomDate($obj->PurchaseDate);
+                    $dataVal[5]=$obj->PurchaseValue;
+                    $dataVal[6]=ConvertToCustomDate($obj->DueDate);
+                    $dataVal[7]=$obj->JobRef;
+                    $dataVal[8]=$obj->LPORef;
+                    $dataVal[9]=$obj->QuotaRef;
+                    $dataVal[10]=$obj->ChargeDetails;
+                    $dataVal[11]=$obj->Status==1 ? "Returned" : "Rented";
+
+                    $writer->writeSheetRow($CategoryName,$dataVal,$styles); 
                 }
             }
-        }                                          
-    }                                  
+        }                                         
+ 
+        $writer->writeToStdOut(); 
+    }    
 ?>

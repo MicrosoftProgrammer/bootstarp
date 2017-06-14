@@ -104,7 +104,7 @@ $filter = array();
 
         function fnReport(arg){
             if(arg==1){
-                document.adminForm.action="../reports/reportgenerator.php?mode=Product";
+                document.adminForm.action="../reports/types/excel.php?mode=Product";
                 document.adminForm.submit();
             }
             if(arg==2){
