@@ -82,7 +82,7 @@
                             <?php } ?>  
                     <div class="panel-heading">
                         <img src="images/<?php echo $_SESSION['Logo']; ?>" alt="Logo" class="img-responsive" />
-                        <h1>Company Name</h1>
+                        <h3 class="text-center"><?php echo $_SESSION["CompanyName"]; ?></h3>
                     </div>
                     <div class="panel-body">
                         <form name="adminForm" method="post" action="login.php?mode=login">
@@ -94,7 +94,7 @@
                                     <input class="form-control" required placeholder="Password" name="Password" type="password" />
                                 </div>
                                 <!-- Change this to a button or input when using this as a form -->
-                                <button type="submit" class="btn btn-lg btn-success btn-block">Login</button>
+                                <button type="submit" class="btn btn-lg btn-primary btn-block">Login</button>
                             </fieldset>
                         </form>
                     </div>

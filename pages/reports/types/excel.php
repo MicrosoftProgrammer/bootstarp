@@ -21,8 +21,8 @@
         where fm.CategoryID=".$CategoryID." and fm.Deleted=0 order by fm.DisplayOrder";
         $res = mysql_query($sql);
         $header = array();   
-        $styles = array( 'font'=>'Arial','font-size'=>10,'font-style'=>'bold', 'fill'=>'#eee', 'halign'=>'center', 'border'=>'left,right,top,bottom');       
-        $headerstyles = array( 'font'=>'Arial','font-size'=>10,'font-style'=>'bold', 'fill'=>'#eeffee', 'halign'=>'center', 'border'=>'left,right,top,bottom');              
+        $styles = array( 'font'=>'Arial','font-size'=>10,'font-style'=>'normal', 'fill'=>'#ffffff', 'halign'=>'left', 'border'=>'left,right,top,bottom');       
+        $headerstyles = array( 'font'=>'Arial','font-size'=>10,'font-style'=>'bold','fill'=>'#eee', 'halign'=>'left', 'border'=>'left,right,top,bottom');              
         
         while($obj=mysql_fetch_object($res)){
             array_push($header,$obj->ProductFieldName);
@@ -106,8 +106,9 @@
         $res=mysql_query($sql);
         $numrows=mysql_num_rows($res);
 
-        $styles = array( 'font'=>'Arial','font-size'=>10,'font-style'=>'bold', 'fill'=>'#eee', 'halign'=>'center', 'border'=>'left,right,top,bottom');       
-        $headerstyles = array( 'font'=>'Arial','font-size'=>10,'font-style'=>'bold', 'fill'=>'#eeffee', 'halign'=>'center', 'border'=>'left,right,top,bottom');                      
+        $styles = array( 'font'=>'Arial','font-size'=>10,'font-style'=>'normal', 'fill'=>'#ffffff', 'halign'=>'left', 'border'=>'left,right,top,bottom');       
+        $headerstyles = array( 'font'=>'Arial','font-size'=>10,'font-style'=>'bold','fill'=>'#eee', 'halign'=>'left', 'border'=>'left,right,top,bottom');              
+                        
         $writer = new XLSXWriter();
         $writer->setAuthor($_SESSION["CompanyName"]); 
         $writer->writeSheetRow($CategoryName,$header,$headerstyles);         
@@ -154,8 +155,9 @@
         where fm.CategoryID=".$CategoryID." and fm.Deleted=0 order by fm.DisplayOrder";
         $res = mysql_query($sql);
         $header = array("S.No","Product Name","Invoice No","Owner","Purchase Date","Purchase Value","Due Date","Job Ref","LPO Ref","Quota Ref","Charge Details","Status");   
-        $styles = array( 'font'=>'Arial','font-size'=>10,'font-style'=>'bold', 'fill'=>'#eee', 'halign'=>'center', 'border'=>'left,right,top,bottom');       
-        $headerstyles = array( 'font'=>'Arial','font-size'=>10,'font-style'=>'bold', 'fill'=>'#eeffee', 'halign'=>'center', 'border'=>'left,right,top,bottom');              
+        $styles = array( 'font'=>'Arial','font-size'=>10,'font-style'=>'normal', 'fill'=>'#ffffff', 'halign'=>'left', 'border'=>'left,right,top,bottom');       
+        $headerstyles = array( 'font'=>'Arial','font-size'=>10,'font-style'=>'bold','fill'=>'#eee', 'halign'=>'left', 'border'=>'left,right,top,bottom');              
+        
 
         $data = array();
 
@@ -232,8 +234,9 @@
         where fm.CategoryID=".$CategoryID." and fm.Deleted=0 order by fm.DisplayOrder";
         $res = mysql_query($sql);
         $header = array("S.No","Product Name","Invoice No","Owner","Purchase Date","Purchase Value","Due Date","Job Ref","LPO Ref","Quota Ref","Charge Details","Status");   
-        $styles = array( 'font'=>'Arial','font-size'=>10,'font-style'=>'bold', 'fill'=>'#eee', 'halign'=>'center', 'border'=>'left,right,top,bottom');       
-        $headerstyles = array( 'font'=>'Arial','font-size'=>10,'font-style'=>'bold', 'fill'=>'#eeffee', 'halign'=>'center', 'border'=>'left,right,top,bottom');              
+        $styles = array( 'font'=>'Arial','font-size'=>10,'font-style'=>'normal', 'fill'=>'#ffffff', 'halign'=>'left', 'border'=>'left,right,top,bottom');       
+        $headerstyles = array( 'font'=>'Arial','font-size'=>10,'font-style'=>'bold','fill'=>'#eee', 'halign'=>'left', 'border'=>'left,right,top,bottom');              
+        
 
         $data = array();
 
