@@ -91,7 +91,7 @@ function fnScript(){
             } 
         }
         $("body").append(`<footer>
-            <p>Copyright &copy; '.date("Y").' '.$_SESSION["CompanyName"].'. All Rights Reservered</p>
+            <p>Copyright &copy; '.date("Y").' '.$_SESSION["CompanyName"].'. All Rights Reservered. Powered by Use Own Solutions</p>
         </footer>`);
     </script>';    
     return $html;

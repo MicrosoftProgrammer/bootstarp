@@ -631,3 +631,30 @@ a.pull-right:hover{
     color : white !important;
     text-decoration: underline;
 }
+
+.panel-footer{
+    background-color: @blue-lightest;
+}
+
+.mask{
+  display: none; /*This hides the mask*/
+}
+
+.ajax{
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: relative; /*required for z-index*/
+  z-index: 1000; /*puts on top of everything*/
+  content :"Loading...";
+  color:white;
+}
+
+.btn-primary{
+    background-color: @blue-hardest !important;
+}
+
+.btn-primary:hover{
+    background-color: @white-color !important;
+    color: @blue-hardest !important;
+}

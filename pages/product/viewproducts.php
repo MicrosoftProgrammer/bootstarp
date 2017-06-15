@@ -164,6 +164,7 @@ $cols="";
                                                 $data = json_decode($objFields->Fields, TRUE);
                                                 echo '<div class="form-group  pull-right" id="button"><a href="javascript:void(0)"  type="button" class="btn btn-primary" >Show/Hide Columns</a>';
                                                 echo '<div class="form-group" id="fieldList">
+                                                <div class="mask"><i class="fa fa-spinner fa-spin fa-2x fa-fw">&nbsp;</i>Loading...</div>
                                                 <div class="checkbox">
                                                                     <label>
                                         <input id="fieldcheck" type="checkbox">Select All
@@ -196,6 +197,7 @@ $cols="";
                                             }
                                              $cols = rtrim($cols,",");
                                         ?>
+                                        
                             <table width="100%" class="table table-striped table-bordered table-hover" id="example">
                                 <thead>
                                     <tr>
@@ -392,11 +394,15 @@ $cols="";
         }
 
         $("#fieldcheck").click(function(){
+            $('.mask').addClass('ajax');
             $('.fieldcheck').not(this).prop('checked', this.checked);
+            setTimeout(function(){
                 var oTable = $('#example').dataTable();
                 for(i=0;i<oTable.fnSettings().aoColumns.length;i++){
-                    oTable.fnSetColumnVis( i, this.checked );
-                }            
+                    oTable.fnSetColumnVis( i, document.getElementById('fieldcheck').checked );
+                }  
+                $('.mask').removeClass('ajax');
+            },1000);          
         });
 
         function fnReport(arg){
