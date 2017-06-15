@@ -49,6 +49,11 @@
                         <?php
                             $CategoryID=$_REQUEST["Category"];
                             $CategoryName = GetData("categories","CategoryID",$CategoryID,"CategoryName");
+                            echo '<div id="divLoading" style="display:none;margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(102, 102, 102); z-index: 30001; opacity: 0.8;">
+<p style="position: absolute; color: White; top: 50%; left: 45%;">
+Loading, please wait...
+<i class="fa fa-spinner fa-spin fa-2x fa-fw"></i>
+</p></div>';
                             echo '<table id="export"  width="100%" class="table table-striped table-bordered table-hover">';
                             if($_REQUEST["mode"]=="Product"){
                                 $sql="select * from productfields pf inner join fieldmapping fm on pf.ProductFieldID = fm.ProductFieldID
@@ -385,6 +390,8 @@
 
         function fnDownload()
         {
+            $("#divLoading").show();
+            setTimeout(function(){
             <?php if($_REQUEST["type"]=="excel") { ?>
                 $('#export').tableExport({type:'xlsx',htmlContent: true,fileName: '<?php echo $filename; ?>',worksheetName: '<?php echo $CategoryName; ?>'});
             <?php } ?>
@@ -403,8 +410,13 @@
             <?php if($_REQUEST["type"]=="csv") { ?>
                 $('#export').tableExport({type:'csv',htmlContent: true,fileName: '<?php echo $filename; ?>',worksheetName: '<?php echo $CategoryName; ?>'});
             <?php } ?>
+            },1000);
 		    // document.adminForm.action="<?php echo "../reports/types/".$_REQUEST["type"].".php?mode=".$_REQUEST["mode"]; ?>";
-            // document.adminForm.submit();        
+            // document.adminForm.submit();  
+            setTimeout(function(){
+                $("#divLoading").hide();  
+            },1000);
+               
         }
         var cnt = $( "#export thead tr th" ).length;
         $('#export thead tr:first').before('<tr><td align="center" colspan='+cnt+'><h2><?php echo $_SESSION["CompanyName"]." ".$_REQUEST["mode"]." Report"; ?><h2></td></tr>');
