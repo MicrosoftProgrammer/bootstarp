@@ -72,17 +72,11 @@ function fnScript(){
 
         function fnBulk(arg) {
             if($(".check:checked").length >0){
+                document.adminForm.target="_self";
                 if(arg=="del") {
                     if(confirm("Are you sure want to delete?"))
                     {
                         document.adminForm.action="'.basename($_SERVER['PHP_SELF']).'?mode=del";
-                        document.adminForm.submit();
-                    }        
-                }  
-                if(arg=="TCDone") {
-                    if(confirm("Are you sure want to update TC Status?"))
-                    {
-                        document.adminForm.action="'.basename($_SERVER['PHP_SELF']).'?mode=TCGiven";
                         document.adminForm.submit();
                     }        
                 }                 

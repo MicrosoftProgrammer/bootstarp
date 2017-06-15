@@ -116,23 +116,29 @@ $filter = array();
     <?php echo fnScript(); ?>
     <script>
         function fnSubmit(){
+            document.adminForm.target="_self";
             document.adminForm.action="overviewreport.php";
             document.adminForm.submit();
         }
 
         function fnReport(arg){
+            document.adminForm.target="_blank";
             if(arg==1){
-                document.adminForm.action="../reports/types/excel.php?mode=Overview";
+                document.adminForm.action="../reports/previewreport.php?mode=Overview&type=excel";
                 document.adminForm.submit();
             }
             if(arg==2){
-                document.adminForm.action="../reports/types/csv.php?mode=Overview";
+                document.adminForm.action="../reports/previewreport.php?mode=Overview&type=csv";
                 document.adminForm.submit();  
             }            
             if(arg==3){
-                document.adminForm.action="../reports/types/word.php?mode=Overview";
+                document.adminForm.action="../reports/previewreport.php?mode=Overview&type=word";
                 document.adminForm.submit();  
             }
-        }           
+            if(arg==4){
+                document.adminForm.action="../reports/types/pdf.php?mode=Overview&type=pdf";
+                document.adminForm.submit();  
+            }
+        }              
     </script>
 </html>

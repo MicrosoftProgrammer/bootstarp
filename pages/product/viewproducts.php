@@ -389,6 +389,7 @@ $cols="";
         }
 
         function fnSubmit(){
+            document.adminForm.target="_self";
             document.adminForm.action="viewproducts.php";
             document.adminForm.submit();
         }
@@ -406,16 +407,17 @@ $cols="";
         });
 
         function fnReport(arg){
+            document.adminForm.target="_blank";
             if(arg==1){
-                document.adminForm.action="../reports/types/excel.php?mode=Product";
+                document.adminForm.action="../reports/previewreport.php?mode=Product&type=excel";
                 document.adminForm.submit();
             }
             if(arg==2){
-                document.adminForm.action="../reports/types/csv.php?mode=Product";
+                document.adminForm.action="../reports/previewreport.php?mode=Product&type=csv";
                 document.adminForm.submit();  
             }            
             if(arg==3){
-                document.adminForm.action="../reports/types/word.php?mode=Product";
+                document.adminForm.action="../reports/previewreport.php?mode=Product&type=word";
                 document.adminForm.submit();  
             }
         }        

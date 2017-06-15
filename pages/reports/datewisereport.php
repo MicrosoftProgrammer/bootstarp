@@ -173,24 +173,30 @@ $filter = array();
     <?php echo fnScript(); ?>
             <script>
         function fnSubmit(){
+             document.adminForm.target="_self";
             document.adminForm.action="datewisereport.php";
             document.adminForm.submit();
         }
 
         function fnReport(arg){
+            document.adminForm.target="_blank";
             if(arg==1){
-                document.adminForm.action="../reports/types/excel.php?mode=date";
+                document.adminForm.action="../reports/previewreport.php?mode=date&type=excel";
                 document.adminForm.submit();
             }
             if(arg==2){
-                document.adminForm.action="../reports/types/csv.php?mode=date";
+                document.adminForm.action="../reports/previewreport.php?mode=date&type=csv";
                 document.adminForm.submit();  
             }            
             if(arg==3){
-                document.adminForm.action="../reports/types/word.php?mode=date";
+                document.adminForm.action="../reports/previewreport.php?mode=date&type=word";
                 document.adminForm.submit();  
             }
-        }   
+            if(arg==4){
+                document.adminForm.action="../reports/types/pdf.php?mode=date&type=pdf";
+                document.adminForm.submit();  
+            }    
+        } 
 
         
     </script>
