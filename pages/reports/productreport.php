@@ -118,7 +118,7 @@ $filter = array();
                 document.adminForm.submit();  
             }
             if(arg==4){
-                document.adminForm.action="../reports/types/pdf.php?mode=Product&type=pdf";
+                document.adminForm.action="../reports/previewreport.php?mode=Product&type=pdf";
                 document.adminForm.submit();  
             }
         }                

@@ -420,6 +420,10 @@ $cols="";
                 document.adminForm.action="../reports/previewreport.php?mode=Product&type=word";
                 document.adminForm.submit();  
             }
+            if(arg==4){
+                document.adminForm.action="../reports/previewreport.php?mode=Product&type=pdf";
+                document.adminForm.submit();  
+            }
         }        
 
     </script>

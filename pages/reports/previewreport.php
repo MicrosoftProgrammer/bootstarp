@@ -2,6 +2,11 @@
     include('../../includes/connection.php');
     include('../../includes/helpers.php');
     include('../../includes/templates.php');
+
+    $filename="";
+    $CategoryID=$_REQUEST["Category"];
+    $CategoryName = GetData("categories","CategoryID",$CategoryID,"CategoryName");
+    $filename = slugify($CategoryName)."_".date("Y-m-d H:i:s")."_".$_REQUEST["mode"];      
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -40,11 +45,11 @@
                         <input type="hidden" name="Product" value="<?php echo $_REQUEST["Product"]; ?>" />
                         <input type="hidden" name="FromDate" value="<?php echo $_REQUEST["FromDate"]; ?>" />
                         <input type="hidden" name="ToDate" value="<?php echo $_REQUEST["ToDate"]; ?>" />
+                        <textarea name="filters" style="display:none;"><?php echo $_REQUEST["filters"]; ?></textarea>
                         <?php
-                        echo '<textarea name="filters" style="display:none;">'.$_REQUEST["filters"].'</textarea>'; 
                             $CategoryID=$_REQUEST["Category"];
                             $CategoryName = GetData("categories","CategoryID",$CategoryID,"CategoryName");
-                            echo '<table  width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">';
+                            echo '<table id="export"  width="100%" class="table table-striped table-bordered table-hover">';
                             if($_REQUEST["mode"]=="Product"){
                                 $sql="select * from productfields pf inner join fieldmapping fm on pf.ProductFieldID = fm.ProductFieldID
                                 where fm.CategoryID=".$CategoryID." and fm.Deleted=0 order by fm.DisplayOrder";
@@ -366,6 +371,11 @@
         </div>
     </body>
     <?php echo fnScript(); ?>
+    <script type="text/javascript" src="scripts/libs/FileSaver/FileSaver.min.js"></script>
+    <script type="text/javascript" src="scripts/libs/js-xlsx/xlsx.core.min.js"></script>
+    <script type="text/javascript" src="scripts/libs/jsPDF/jspdf.min.js"></script>
+    <script type="text/javascript" src="scripts/libs/jsPDF-AutoTable/jspdf.plugin.autotable.js"></script>
+    <script type="text/javascript" src="scripts/tableExport.min.js"></script>
     <script>
         function fnPrint()
         {
@@ -375,8 +385,30 @@
 
         function fnDownload()
         {
-		    document.adminForm.action="<?php echo "../reports/types/".$_REQUEST["type"].".php?mode=".$_REQUEST["mode"]; ?>";
-            document.adminForm.submit();        
+            <?php if($_REQUEST["type"]=="excel") { ?>
+                $('#export').tableExport({type:'xlsx',htmlContent: true,fileName: '<?php echo $filename; ?>',worksheetName: '<?php echo $CategoryName; ?>'});
+            <?php } ?>
+            <?php if($_REQUEST["type"]=="word") { ?>
+                $('#export').tableExport({type:'doc',htmlContent: true,fileName: '<?php echo $filename; ?>'});
+            <?php } ?>
+            <?php if($_REQUEST["type"]=="pdf") { ?>
+                $('#export').tableExport({type:'pdf',htmlContent: true,fileName: '<?php echo $filename; ?>',
+                           jspdf: {orientation: 'l',
+                                   format: 'a2',
+                                   margins: {left:10, right:10, top:20, bottom:20}
+
+                                  }
+                          });
+            <?php } ?>
+            <?php if($_REQUEST["type"]=="csv") { ?>
+                $('#export').tableExport({type:'csv',htmlContent: true,fileName: '<?php echo $filename; ?>',worksheetName: '<?php echo $CategoryName; ?>'});
+            <?php } ?>
+		    // document.adminForm.action="<?php echo "../reports/types/".$_REQUEST["type"].".php?mode=".$_REQUEST["mode"]; ?>";
+            // document.adminForm.submit();        
         }
+        var cnt = $( "#export thead tr th" ).length;
+        $('#export thead tr:first').before('<tr><td align="center" colspan='+cnt+'><h2><?php echo $_SESSION["CompanyName"]." ".$_REQUEST["mode"]." Report"; ?><h2></td></tr>');
     </script>
+
+
 </html>
