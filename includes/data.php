@@ -1,5 +1,6 @@
 <?php
     include('connection.php');
+    include('templates.php');
 
 if($_REQUEST["mode"]=="sorting"){
     $orderlist = explode(',', $_POST['order']);
@@ -8,5 +9,9 @@ if($_REQUEST["mode"]=="sorting"){
         $sql="update fieldmapping set DisplayOrder='$k' where FieldMappingID=".$order;
         mysql_query($sql);
     }   
+}
+
+if($_REQUEST["mode"]=="permissions"){
+    echo fnGetPermissions($_REQUEST["UserID"]);
 }
 ?>

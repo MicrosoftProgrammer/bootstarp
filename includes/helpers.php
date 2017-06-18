@@ -61,9 +61,13 @@ function fnScript(){
         $("#checkAll").click(function(){
             $(".check").not(this).prop("checked", this.checked);
         });
+                    $(document).ready(function(){
+                $(`[data-toggle="popover"]`).popover({"html":true}); 
+            });
         
         function fnDelete(arg)
         {
+
 	        if(confirm("Are you sure want to delete?"))
 	        {
 		        document.location.href="'.basename($_SERVER['PHP_SELF']).'?mode=del&&chkSelect[]=" + arg + "";

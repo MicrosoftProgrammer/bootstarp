@@ -107,7 +107,7 @@
                                         ?>                                        
                                         <li class="form-group col-md-12" style="list-style:none">
                                             <label class="checkbox-inline">
-                                                <input name="fields[]" <?php if($permissions[$k]["Status"]) echo "checked"; ?> value="<?php echo $permissions[$k]['PageID']; ?>" type="checkbox"><?php echo $permissions[$k]["PageName"]; ?>
+                                                <input name="fields[]" <?php if($obj->UserType=="1") echo "disabled"; ?> <?php if($permissions[$k]["Status"]) echo "checked"; ?> value="<?php echo $permissions[$k]['PageID']; ?>" type="checkbox"><?php echo $permissions[$k]["PageName"]; ?>
                                             </label>
                                         <?php
                                               if(count($permissions[$k]["SubPage"])>0){
@@ -117,7 +117,7 @@
                                                   ?>
                                             <li class="form-group col-md-3" style="list-style:none">
                                                 <label class="checkbox-inline">
-                                                    <input name="fields[]" <?php if($SubPage[$z]["Status"]) echo "checked"; ?> value="<?php echo $SubPage[$z]['PageID']; ?>" type="checkbox"><?php echo $SubPage[$z]["PageName"]; ?>
+                                                    <input name="fields[]" <?php if($SubPage[$z]["Status"]) echo "checked"; ?> <?php if($obj->UserType=="1") echo "disabled"; ?> value="<?php echo $SubPage[$z]['PageID']; ?>" type="checkbox"><?php echo $SubPage[$z]["PageName"]; ?>
                                                 </label>
                                             </li>
 
@@ -128,10 +128,12 @@
                                         ?>
                                         </li>
                                         <?php } ?>
+                                         <?php if($obj->UserType!=="1"){ ?>
                                         <div class="form-group col-md-12">
                                             <button type="submit" class="btn btn-primary">Submit</button>
                                             <button type="reset" class="btn btn-danger">Reset</button>
                                         </div>
+                                         <?php } ?>
                                         </ul>
                                         <?php } ?>
                                     </form>

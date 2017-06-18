@@ -29,9 +29,7 @@ $cols="";
             display :inline-block;
         }
 
-        table th{
-             white-space: nowrap;
-        }
+
             th.search input{
                 width:80% !important;
             }
@@ -47,6 +45,25 @@ $cols="";
                 absolute;z-index:9;
                 padding-left: 10px;
                 border-radius: 6px
+            }
+
+            span.cell{
+                display: block !important;
+            }
+
+            .cell{
+                white-space: nowrap;
+                width:120px !important;
+                text-overflow: ellipsis;
+                cursor: pointer;
+                word-break: break-all;
+                overflow:hidden;
+                white-space: nowrap;
+            }
+
+            span.cell:hover{
+                overflow: visible; 
+                width:auto !important;  /* just added this line */
             }
 
         </style>
@@ -153,10 +170,10 @@ $cols="";
                                             if($numrows>0)
                                             {
                                                 echo ' <div class="form-group col-md-3">
-                                                               <a href="javascript:void(0)" onclick="fnReport(1)" class="btn btn-primary" type="button"><i class="fa fa-file-excel-o fa-2x"></i></a>
-                                                               <a href="javascript:void(0)" onclick="fnReport(2)" class="btn btn-primary" type="button"><i class="fa fa-file fa-2x"></i></a>       
-                                                               <a href="javascript:void(0)" onclick="fnReport(3)" class="btn btn-primary" type="button"><i class="fa fa-file-word-o fa-2x"></i></a>  
-                                                               <a href="javascript:void(0)" onclick="fnReport(4)" class="btn btn-primary" type="button"><i class="fa fa-file-pdf-o fa-2x"></i></a>                                          
+                                                               <a href="javascript:void(0)" onclick="fnReport(1)"><img src="../../images/excel.png"alt="excel" /></a>
+                                                               <a href="javascript:void(0)" onclick="fnReport(2)"><img src="../../images/csv.png"alt="csv" /></a>       
+                                                               <a href="javascript:void(0)" onclick="fnReport(3)"><img src="../../images/word.png"alt="word" /></a>  
+                                                               <a href="javascript:void(0)" onclick="fnReport(4)"><img src="../../images/pdf.png"alt="pdf" /></a>                                          
                                                             </div>';
 
                                                 $objFields=mysql_fetch_object($res);
@@ -175,7 +192,7 @@ $cols="";
                                                 $count=0;
                                                 foreach(array_keys($data) as $key) {
                                                     $checked="";
-                                                    if($count>6){
+                                                    if($count>4){
                                                         $cols= $cols.(string)$count.",";
                                                     }
                                                     else{
@@ -212,7 +229,7 @@ $cols="";
                                                 $data = json_decode($objFields->Fields, TRUE);
                                                 
                                                     foreach(array_keys($data) as $key) {
-                                                        echo "<th>".$key."</th>";
+                                                        echo "<th class='cell'>".$key."</th>";
                                                         $count++;
                                                     }
                                                 
@@ -233,7 +250,7 @@ $cols="";
                                                 $data = json_decode($objFields->Fields, TRUE);
                                                 
                                                     foreach(array_keys($data) as $key) {
-                                                        echo "<th class='search'>".$key."</th>";
+                                                        echo "<th class='search cell'>".$key."</th>";
                                                         $count++;
                                                     }
                                                 
@@ -288,7 +305,7 @@ $cols="";
                                                             
                                                            
                                                                 foreach(array_values($data) as $value) {
-                                                                    echo "<td>".$value."</td>";
+                                                                    echo "<td><span class='cell'>".$value."</span></td>";
                                                                 }
                                                            
                                                            ?>
@@ -343,6 +360,7 @@ $cols="";
     </body>
     <?php echo fnScript(); ?>
     <?php echo fnDataTableScript(); ?>
+    <script src="colResizable-1.5.min.js"></script>
     <script>
     
         $('#example thead th.search').each(function() {
@@ -353,6 +371,7 @@ $cols="";
         // DataTable
         var example = 
             $('#example').DataTable({
+                "autoWidth": false,
                 //"responsive" :true,
                 "columnDefs": [ {
                     "targets": 0,

@@ -90,4 +90,42 @@ function fnMobileMenu(){
 
     return $html;
 }
+
+function fnGetPermissions($UserID){
+    $sql = "select * from users where Deleted=0 and UserType!=1 and UserID=".$UserID;
+    $sql.= " order by userID";
+    $res=mysql_query($sql);
+    $obj = mysql_fetch_object($res);
+
+    $html= "<ul id='sortable' style='padding-left:0;display:inline-block'>";  
+    $permissions = json_decode($obj->Permissions,TRUE);                                      
+    for($k=0;$k<count($permissions);$k++) {    
+        $checked= "";    
+        if($permissions[$k]["Status"])  $checked= "checked";                                
+            $html= $html.                                      
+            "<li class='form-group col-md-12' style='list-style:none'>
+                <label class='checkbox-inline'>
+                    <input name='fields[]' disabled ".$checked." type='checkbox'/>".$permissions[$k]['PageName']."
+                </label>";
+                    if(count($permissions[$k]["SubPage"])>0){
+                        $html= $html.  "<ul style='padding-left:10px'>"; 
+                        $SubPage = $permissions[$k]["SubPage"]; 
+                        for($z=0;$z<count($SubPage);$z++) {
+                        $checked= "";
+                            if($SubPage[$z]["Status"]) $checked= "checked";   
+                    $html= $html. 
+                "<li class='form-group col-md-12' style='list-style:none'>
+                    <label class='checkbox-inline'>
+                        <input name='fields[]' disabled ".$checked." type='checkbox'/>".$SubPage[$z]['PageName']."
+                    </label>
+                </li>";
+                }
+                $html= $html. "</ul>";
+            }
+            $html= $html. "</li>";
+    } 
+
+    $html= $html. "</ul>";
+    return $html;
+}
 ?>

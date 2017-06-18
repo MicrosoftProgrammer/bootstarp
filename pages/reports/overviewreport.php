@@ -85,12 +85,12 @@ $filter = array();
                                                 $html=$html.'</select></div>';
                                                 
                                                 echo '</div>'.$html.'<textarea name="filters" style="display:none;">'.json_encode($filter).'</textarea>';   
-                                                                                                                                        echo ' <div class="form-group col-md-12">
-                                                               <a href="javascript:void(0)" onclick="fnReport(1)" class="btn btn-primary" type="button"><i class="fa fa-file-excel-o fa-2x"></i></a>
-                                                               <a href="javascript:void(0)" onclick="fnReport(2)" class="btn btn-primary" type="button"><i class="fa fa-file fa-2x"></i></a>       
-                                                               <a href="javascript:void(0)" onclick="fnReport(3)" class="btn btn-primary" type="button"><i class="fa fa-file-word-o fa-2x"></i></a>  
-                                                               <a href="javascript:void(0)" onclick="fnReport(4)" class="btn btn-primary" type="button"><i class="fa fa-file-pdf-o fa-2x"></i></a>                                          
-                                                            </div>';       
+                                                echo ' <div class="form-group col-md-12">
+                                                               <a href="javascript:void(0)" onclick="fnReport(1)"><img src="../../images/excel.png"alt="excel" /></a>
+                                                               <a href="javascript:void(0)" onclick="fnReport(2)"><img src="../../images/csv.png"alt="csv" /></a>       
+                                                               <a href="javascript:void(0)" onclick="fnReport(3)"><img src="../../images/word.png"alt="word" /></a>  
+                                                               <a href="javascript:void(0)" onclick="fnReport(4)"><img src="../../images/pdf.png"alt="pdf" /></a>                                          
+                                                            </div>';   
 
                                                 
                                     } ?>
