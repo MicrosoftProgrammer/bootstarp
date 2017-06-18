@@ -4,11 +4,6 @@
     include('../../includes/helpers.php');
     include('../../includes/templates.php');
 
-    if(!isSuperAdmin())
-    {
-        header("location:../../login.php");
-    }
-
     if ($_REQUEST['mode']=="update")
     {
         $UserID=$_REQUEST["User"];
@@ -92,7 +87,22 @@
                                         <div class="form-group col-md-12">
                                             <label>User</label>
                                             <select class="form-control" id="User" name="User" onchange="fnSubmit();" required>
-                                                <?php fnDropDown("users","Name","UserID","User"); ?>
+                                            <option value="">Select</option>
+                                                <?php 
+                                                    $sql= "select * from users where UserType=3 and Deleted=0 and UserID!=".$_SESSION["UserID"];
+                                                    $res=mysql_query($sql);
+                                                    while($obj=mysql_fetch_object($res))
+                                                    {
+                                                        if($_REQUEST["User"]==$obj->UserID)
+                                                        {
+                                                            echo '<option value="'.$obj->UserID.'" selected="selected">'.$obj->Name.'</option>';
+                                                        }
+                                                        else
+                                                        {
+                                                            echo '<option value="'.$obj->UserID.'">'.$obj->Name.'</option>';
+                                                        }
+                                                    } 
+                                                ?>
                                             </select>                                               
                                         </div>
                                         

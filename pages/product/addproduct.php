@@ -26,9 +26,10 @@
        $json=json_encode($json);       
 
         $CategoryID = $_REQUEST["Category"];
-
-        $sql = "INSERT INTO products (CategoryID,Fields)
-        VALUES ('$CategoryID','$json')";        
+        $UserID = $_SESSION["UserID"];
+        $Productlog = "Product Created by ".$_SESSION["name"];
+        $sql = "INSERT INTO products (CategoryID,Fields,CreatedBy,Productlog)
+        VALUES ('$CategoryID','$json','$UserID','$Productlog')";        
         mysql_query($sql);
 
         $Owner = str_replace("'","`",$_REQUEST["Owner"]);

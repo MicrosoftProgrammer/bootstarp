@@ -20,7 +20,7 @@
         <title><?php echo $_SESSION["CompanyName"]; ?></title>
         <?php echo fnCss(); ?>
     </head>
-    <body>
+    <body style="background-color:white">
         <div class="container" style="width:700px;">
             <table class="table">
                 <tr>

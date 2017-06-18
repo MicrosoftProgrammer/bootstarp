@@ -21,10 +21,15 @@
        $keys = explode (",", $keys);      
        $json = array_combine($keys, array_values($_POST));
        $json=json_encode($json);
+       $UserID = $_SESSION["UserID"];
 
             $sql = "UPDATE products SET ";
-            $sql.= "Fields	=	'".$json."'";
+            $sql.= "Fields	=	'".$json."',";
+            $sql.= "LastUpdatedBy	='".$UserID."',";
+            $sql.= "LastUpdatedOn	=CURRENT_TIMESTAMP";
             $sql.= " where ProductID=".$_REQUEST['Id']."";
+
+ 
         
         mysql_query($sql);				
         header("location:viewproducts.php?mode=edited");           

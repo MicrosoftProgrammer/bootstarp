@@ -15,6 +15,7 @@ if ($_REQUEST['mode']=="del")
 }
 
 $cols="";
+$headers= array();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -162,6 +163,8 @@ $cols="";
                                         $sql.= " order by p.ProductID";
                                         $res=mysql_query($sql);
                                         $numrows=mysql_num_rows($res);
+                                        $objFields=mysql_fetch_object($res);
+                                        $data = json_decode($objFields->Fields, TRUE);
                                         
 
                             
@@ -176,9 +179,6 @@ $cols="";
                                                                <a href="javascript:void(0)" onclick="fnReport(4)"><img src="../../images/pdf.png"alt="pdf" /></a>                                          
                                                             </div>';
 
-                                                $objFields=mysql_fetch_object($res);
-                                                $count=0;
-                                                $data = json_decode($objFields->Fields, TRUE);
                                                 echo '<div class="form-group  pull-right" id="button"><a href="javascript:void(0)"  type="button" class="btn btn-primary" >Show/Hide Columns</a>';
                                                 echo '<div class="form-group" id="fieldList">
                                                 <div class="mask"><i class="fa fa-spinner fa-spin fa-2x fa-fw">&nbsp;</i>Loading...</div>
@@ -192,8 +192,8 @@ $cols="";
                                                 $count=0;
                                                 foreach(array_keys($data) as $key) {
                                                     $checked="";
-                                                    if($count>4){
-                                                        $cols= $cols.(string)$count.",";
+                                                    if($count>5){
+                                                        $cols= $cols.(string)($count+1).",";
                                                     }
                                                     else{
                                                         $checked="checked";
@@ -224,15 +224,10 @@ $cols="";
                                         <?php
                                             if($numrows>0)
                                             {
-                                                $objFields=mysql_fetch_object($res);
-                                                $count=0;
-                                                $data = json_decode($objFields->Fields, TRUE);
-                                                
-                                                    foreach(array_keys($data) as $key) {
-                                                        echo "<th class='cell'>".$key."</th>";
-                                                        $count++;
-                                                    }
-                                                
+                                                foreach(array_keys($data) as $key) {
+                                                    echo "<th class='cell'>".$key."</th>";
+                                                    array_push($headers,$key);
+                                                }                                                
                                             }
                                         ?>
                                         <th>
@@ -244,16 +239,10 @@ $cols="";
                                         </th>
                                         <?php
                                             if($numrows>0)
-                                            {
-                                                $objFields=mysql_fetch_object($res);
-                                                $count=0;
-                                                $data = json_decode($objFields->Fields, TRUE);
-                                                
-                                                    foreach(array_keys($data) as $key) {
-                                                        echo "<th class='search cell'>".$key."</th>";
-                                                        $count++;
-                                                    }
-                                                
+                                            {                                                
+                                                foreach(array_keys($data) as $key) {
+                                                    echo "<th class='search cell'>".$key."</th>";
+                                                }                                                
                                             }
                                         ?>
                                         <th>
@@ -304,8 +293,8 @@ $cols="";
                                                             $count=0;
                                                             
                                                            
-                                                                foreach(array_values($data) as $value) {
-                                                                    echo "<td><span class='cell'>".$value."</span></td>";
+                                                                foreach($headers as $value) {
+                                                                    echo "<td><span class='cell'>".$data[$value]."</span></td>";
                                                                 }
                                                            
                                                            ?>
@@ -360,7 +349,6 @@ $cols="";
     </body>
     <?php echo fnScript(); ?>
     <?php echo fnDataTableScript(); ?>
-    <script src="colResizable-1.5.min.js"></script>
     <script>
     
         $('#example thead th.search').each(function() {

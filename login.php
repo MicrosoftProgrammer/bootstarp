@@ -23,7 +23,13 @@
             $_SESSION["Email"]=$obj->Email;
             $_SESSION["UserID"]=$obj->UserID;
             $_SESSION["Permissions"]=$obj->Permissions;
+            $ip = $_SERVER['REMOTE_ADDR'];
+            $browser= $_REQUEST['browser'];
 
+            $sql="insert into userlog(LoggedInUser,IPAddress,Browser) values('$obj->UserID','$ip','$browser')";
+            mysql_query($sql);
+            echo $sql;
+            $_SESSION["SessionId"]= mysql_insert_id();
             header("location:pages/dashboard/index.php");
         }
     }
@@ -35,6 +41,10 @@
         $_SESSION["id"]="";
         $_SESSION["name"]="";
         $_SESSION["Permissions"]="";
+
+        $sql ="update `userlog` set `LogoutTime`=CURRENT_TIMESTAMP where LogID=".$_SESSION["SessionId"];
+        mysql_query($sql);
+        $_SESSION["SessionId"]="";
     }
 
 ?>
@@ -87,6 +97,7 @@
                     <div class="panel-body">
                         <form name="adminForm" method="post" action="login.php?mode=login">
                             <fieldset>
+                             <input name="browser" type="hidden" id="browser" />
                                 <div class="form-group">
                                     <input name="Email" required type="email" class="form-control" placeholder="User Name" autofocus/>
                                 </div>
@@ -114,7 +125,31 @@
 
     <!-- Custom Theme JavaScript -->
     <script src="dist/js/sb-admin-2.js"></script>
+<script>
+    var browser = '';
+var browserVersion = 0;
 
+if (/Opera[\/\s](\d+\.\d+)/.test(navigator.userAgent)) {
+    browser = 'Opera';
+} else if (/MSIE (\d+\.\d+);/.test(navigator.userAgent)) {
+    browser = 'MSIE';
+} else if (/Navigator[\/\s](\d+\.\d+)/.test(navigator.userAgent)) {
+    browser = 'Netscape';
+} else if (/Chrome[\/\s](\d+\.\d+)/.test(navigator.userAgent)) {
+    browser = 'Chrome';
+} else if (/Safari[\/\s](\d+\.\d+)/.test(navigator.userAgent)) {
+    browser = 'Safari';
+    /Version[\/\s](\d+\.\d+)/.test(navigator.userAgent);
+    browserVersion = new Number(RegExp.$1);
+} else if (/Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent)) {
+    browser = 'Firefox';
+}
+if(browserVersion === 0){
+    browserVersion = parseFloat(new Number(RegExp.$1));
+}
+$("#browser").val(browser + " " + browserVersion);
+
+</script>
 </body>
 
 </html>

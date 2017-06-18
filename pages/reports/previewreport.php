@@ -18,6 +18,24 @@
         footer{
             display:none;
         }
+                    span.cell{
+                display: block !important;
+            }
+
+            .cell{
+                white-space: nowrap;
+                width:120px !important;
+                text-overflow: ellipsis;
+                cursor: pointer;
+                word-break: break-all;
+                overflow:hidden;
+                white-space: nowrap;
+            }
+
+            span.cell:hover{
+                overflow: visible; 
+                width:auto !important;  /* just added this line */
+            }
         </style>
     </head>
     <body>
@@ -61,8 +79,10 @@ Loading, please wait...
                                 $res = mysql_query($sql);                               
                                 echo "<thead>";
                                 echo "<tr>";
+                                $header = array();
                                 while($obj=mysql_fetch_object($res)){
-                                echo "<th style='white-space: nowrap'>".$obj->ProductFieldName."</th>";
+                                echo "<th class='cell'>".$obj->ProductFieldName."</th>";
+                                array_push($header,$obj->ProductFieldName);
                                 }
                                 echo "</tr>";
                                 echo "</thead>";
@@ -105,8 +125,8 @@ Loading, please wait...
                                             $datum = json_decode($obj->Fields, TRUE);
                                             $dataVal = array();
                                             $count =0;
-                                            foreach ($datum as $key) {
-                                                echo "<td>".$key."</td>";
+                                            foreach ($header as $key) {
+                                                echo "<td><span class='cell'>".$datum[$key]."</span></td>";
                                                 $count++;
                                             }
                                         }
@@ -271,11 +291,7 @@ Loading, please wait...
 
                                     $CategoryID=$_REQUEST["Category"];
                                     $CategoryName = GetData("categories","CategoryID",$CategoryID,"CategoryName");
-                                    $filename = slugify($CategoryName)."-History.xlsx";
-
-                                    $sql="select * from productfields pf inner join fieldmapping fm on pf.ProductFieldID = fm.ProductFieldID
-                                    where fm.CategoryID=".$CategoryID." and fm.Deleted=0 order by fm.DisplayOrder";
-                                    $res = mysql_query($sql);
+                                    $filename = slugify($CategoryName)."-date.xlsx";
 
                                     echo "<thead>";
                                     echo "<tr>";
@@ -290,9 +306,10 @@ Loading, please wait...
 
                                     $data = array();
 
-                                    $sql = "select * from producttransactions pt inner join products p on p.ProductID=pt.ProductID 
-                                    inner join categories c on p.CategoryID =c.CategoryID 
-                                    where p.Deleted=0";
+                                    $sql = "select * from producttransactions pt left join products p on p.ProductID=pt.ProductID 
+                                    left join categories c on p.CategoryID =c.CategoryID 
+                                    where (p.Deleted=0 or pt.ProductID=0)";
+                                
                                     if($_REQUEST["Category"]!=""){
                                         $sql= $sql." and p.CategoryID=".$_REQUEST["Category"];
                                     }
