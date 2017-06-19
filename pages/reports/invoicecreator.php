@@ -52,8 +52,11 @@ if ($_REQUEST['mode']=="Add" && $TransactionID=="")
         $data["Purchase Value"] =  $PurchaseValue;
         $data["Invoice No"] =  $InvoiceNo;
         $data["Status"] =  "Rented";
+        $Productlog = "<li>Product Rented to ".$Owner." by ".$_SESSION["Name"]." on ".$_REQUEST["PurchaseDate"]."</li>";
 
-        $sql= "update products set Fields='".json_encode($data)."' where ProductID=".$_REQUEST["Product"];
+        $sql= "update products set Fields='".json_encode($data)."' 
+        ,Productlog	=CONCAT(Productlog,'".$Productlog."')
+        where ProductID=".$_REQUEST["Product"];
         mysql_query($sql);
     }
 }

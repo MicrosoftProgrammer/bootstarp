@@ -49,7 +49,9 @@
 
                     if(count($jsonArray)>0){
                         $json = json_encode($jsonArray);
-                        $sql ="insert into products(CategoryID,Fields) values('$CategoryID','$json')";
+                        $UserID = $_SESSION["UserID"];
+                        $Productlog = "<li>Product Created by ".$_SESSION["Name"]." on ".date("Y-m-d H:i:s")."</li>";
+                        $sql ="insert into products(CategoryID,Fields,CreatedBy,Productlog) values('$CategoryID','$json','$UserID','$Productlog')";
                         mysql_query($sql);
 
                         $Owner = str_replace("'","`",$jsonArray["Owner"]);

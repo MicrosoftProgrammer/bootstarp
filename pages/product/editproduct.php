@@ -20,11 +20,13 @@
        $keys = substr($keys, 0, -1);     
        $keys = explode (",", $keys);      
        $json = array_combine($keys, array_values($_POST));
+       $Productlog = "<li>Product Updated by ".$_SESSION["Name"]." on ".date("Y-m-d H:i:s")."</li>";
        $json=json_encode($json);
        $UserID = $_SESSION["UserID"];
 
             $sql = "UPDATE products SET ";
             $sql.= "Fields	=	'".$json."',";
+            $sql.= "Productlog	=CONCAT(Productlog,'".$Productlog."'),";
             $sql.= "LastUpdatedBy	='".$UserID."',";
             $sql.= "LastUpdatedOn	=CURRENT_TIMESTAMP";
             $sql.= " where ProductID=".$_REQUEST['Id']."";

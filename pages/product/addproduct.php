@@ -27,7 +27,7 @@
 
         $CategoryID = $_REQUEST["Category"];
         $UserID = $_SESSION["UserID"];
-        $Productlog = "Product Created by ".$_SESSION["name"];
+        $Productlog = "<li>Product Created by ".$_SESSION["Name"]." on ".date("Y-m-d H:i:s")."</li>";
         $sql = "INSERT INTO products (CategoryID,Fields,CreatedBy,Productlog)
         VALUES ('$CategoryID','$json','$UserID','$Productlog')";        
         mysql_query($sql);

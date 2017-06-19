@@ -24,8 +24,11 @@ if ($_REQUEST['mode']=="ret")
         $obj=mysql_fetch_object($res);
         $data = json_decode($obj->Fields,TRUE);
         $data["Status"] = "Returned";
+        $Productlog = "<li>Product Returned to ".$_SESSION["Name"]." on ".date("Y-m-d H:i:s")."</li>";
 
-        $sql= "update products set Fields='".json_encode($data)."' where ProductID=".$obj->ProductID;
+        $sql= "update products set Fields='".json_encode($data)."' 
+        ,Productlog	=CONCAT(Productlog,'".$Productlog."')
+        where ProductID=".$obj->ProductID;
         mysql_query($sql);    
 	}
 

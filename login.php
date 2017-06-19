@@ -36,10 +36,10 @@
 
     if ($_REQUEST["mode"]=="logout")
     {
-        $_SESSION["admin"]="";
-        $_SESSION["superadmin"]="";
-        $_SESSION["id"]="";
-        $_SESSION["name"]="";
+        $_SESSION["Email"]="";
+        $_SESSION["UserType"]="";
+        $_SESSION["UserID"]="";
+        $_SESSION["Name"]="";
         $_SESSION["Permissions"]="";
 
         $sql ="update `userlog` set `LogoutTime`=CURRENT_TIMESTAMP where LogID=".$_SESSION["SessionId"];
