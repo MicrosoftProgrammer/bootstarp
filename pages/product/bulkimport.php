@@ -14,6 +14,10 @@
         $CategoryID= $_REQUEST["Category"];
         $i=0;
         $header = array();
+
+        $sql="select max(ProductID) from products";
+        $res=mysql_query($sql);
+        $row = mysql_num_rows($res);
       
         foreach ($Sheets as $Index => $Name)
         {
@@ -30,9 +34,21 @@
               
                    $jsonArray = array();
                    if(count($header)== count($Row)){
+                       $com = array_combine( $header, $Row );
                         foreach (array_combine( $header, $Row ) as $name => $value) {       
                             $value = str_replace('"','`',$value);                 
-                            $jsonArray[$name] = trim($value);
+                            if($name=="Calibration Due Date"){                         
+                                $date = ConvertToStdDate(str_replace("/","-",$com["Calibration Date"]));
+                                $date = strtotime($date);
+                                $new_date = strtotime('+ 1 year', $date);
+                                $jsonArray[$name] =  date('d/M/Y', $new_date);
+                            }
+                            else if($name=="S.No"){                                    
+                                $jsonArray[$name] =  $row++;
+                            }
+                            else{
+                                $jsonArray[$name] = trim($value);
+                            }
                         }
                     }
                     else{
@@ -40,9 +56,21 @@
                             if(!isset($Row[$key])) $Row[$key] = "";
                           }
                           if(count($header) == count($Row)){
+                              $com = array_combine( $header, $Row );
                                 foreach (array_combine( $header, $Row ) as $name => $value) {       
                                     $value = str_replace('"','`',$value);                 
-                                    $jsonArray[$name] = trim($value);
+                                    if($name=="Calibration Due Date"){  
+                                        $date = ConvertToStdDate(str_replace("/","-",$com["Calibration Date"]));
+                                        $date = strtotime($date);
+                                        $new_date = strtotime('+ 1 year', $date);
+                                        $jsonArray[$name] =  date('d/M/Y', $new_date);
+                                    }
+                                    else if($name=="S.No"){                                    
+                                        $jsonArray[$name] =  $row++;
+                                    }
+                                    else{
+                                        $jsonArray[$name] = trim($value);
+                                    }
                                 }
                           }
                     }
@@ -88,6 +116,10 @@
                 
             }
         }
+
+                            $UserAction = "<li>".$_SESSION["Name"]." did bulk upload  at ".date("d-m-Y H:i:s")."</li>";
+            $sql="update userlog set UserAction=CONCAT(UserAction,'".$UserAction."') where LogID=".$_SESSION["SessionId"];
+            mysql_query($sql);
 
         $text = "Products imported Successfully";
     }

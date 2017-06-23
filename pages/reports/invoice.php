@@ -29,7 +29,11 @@ if ($_REQUEST['mode']=="ret")
         $sql= "update products set Fields='".json_encode($data)."' 
         ,Productlog	=CONCAT(Productlog,'".$Productlog."')
         where ProductID=".$obj->ProductID;
-        mysql_query($sql);    
+        mysql_query($sql);  
+
+        $UserAction = "<li>".$_SESSION["Name"]." updated invoice with TransactionID ".$_REQUEST['chkSelect'][$i]."  at ".date("d-m-Y H:i:s")."</li>";
+        $sql="update userlog set UserAction=CONCAT(UserAction,'".$UserAction."') where LogID=".$_SESSION["SessionId"];
+        mysql_query($sql);	  
 	}
 
 	header("location:invoice.php?mode=updated");

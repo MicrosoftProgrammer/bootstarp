@@ -6,6 +6,30 @@
 
     if ($_REQUEST["mode"]=="Add")
     { 
+        $sql="select max(ProductID) from products";
+        $res=mysql_query($sql);
+        $row = mysql_num_rows($res);
+
+        $files = array();
+        $fileImage = array();
+        $invalid = array();
+        if(count($_FILES)>0){
+            foreach(array_keys($_FILES) as $file){
+                $name = GetData("productfields","ProductFieldKey","'".$file."'","ProductFieldName");
+                $files[]=$name;
+            }
+            $cnt=0;
+            foreach ($_FILES as $file){
+                if($file['name']==""){
+                    $invalid[] = $files[$cnt];
+                }
+                else {
+                    $fileImage[$files[$cnt]] =post_img($file['name'], $file['tmp_name'],"../../images/products");
+                }
+                $cnt++;
+            }
+        }
+
         $keys = implode (", ", array_map('add_quotes', array_keys($_POST)));
         $sql = "SELECT ProductFieldName FROM productfields where `ProductFieldKey`in($keys)
          ORDER BY FIELD(ProductFieldKey,$keys)";
@@ -23,6 +47,13 @@
        $keys = substr($keys, 0, -1);     
        $keys = explode (",", $keys);      
        $json = array_combine($keys, array_values(array_map('trim',$data)));
+
+        foreach ($fileImage as $key => $value){
+            $json[$key]=$value;
+        }
+
+        $json["S.No"]=$row++;
+
        $json=json_encode($json);       
 
         $CategoryID = $_REQUEST["Category"];
@@ -52,6 +83,10 @@
 
             mysql_query($sql);     
         }
+
+        $UserAction = "<li>".$_SESSION["Name"]." added Product with ID ".$ProductID."  at ".date("d-m-Y H:i:s")."</li>";
+        $sql="update userlog set UserAction=CONCAT(UserAction,'".$UserAction."') where LogID=".$_SESSION["SessionId"];
+        mysql_query($sql);
         
         header("location:viewproducts.php?mode=added");   
    }
@@ -132,6 +167,7 @@
                                                                     <label>'.$obj->ProductFieldName.'</label>
                                                                     <input type="'.$type.'" class="form-control" name="'.$obj->ProductFieldKey.'" 
                                                                     value="'.$_REQUEST[$obj->ProductFieldKey].'" 
+                                                                    id="'.$obj->ProductFieldKey.'" 
                                                                     placeholder="'.$obj->ProductFieldName.'"
                                                                     '.$isRequired.'/>                                            
                                                                 </div>';
@@ -143,6 +179,7 @@
                                                                      <div class="input-group date">
                                                                     <input type="text" 
                                                                             class="form-control " 
+                                                                            id="'.$obj->ProductFieldKey.'" 
                                                                             name="'.$obj->ProductFieldKey.'" 
                                                                             placeholder="'.$obj->ProductFieldName.'"
                                                                             '.$isRequired.'/>  
@@ -156,7 +193,7 @@
                                                     else  if($obj->Type=="TextArea"){
                                                         echo ' <div class="form-group col-md-4">
                                                                     <label>'.$obj->ProductFieldName.'</label>
-                                                                    <textarea class="form-control" rows="4" name="'.$obj->ProductFieldKey.'" 
+                                                                    <textarea id="'.$obj->ProductFieldKey.'"  class="form-control" rows="4" name="'.$obj->ProductFieldKey.'" 
                                                                     placeholder="'.$obj->ProductFieldName.'"
                                                                     '.$isRequired.'></textarea>                                        
                                                                 </div>';
@@ -167,6 +204,10 @@
                                                                     <input type="file" class="form-control" name="'.$obj->ProductFieldKey.'" />                                         
                                                                 </div>';
                                                     } 
+                                                    else  if($obj->Type=="hidden"){
+                                                        echo '<input type="hidden" class="form-control" name="'.$obj->ProductFieldKey.'" value="'.$productfield[$obj->ProductFieldName].'" />                                         
+                                                                ';
+                                                    }  
                                                     else  if($obj->Type=="CheckBox"){
                                                         echo ' <div class="form-group col-md-4">
                                                                     <label>'.$obj->ProductFieldName.'</label>
@@ -219,6 +260,12 @@
                 $('.date').datetimepicker({
                     format: 'DD/MMM/YYYY'
                 });
+            });
+
+            $(".date").on("dp.change", function(e) {
+                if($(e.currentTarget).find("input")[0].id=="CalibrationDate"){
+                    $("#CalibrationDueDate").val(e.date.add('years', 1).format("DD/MMM/YYYY"));
+                }
             });
         </script>
 </html>

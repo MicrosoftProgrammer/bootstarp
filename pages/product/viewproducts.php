@@ -370,7 +370,7 @@ $headers= array();
                 "visible": false
             }
              ],
-                order: [ 1, 'desc' ]            
+                order: [ 1, 'asc' ]            
             });
 
         example.columns().eq(0).each(function(colIdx) {

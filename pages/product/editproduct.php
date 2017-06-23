@@ -5,7 +5,47 @@
 
 
     if ($_REQUEST["mode"]=="update")
-    {         
+    {       
+        
+        // print_r($_FILES);
+        $files = array();
+        $fileImage = array();
+        $invalid = array();
+        if(count($_FILES)>0){
+            foreach(array_keys($_FILES) as $file){
+                $name = GetData("productfields","ProductFieldKey","'".$file."'","ProductFieldName");
+                $files[]=$name;
+            }
+            $cnt=0;
+            foreach ($_FILES as $file){
+                if($file['name']==""){
+                    $invalid[] = $files[$cnt];
+                }
+                else {
+                    $fileImage[$files[$cnt]] =post_img($file['name'], $file['tmp_name'],"../../images/products");
+                }
+                $cnt++;
+            }
+        }
+        if(count($invalid)>0) {
+           
+             $fields = GetData("products","ProductID",$_REQUEST['Id'],"Fields");
+             $fields = json_decode($fields,TRUE);
+             $sql ="select * from products p inner join fieldmapping fm on p.CategoryID=fm.CategoryID
+             inner join productfields pf on pf.ProductFieldID=fm.ProductFieldID where pf.ProductFieldType=10
+             and p.ProductID=".$_REQUEST['Id'];
+
+            $res=mysql_query($sql);
+            while($row = mysql_fetch_object($res))
+            {
+                foreach ($invalid as $file){
+                    if($file== $row->ProductFieldName){
+                        $fileImage[$row->ProductFieldName] = $fields[$row->ProductFieldName];
+                    }
+                }
+            }
+        }
+
         $keys = implode (", ", array_map('add_quotes', array_keys($_POST)));
         $sql = "SELECT ProductFieldName FROM productfields where `ProductFieldKey`in($keys)
          ORDER BY FIELD(ProductFieldKey,$keys)";
@@ -21,6 +61,12 @@
        $keys = explode (",", $keys);      
        $json = array_combine($keys, array_values($_POST));
        $Productlog = "<li>Product Updated by ".$_SESSION["Name"]." on ".date("Y-m-d H:i:s")."</li>";
+
+        foreach ($fileImage as $key => $value){
+            $json[$key]=$value;
+        }
+
+     
        $json=json_encode($json);
        $UserID = $_SESSION["UserID"];
 
@@ -33,7 +79,11 @@
 
  
         
-        mysql_query($sql);				
+        mysql_query($sql);		
+
+        $UserAction = "<li>".$_SESSION["Name"]." updated Product with ID ".$_REQUEST['Id']."  at ".date("d-m-Y H:i:s")."</li>";
+        $sql="update userlog set UserAction=CONCAT(UserAction,'".$UserAction."') where LogID=".$_SESSION["SessionId"];
+        mysql_query($sql);		
         header("location:viewproducts.php?mode=edited");           
     }
 
@@ -118,6 +168,7 @@
                                                                     <label>'.$obj->ProductFieldName.'</label>
                                                                     <input type="'.$type.'" 
                                                                             class="form-control" 
+                                                                            id="'.$obj->ProductFieldKey.'" 
                                                                             name="'.$obj->ProductFieldKey.'" 
                                                                             placeholder="'.$obj->ProductFieldName.'"
                                                                             value="'.$productfield[$obj->ProductFieldName].'"
@@ -132,6 +183,7 @@
                                                                     <input type="text" 
                                                                             class="form-control " 
                                                                             name="'.$obj->ProductFieldKey.'" 
+                                                                            id="'.$obj->ProductFieldKey.'" 
                                                                             placeholder="'.$obj->ProductFieldName.'"
                                                                             value="'.$productfield[$obj->ProductFieldName].'"
                                                                             '.$isRequired.'/>  
@@ -145,7 +197,7 @@
                                                     else  if($obj->Type=="TextArea"){
                                                         echo ' <div class="form-group col-md-4">
                                                                     <label>'.$obj->ProductFieldName.'</label>
-                                                                    <textarea class="form-control" rows="4" name="'.$obj->ProductFieldKey.'" 
+                                                                    <textarea id="'.$obj->ProductFieldKey.'"  class="form-control" rows="4" name="'.$obj->ProductFieldKey.'" 
                                                                     placeholder="'.$obj->ProductFieldName.'"
                                                                     '.$isRequired.'>'.$productfield[$obj->ProductFieldName].'</textarea>                                        
                                                                 </div>';
@@ -154,6 +206,17 @@
                                                         echo ' <div class="form-group col-md-4">
                                                                     <label>'.$obj->ProductFieldName.'</label>
                                                                     <input type="checkbox" class="form-control" name="'.$obj->ProductFieldKey.'" />                                         
+                                                                </div>';
+                                                    } 
+                                                    else  if($obj->Type=="hidden"){
+                                                        echo '<input type="hidden" class="form-control" name="'.$obj->ProductFieldKey.'" value="'.$productfield[$obj->ProductFieldName].'" />                                         
+                                                                ';
+                                                    }                                                     
+                                                    else  if($obj->Type=="file"){
+                                                        echo ' <div class="form-group col-md-4">
+                                                                    <label>'.$obj->ProductFieldName.'</label>
+                                                                    <input type="file" class="form-control" value="'.$productfield[$obj->ProductFieldName].'" name="'.$obj->ProductFieldKey.'" />  
+                                                                    <a target="_blank" href="../../images/products/'.$productfield[$obj->ProductFieldName].'">'.$productfield[$obj->ProductFieldName].'</a>                                       
                                                                 </div>';
                                                     } 
                                                     else  if($obj->Type=="Select"){
@@ -201,6 +264,12 @@
                 $('.date').datetimepicker({
                     format: 'DD/MMM/YYYY'
                 });
+            });
+
+            $(".date").on("dp.change", function(e) {
+                if($(e.currentTarget).find("input")[0].id=="CalibrationDate"){
+                    $("#CalibrationDueDate").val(e.date.add('years', 1).format("DD/MMM/YYYY"));
+                }
             });
         </script>
 </html>

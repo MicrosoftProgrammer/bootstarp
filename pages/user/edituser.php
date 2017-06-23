@@ -41,7 +41,11 @@
             $sql.= "ContactNo	=	'".$ContactNo."', ";
             $sql.= "UserType	=	'".$UserType."'";            
             $sql.= " where UserID='".$_REQUEST['Id']."'";	
-            mysql_query($sql);				
+            mysql_query($sql);		
+
+                                $UserAction = "<li>".$_SESSION["Name"]." updated user ".$Name."  at ".date("d-m-Y H:i:s")."</li>";
+            $sql="update userlog set UserAction=CONCAT(UserAction,'".$UserAction."') where LogID=".$_SESSION["SessionId"];
+            mysql_query($sql);		
 
             header("location:viewusers.php?mode=edited");
         }

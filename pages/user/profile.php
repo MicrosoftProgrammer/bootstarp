@@ -25,7 +25,11 @@
             }
             $sql.= "ContactNo	=	'".$ContactNo."'";
             $sql.= " where UserID='".$_SESSION['UserID']."'";	
-            mysql_query($sql);				
+            mysql_query($sql);	
+
+            $UserAction = "<li>".$_SESSION["Name"]." updatedprofile  at ".date("d-m-Y H:i:s")."</li>";
+            $sql="update userlog set UserAction=CONCAT(UserAction,'".$UserAction."') where LogID=".$_SESSION["SessionId"];
+            mysql_query($sql);	 			
 
             $text ="Profile Updated Successfully";
         }

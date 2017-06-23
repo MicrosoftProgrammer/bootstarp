@@ -39,6 +39,25 @@
                         <!-- /.panel-heading -->
                         <div class="panel-body">
                             <form name="adminForm" method="post"> 
+                                                            <div id="myModal" class="modal fade" role="dialog">
+                                    <div class="modal-dialog">
+
+                                        <!-- Modal content-->
+                                        <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                            <h4 class="modal-title">User Actions Performed</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Loading...</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                                        </div>
+                                        </div>
+
+                                    </div>
+                                </div>
                             <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
                                 <thead>
                                     <tr>
@@ -56,6 +75,9 @@
                                         </th>  
                                         <th>
                                             Browser
+                                        </th>
+                                         <th>
+                                            Action
                                         </th>
                                     </tr>
                                 </thead>
@@ -91,6 +113,9 @@
                                                         <td>
                                                             <?php echo $obj->Browser; ?>                                            
                                                         </td>
+                                                         <td>
+                                                           <a type="button" id="<?php echo $obj->LogID; ?>" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Actions</a>                                                                                     
+                                                        </td>
                                                     </tr>  
                                                     <?php
                                                 }
@@ -118,4 +143,10 @@
     </body>
     <?php echo fnScript(); ?>
     <?php echo fnDataTableScript(); ?>
+        <script>
+        $('#myModal').on('shown.bs.modal', function (e) {
+           var link = $(e.relatedTarget);          
+            $(this).find(".modal-body").load("../../includes/data.php?mode=log&LogID="+link[0].id);
+        });
+    </script>
 </html>

@@ -25,10 +25,10 @@
             $_SESSION["Permissions"]=$obj->Permissions;
             $ip = $_SERVER['REMOTE_ADDR'];
             $browser= $_REQUEST['browser'];
-
-            $sql="insert into userlog(LoggedInUser,IPAddress,Browser) values('$obj->UserID','$ip','$browser')";
+            $UserAction = "<li>".$_SESSION["Name"]." logged in at ".date("d-m-Y H:i:s")."</li>";
+            $sql="insert into userlog(LoggedInUser,IPAddress,Browser,UserAction) values('$obj->UserID','$ip','$browser','$UserAction')";
             mysql_query($sql);
-            echo $sql;
+            
             $_SESSION["SessionId"]= mysql_insert_id();
             header("location:pages/dashboard/index.php");
         }

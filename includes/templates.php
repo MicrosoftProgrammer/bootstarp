@@ -128,4 +128,31 @@ function fnGetPermissions($UserID){
     $html= $html. "</ul>";
     return $html;
 }
+
+function fnGetLogs($LogID){
+    $sql = "select * from userlog where LogID=".$LogID;
+    $res=mysql_query($sql);
+    $html ='<div class="panel panel-success">
+                <div class="panel-heading">
+                    <i class="fa fa-bell fa-fw"></i> User Logs
+                </div>
+                <!-- /.panel-heading -->
+                <div class="panel-body">
+                    <div class="list-group">
+                    <ul>';
+    while($obj = mysql_fetch_object($res)){
+         $html =$html.$obj->UserAction;
+    }
+                    
+   $html =$html.'</ul>                           
+                    </div>
+                    <!-- /.list-group -->
+                </div>
+                <!-- /.panel-body -->
+        </div>';
+
+
+
+    return $html;
+}
 ?>

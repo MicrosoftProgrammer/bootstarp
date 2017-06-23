@@ -36,6 +36,10 @@
         $sql = "INSERT INTO users (Name,Password,Email,ContactNo,UserType,Permissions)
         VALUES ('$Name','$Password','$Email','$ContactNo','$UserType','$permissions')";        
         mysql_query($sql);
+
+                    $UserAction = "<li>".$_SESSION["Name"]." added user ".$Name."  at ".date("d-m-Y H:i:s")."</li>";
+            $sql="update userlog set UserAction=CONCAT(UserAction,'".$UserAction."') where LogID=".$_SESSION["SessionId"];
+            mysql_query($sql);	 
         
         header("location:viewusers.php?mode=added");
     }

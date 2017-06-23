@@ -12,7 +12,7 @@ if ($_REQUEST['mode']=="del")
 {
 	for ($i=0;$i<count($_REQUEST['chkSelect']);$i++)
 	{
-		mysql_query("update productfieldsset Deleted=1 where ProductFieldID=".$_REQUEST['chkSelect'][$i]."");
+		mysql_query("update productfields set Deleted=1 where ProductFieldID=".$_REQUEST['chkSelect'][$i]."");
 	}
 
 	header("location:viewproductfield.php?mode=deleted");

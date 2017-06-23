@@ -77,6 +77,10 @@
                     }
                 } 
 
+            $UserAction = "<li>".$_SESSION["Name"]." updated fiele mapping  at ".date("d-m-Y H:i:s")."</li>";
+            $sql="update userlog set UserAction=CONCAT(UserAction,'".$UserAction."') where LogID=".$_SESSION["SessionId"];
+            mysql_query($sql);	 
+
         $text="Field Updated Successfully";
     }
 ?>

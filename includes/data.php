@@ -14,4 +14,8 @@ if($_REQUEST["mode"]=="sorting"){
 if($_REQUEST["mode"]=="permissions"){
     echo fnGetPermissions($_REQUEST["UserID"]);
 }
+
+if($_REQUEST["mode"]=="log"){
+    echo fnGetLogs($_REQUEST["LogID"]);
+}
 ?>

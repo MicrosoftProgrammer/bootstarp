@@ -58,6 +58,10 @@ if ($_REQUEST['mode']=="Add" && $TransactionID=="")
         ,Productlog	=CONCAT(Productlog,'".$Productlog."')
         where ProductID=".$_REQUEST["Product"];
         mysql_query($sql);
+
+        $UserAction = "<li>".$_SESSION["Name"]." created invoice with no ".$InvoiceNo."  at ".date("d-m-Y H:i:s")."</li>";
+        $sql="update userlog set UserAction=CONCAT(UserAction,'".$UserAction."') where LogID=".$_SESSION["SessionId"];
+        mysql_query($sql);	 
     }
 }
 ?>

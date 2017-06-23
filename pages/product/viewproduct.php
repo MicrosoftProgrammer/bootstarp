@@ -46,8 +46,7 @@
                                         	if($numrows>0)
                                             {
                                                 $cnt=0;
-                                                while($obj=mysql_fetch_object($res))
-                                                { 
+                                                $obj=mysql_fetch_object($res);
                                                     $cnt++;
                                                     if($cnt%2==0) $class=""; else $class="class=alt";
                                                     ?>
@@ -71,10 +70,24 @@
                                                      
                                                     
                                                     <?php
-                                                }
                                             }
                                                                      
                                 ?>
+                                <div class="panel panel-success">
+                                    <div class="panel-heading">
+                                        <i class="fa fa-bell fa-fw"></i> Product History
+                                    </div>
+                                    <!-- /.panel-heading -->
+                                    <div class="panel-body">
+                                        <div class="list-group">
+                                        <ul>
+                                          <?php echo $obj->Productlog; ?>
+                                        </ul>                           
+                                        </div>
+                                        <!-- /.list-group -->
+                                    </div>
+                                    <!-- /.panel-body -->
+                                </div>
                    
                             </form>                            
                             <!-- /.table-responsive -->    
