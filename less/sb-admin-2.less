@@ -126,6 +126,7 @@ body {
 
 .sidebar .sidebar-search {
     padding: 15px;
+    text-align: center;
 }
 
 .sidebar ul li {
@@ -666,3 +667,52 @@ a.pull-right:hover{
 .operation a:hover{
     color:#CECECE;
 }
+
+.logo{
+    max-height: 100px;
+}
+
+.container-fluid{
+    min-height: 720px;
+}
+
+#divLoading{
+    margin: 0px; 
+    padding: 0px; 
+    position: fixed; 
+    right: 0px; 
+    top: 0px; 
+    width: 100%; 
+    height: 100%; 
+    background-color: #004164; 
+    z-index: 30001; 
+    opacity: 0.8;
+
+    p{
+        position: absolute; 
+        color: White; 
+        top: 50%; left: 45%;
+    }
+}
+
+#dataTable-example_filter{
+    float: right;
+}
+
+span.cell{
+    display: block !important;
+    &:hover{
+    overflow: visible; 
+    width:auto !important;  /* just added this line */
+}
+}
+
+.cell{
+    white-space: nowrap;
+    width: 120px !important;
+    text-overflow: ellipsis;
+    cursor: pointer;
+    word-break: break-all;
+    overflow:hidden;
+}
+

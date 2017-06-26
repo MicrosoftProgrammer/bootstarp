@@ -70,6 +70,9 @@
                                         <th>
                                             IP Address
                                         </th>
+                                         <th>
+                                            MAC Address
+                                        </th>
                                         <th>
                                             Logout Time
                                         </th>  
@@ -102,13 +105,16 @@
                                                             <?php echo $obj->Name; ?>
                                                         </td>
                                                         <td>
-                                                            <?php echo $obj->LoggedInTime; ?>
+                                                            <?php echo ConvertToCustomDateTime($obj->LoggedInTime); ?>
                                                         </td>
                                                          <td>
                                                             <?php echo $obj->IPAddress; ?>
                                                         </td>
                                                          <td>
-                                                            <?php echo $obj->LogoutTime; ?>
+                                                            <?php echo $obj->MACAddress; ?>
+                                                        </td>                                                        
+                                                         <td>
+                                                            <?php if($obj->LogoutTime=="0000-00-00 00:00:00") echo "UnExpected Logout"; else echo ConvertToCustomDateTime($obj->LogoutTime); ?>
                                                         </td>
                                                         <td>
                                                             <?php echo $obj->Browser; ?>                                            

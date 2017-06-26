@@ -41,7 +41,7 @@ $filter = array();
                             <?php } ?>
                             <div class="row">
                                 <div class="col-md-12">
-                                   <form name="adminForm" method="post" action="reportgenerator.php?mode=Product" enctype="multipart/form-data">   
+                                   <form name="adminForm" method="post" enctype="multipart/form-data">   
                                         <div class="form-group col-md-3">
                                             <label>Category Name</label>
                                             <select class="form-control" name="Category" onchange="fnSubmit();" required>
@@ -128,7 +128,10 @@ $filter = array();
                                         <div class="input-group date">
                                             <input type="text" 
                                                     class="form-control " 
+                                                     onchange="fnSubmit();"
                                                     name="FromDate" 
+                                                    <?php if($_REQUEST["FromDate"]!="") echo "value='".$_REQUEST["FromDate"]."'"; ?>
+                                                    id="FromDate" 
                                                     required/>  
                                             <span class="input-group-addon">
                                                 <span class="fa fa-calendar"></span>
@@ -141,11 +144,17 @@ $filter = array();
                                             <input type="text" 
                                                     class="form-control " 
                                                     name="ToDate" 
+                                                     id="ToDate" 
+                                                     <?php if($_REQUEST["ToDate"]!="") echo "value='".$_REQUEST["ToDate"]."'"; ?>
+                                                     onchange="fnSubmit();"
                                                     required/>  
                                             <span class="input-group-addon">
                                                 <span class="fa fa-calendar"></span>
                                             </span>   
                                         </div>                                       
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                                    <button type="button" onclick="fnSubmit();" class="btn btn-primary">Search</button>
                                     </div>
 <?php
                                                 echo ' <div class="form-group col-md-12">
@@ -154,6 +163,117 @@ $filter = array();
                                                                <a href="javascript:void(0)" onclick="fnReport(3)"><img src="../../images/word.png"alt="word" /></a>  
                                                                <a href="javascript:void(0)" onclick="fnReport(4)"><img src="../../images/pdf.png"alt="pdf" /></a>                                          
                                                             </div>';
+
+                           echo '<div id="divLoading">
+                                        <p>
+                                        Loading, please wait...
+                                        <i class="fa fa-spinner fa-spin fa-2x fa-fw"></i>
+                                    </p></div>';   
+                                     echo '<div class="col-md-12" style="width:100%;overflow-x:scroll">';
+ echo '<table width="100%" class="table table-striped table-bordered table-hover" id="dataTable-example">';
+
+
+                                        $data = array();
+
+                                        $sql = "select * from producttransactions pt left join products p on p.ProductID=pt.ProductID 
+                                        left join categories c on p.CategoryID =c.CategoryID 
+                                        where (p.Deleted=0 or pt.ProductID=0)";
+                                    
+                                        if($_REQUEST["Category"]!=""){
+                                            $sql= $sql." and p.CategoryID=".$_REQUEST["Category"];
+                                        }
+                                        if($_REQUEST["FromDate"]!="" && $_REQUEST["ToDate"]!=""){
+                                            $FromDate = str_replace('/','-',$_REQUEST["FromDate"]);
+                                            $FromDate = ConvertToStdDate($FromDate);
+                                            $ToDate = str_replace('/','-',$_REQUEST["ToDate"]);
+                                            $ToDate = ConvertToStdDate($ToDate);
+
+                                            $sql= $sql." and pt.PurchaseDate between '".$FromDate."' and '".$ToDate."'";
+                                        }
+                                        if($_REQUEST["Product"]!=""){
+                                            $sql= $sql." and p.ProductID=".$_REQUEST["Product"];
+                                        }        
+                                        $sql.= " order by p.ProductID";
+
+                                        $res=mysql_query($sql);
+                                        $numrows=mysql_num_rows($res);
+
+                                        if($numrows >0){
+                                                     echo "<thead>";
+                                        echo "<tr>";
+                                        $header = array("S.No","Product Name","Invoice No","Owner","Purchase Date","Purchase Value","Due Date","Job Ref","LPO Ref","Quota Ref","Charge Details","Status");   
+
+                                        foreach($header as $key){
+                                            $cls="nprn";  
+                                            if(strlen($key)>10){
+                                                $cls="cell";
+                                            }
+                                            echo "<th  style='white-space: nowrap;' class='".$cls."'>".$key."</th>"; 
+                                        }
+
+                                        echo "</tr>";
+                                        echo "</thead>";
+                                        }
+      echo "<tbody>";
+                                        if($numrows>0)
+                                        {
+                                            $cnt=0;
+                                      
+                                            while($obj=mysql_fetch_object($res))
+                                            {
+                                                $cnt++; 
+                                                $showdata =true;
+                                                $filter=json_decode($_REQUEST['filters'],TRUE);
+                                                if(count($filter)>0){
+                                                    $allFields = json_decode($obj->Fields, TRUE);
+                                                
+                                                    for($k=0;$k<count($filter);$k++) {
+                                                        $filterkey = $_REQUEST[$filter[$k]["Key"]];
+                                                
+                                                        $filterdata = $filter[$k]["Name"];
+                                                        if($filterkey !="") {
+                                                            if($filterkey!=$allFields[$filterdata]){
+                                                                $showdata= false;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+
+                                                if($showdata){
+                                                    echo "<tr>";
+                                                    $datum = json_decode($obj->Fields, TRUE);
+                                                    $dataVal = array();
+                                                    $dataVal[0]=$cnt;
+                                                    $dataVal[1]=$datum[$obj->ProductPrimaryName];
+                                                    $dataVal[2]=$obj->Owner;
+                                                    $dataVal[3]=$obj->InvoiceNo;
+                                                    $dataVal[4]=ConvertToCustomDate($obj->PurchaseDate);
+                                                    $dataVal[5]=$obj->PurchaseValue;
+                                                    $dataVal[6]=ConvertToCustomDate($obj->DueDate);
+                                                    $dataVal[7]=$obj->JobRef;
+                                                    $dataVal[8]=$obj->LPORef;
+                                                    $dataVal[9]=$obj->QuotaRef;
+                                                    $dataVal[10]=$obj->ChargeDetails;
+                                                    $dataVal[11]=$obj->Status==1 ? "Returned" : "Rented";
+
+                                                    foreach($dataVal as $key){
+                                                        $cls="nprn";                                                                   $cls="";
+                                                        if(strlen($key)>9){
+                                                            $cls="cell";
+                                                        }
+                                                           echo "<td><span class='".$cls."'>".$key."</span></td>";
+                                                    }
+
+                                                    echo "</tr>";
+                                                }
+                                            }
+                                          
+                                        } else
+                                            {
+                                                echo '<tr  id="no" style="background-color: white!important;"><td><b style="color:red;">No Product found.</b></td></tr>';
+                                            } 
+                                          echo "</tbody>";        
+                                    echo "</table></div>";
 ?>
                                     </form>
                                 </div>
@@ -172,8 +292,22 @@ $filter = array();
             <!-- /.container-fluid -->
         </div>
     </body>
-    <?php echo fnScript(); ?>
-            <script>
+     <?php echo fnScript(); ?>
+    <?php echo fnDataTableScript(); ?>
+    <script>
+        $(document).ready(function() {
+            if($("#no")[0] === undefined) {
+            $("#dataTable-example").on( 'init.dt', function () {                 
+                    $("#divLoading").hide();
+                } ).DataTable({
+                     "bSort": false
+            });
+            }
+            else{
+                   $("#divLoading").hide();
+            }
+        });
+
         function fnSubmit(){
              document.adminForm.target="_self";
             document.adminForm.action="datewisereport.php";
@@ -181,6 +315,7 @@ $filter = array();
         }
 
         function fnReport(arg){
+              if($("#no")[0] === undefined) {
             document.adminForm.target="_blank";
             if(arg==1){
                 document.adminForm.action="../reports/previewreport.php?mode=date&type=excel";
@@ -197,7 +332,12 @@ $filter = array();
             if(arg==4){
                 document.adminForm.action="../reports/previewreport.php?mode=date&type=pdf";
                 document.adminForm.submit();  
-            }    
+            }   
+
+        }
+                    else{
+                 alert("No data available to generate report.");
+            } 
         } 
 
         
@@ -209,5 +349,6 @@ $filter = array();
                     format: 'DD/MMM/YYYY'
                 });
             });
+
         </script>
 </html>

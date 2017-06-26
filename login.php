@@ -26,7 +26,8 @@
             $ip = $_SERVER['REMOTE_ADDR'];
             $browser= $_REQUEST['browser'];
             $UserAction = "<li>".$_SESSION["Name"]." logged in at ".date("d-m-Y H:i:s")."</li>";
-            $sql="insert into userlog(LoggedInUser,IPAddress,Browser,UserAction) values('$obj->UserID','$ip','$browser','$UserAction')";
+            $Mac = GetMAC();
+            $sql="insert into userlog(LoggedInUser,IPAddress,Browser,UserAction,MACAddress) values('$obj->UserID','$ip','$browser','$UserAction','$Mac')";
             mysql_query($sql);
             
             $_SESSION["SessionId"]= mysql_insert_id();
@@ -90,8 +91,8 @@
                                     Login Error! <strong><?php echo $text; ?></strong>
                                 </div>
                             <?php } ?>  
-                    <div class="panel-heading">
-                        <img src="images/<?php echo $_SESSION['Logo']; ?>" alt="Logo" class="img-responsive" />
+                    <div class="panel-heading" align="center">
+                        <img src="images/<?php echo $_SESSION['Logo']; ?>" alt="Logo" class="logo" />
                         <h3 class="text-center"><?php echo $_SESSION["CompanyName"]; ?></h3>
                     </div>
                     <div class="panel-body">

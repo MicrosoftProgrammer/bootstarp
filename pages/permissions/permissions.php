@@ -45,7 +45,7 @@
         $sql="update users set Permissions='".json_encode($updated)."' where UserID=".$UserID;    
         mysql_query($sql);
 
-        $text="Field Updated Successfully";
+        $text="User Permissions Updated Successfully";
 
             $UserAction = "<li>".$_SESSION["Name"]." updated permission for user id ".$UserID."  at ".date("d-m-Y H:i:s")."</li>";
             $sql="update userlog set UserAction=CONCAT(UserAction,'".$UserAction."') where LogID=".$_SESSION["SessionId"];
@@ -93,7 +93,12 @@
                                             <select class="form-control" id="User" name="User" onchange="fnSubmit();" required>
                                             <option value="">Select</option>
                                                 <?php 
-                                                    $sql= "select * from users where UserType=3 and Deleted=0 and UserID!=".$_SESSION["UserID"];
+                                                    if($_SESSION["UserType"]=="1"){
+                                                        $sql= "select * from users where UserType!=1 and Deleted=0 and UserID!=".$_SESSION["UserID"];
+                                                    }
+                                                    else{
+                                                        $sql= "select * from users where UserType=3 and Deleted=0 and UserID!=".$_SESSION["UserID"];
+                                                    }
                                                     $res=mysql_query($sql);
                                                     while($obj=mysql_fetch_object($res))
                                                     {

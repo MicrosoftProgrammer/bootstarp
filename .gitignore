@@ -5,3 +5,10 @@ dist
 vendor
 uploads/*.*
 backup/*.*
+images/products/*.*
+includes/*.pdf
+includes/*.xlsx
+includes/*.xls
+includes/*.csv
+includes/*.doc
+includes/*.docx

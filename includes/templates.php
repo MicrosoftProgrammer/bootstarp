@@ -1,21 +1,40 @@
 <?php
 function fnSideBar(){
     $menu = json_decode($_SESSION["Permissions"],TRUE);
-
+    $pageName = $altpageName = basename($_SERVER['PHP_SELF']);
     $html ='
             <div class="navbar-default sidebar" role="navigation">
                 <div class="sidebar-nav navbar-collapse">
                     <ul class="nav" id="side-menu">
                         <li class="sidebar-search">
-                        <img src="../../images/'.$_SESSION["Logo"].'" alt="Logo" class="img-responsive" />
+                        <img src="../../images/'.$_SESSION["Logo"].'" alt="Logo" class="logo" />
 
                             <!-- /input-group -->
                         </li>';
+    $altpageName = str_replace("add","",$altpageName);
+    $altpageName = str_replace("edit","",$altpageName);
+    $altpageName = str_replace("view","",$altpageName);
+    $altpageName = str_replace("user","users",$altpageName);
+    $altpageName = str_replace("category","categories",$altpageName);
+    $altpageName = str_replace("product","products",$altpageName);
+    $altpageName = str_replace("bulkimport","products",$altpageName);
+    $altpageName = str_replace("geninvoicecreator","invoicegen",$altpageName);
+    $altpageName = str_replace("creator","",$altpageName);
+    
+    
 
         foreach($menu as $menuitem){
             if($menuitem["Status"]){
+                $class="";
+               
+                foreach($menuitem["SubPage"] as $subitem){
+                    if($subitem["Page"]== $pageName || strpos($subitem["Page"] , $altpageName) || $subitem["Page"] == $altpageName ){
+                        $class="active";
+                    }
+
+                }
             $html =$html.'               
-                        <li>
+                        <li class="'.$class.'">
                             <a href="'.$menuitem["Path"].$menuitem["Page"].'"><i class="fa '.$menuitem["Icon"].' fa-fw"></i> '.$menuitem["PageName"].'';
             if(count($menuitem["SubPage"])>0){
                 $html =$html.'<span class="fa arrow"></span>'; 
@@ -26,9 +45,13 @@ function fnSideBar(){
                 $html =$html.'<ul class="nav nav-second-level">';
                 foreach($menuitem["SubPage"] as $subitem){
                     if($subitem["Status"]){
+                          $class="";
+                          if($subitem["Page"]== $pageName || strpos($subitem["Page"] , $altpageName) || $subitem["Page"] == $altpageName ){
+                        $class="active";
+                    }
                         $html =$html.' 
                             <li>
-                                <a href="'.$subitem["Path"].$subitem["Page"].'">
+                                <a class="'.$class.'"  href="'.$subitem["Path"].$subitem["Page"].'">
                                     <i class="fa '.$subitem["Icon"].' fa-fw"></i> '.$subitem["PageName"].'
                                 </a>
                             </li>';     

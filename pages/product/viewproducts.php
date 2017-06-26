@@ -214,8 +214,13 @@ $headers= array();
                                             }
                                              $cols = rtrim($cols,",");
                                         ?>
-                                        
+                            <div id="divLoading">
+                                        <p>
+                                        Loading, please wait...
+                                        <i class="fa fa-spinner fa-spin fa-2x fa-fw"></i>
+                                    </p></div>           
                             <table width="100%" class="table table-striped table-bordered table-hover" id="example">
+                            <?php if(count($data)>0) { ?>
                                 <thead>
                                     <tr>
                                         <th>
@@ -249,7 +254,8 @@ $headers= array();
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <?php } ?>
+                                <tbody >
                                 <?php
                               
                                         	if($numrows>0)
@@ -317,7 +323,7 @@ $headers= array();
                                             }
                                             else
                                             {
-                                                echo '<tr class="alt"><td colspan="8"><b style="color:red;">No Product found.</b></td></tr>';
+                                                echo '<tr  id="no" style="background-color: white!important;"><td><b style="color:red;">No Product found.</b></td></tr>';
                                             }                                
                                 ?>
                                 </tbody>
@@ -350,7 +356,7 @@ $headers= array();
     <?php echo fnScript(); ?>
     <?php echo fnDataTableScript(); ?>
     <script>
-    
+     if($("#no")[0] === undefined) {
         $('#example thead th.search').each(function() {
             var title = $('#example thead th').eq($(this).index()).text();
             $(this).html('<input type="text" class="form-control" placeholder="Search" />');
@@ -358,7 +364,9 @@ $headers= array();
         
         // DataTable
         var example = 
-            $('#example').DataTable({
+            $('#example').on( 'init.dt', function () {
+                    $("#divLoading").hide();
+                } ).DataTable({
                 "autoWidth": false,
                 //"responsive" :true,
                 "columnDefs": [ {
@@ -385,6 +393,10 @@ $headers= array();
                 e.stopPropagation();
             });
         });
+     }
+     else{
+        $("#divLoading").hide(); 
+     }
 
         function fnShowHide( iCol )
         {

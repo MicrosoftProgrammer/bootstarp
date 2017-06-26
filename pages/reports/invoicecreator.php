@@ -13,55 +13,64 @@ $filter = array();
          $TransactionID=$obj->TransactionID;
      }
  }
-
+$text=="";
 if ($_REQUEST['mode']=="Add" && $TransactionID=="")
 {
-    $ProductID = $_REQUEST["Product"];
-    $Owner = str_replace("'","`",$_REQUEST["Owner"]);
-    $PurchaseDate = ConvertToStdDate(str_replace("/","-",$_REQUEST["PurchaseDate"]));
-    $DueDate = ConvertToStdDate(str_replace("/","-",$_REQUEST["DueDate"]));
     $InvoiceNo	 = str_replace("'","`",$_REQUEST["InvoiceNo"]);
-    $JobRef	 = str_replace("'","`",$_REQUEST["JobRef"]);
-    $LPORef	 = str_replace("'","`",$_REQUEST["LPORef"]);
-    $QuotaRef	 = str_replace("'","`",$_REQUEST["QuotaRef"]);
-    $ChargeDetails	 = "Rented ".GetProductData($ProductID)." From ".ConvertToCustomDate($PurchaseDate)." to ".ConvertToCustomDate($DueDate)." , ".str_replace("'","`",$_REQUEST["ChargeDetails"]);
-    $PurchaseValue	 = $_REQUEST["PurchaseValue"];
+    $exist = GetData("producttransactions","InvoiceNo",$InvoiceNo,"TransactionID");
+    echo $exist;
 
-    if($InvoiceNo!=""){
-        $sql="insert into producttransactions(Owner,ProductID,PurchaseDate,DueDate,InvoiceNo,JobRef,
-                LPORef,QuotaRef,ChargeDetails,PurchaseValue) values(
-                    '$Owner','$ProductID','$PurchaseDate','$DueDate','$InvoiceNo','$JobRef',
-                    '$LPORef','$QuotaRef','$ChargeDetails','$PurchaseValue'
-                )";
+    if($exist==""){
+        $ProductID = $_REQUEST["Product"];
+        $Owner = str_replace("'","`",$_REQUEST["OwnerDet"]);
+        $PurchaseDate = ConvertToStdDate(str_replace("/","-",$_REQUEST["PurchaseDate"]));
+        $DueDate = ConvertToStdDate(str_replace("/","-",$_REQUEST["DueDate"]));
+        
+        $JobRef	 = str_replace("'","`",$_REQUEST["JobRef"]);
+        $LPORef	 = str_replace("'","`",$_REQUEST["LPORef"]);
+        $QuotaRef	 = str_replace("'","`",$_REQUEST["QuotaRef"]);
+        $ChargeDetails	 = "Rented ".GetProductData($ProductID)." From ".ConvertToCustomDate($PurchaseDate)." to ".ConvertToCustomDate($DueDate)." , ".str_replace("'","`",$_REQUEST["ChargeDetails"]);
+        $PurchaseValue	 = $_REQUEST["PurchaseValue"];
 
-        mysql_query($sql);
-        $TransactionID= mysql_insert_id();
-        $_REQUEST["mode"]="added";   
+        if($InvoiceNo!=""){
+            $sql="insert into producttransactions(Owner,ProductID,PurchaseDate,DueDate,InvoiceNo,JobRef,
+                    LPORef,QuotaRef,ChargeDetails,PurchaseValue) values(
+                        '$Owner','$ProductID','$PurchaseDate','$DueDate','$InvoiceNo','$JobRef',
+                        '$LPORef','$QuotaRef','$ChargeDetails','$PurchaseValue'
+                    )";
 
-        $sql="select * from products where ProductID=".$_REQUEST["Product"];
-        $res=mysql_query($sql);
-        $obj=mysql_fetch_object($res);
-        $data = json_decode($obj->Fields,TRUE);
-        $data["Owner"] = $Owner;
-        $data["Purchase Date"] = $_REQUEST["PurchaseDate"];
-        $data["Due Date"] = $_REQUEST["DueDate"];
-        $data["Job Ref"] = $JobRef;
-        $data["LPO Ref"] = $LPORef;
-        $data["Quota Ref"] = $QuotaRef;
-        $data["Charge Details"] = $ChargeDetails;
-        $data["Purchase Value"] =  $PurchaseValue;
-        $data["Invoice No"] =  $InvoiceNo;
-        $data["Status"] =  "Rented";
-        $Productlog = "<li>Product Rented to ".$Owner." by ".$_SESSION["Name"]." on ".$_REQUEST["PurchaseDate"]."</li>";
+            mysql_query($sql);
+            $TransactionID= mysql_insert_id();
+            $_REQUEST["mode"]="added";   
 
-        $sql= "update products set Fields='".json_encode($data)."' 
-        ,Productlog	=CONCAT(Productlog,'".$Productlog."')
-        where ProductID=".$_REQUEST["Product"];
-        mysql_query($sql);
+            $sql="select * from products where ProductID=".$_REQUEST["Product"];
+            $res=mysql_query($sql);
+            $obj=mysql_fetch_object($res);
+            $data = json_decode($obj->Fields,TRUE);
+            $data["Owner"] = $Owner;
+            $data["Purchase Date"] = $_REQUEST["PurchaseDate"];
+            $data["Due Date"] = $_REQUEST["DueDate"];
+            $data["Job Ref"] = $JobRef;
+            $data["LPO Ref"] = $LPORef;
+            $data["Quota Ref"] = $QuotaRef;
+            $data["Charge Details"] = $ChargeDetails;
+            $data["Purchase Value"] =  $PurchaseValue;
+            $data["Invoice No"] =  $InvoiceNo;
+            $data["Status"] =  "Rented";
+            $Productlog = "<li>Product Rented to ".$Owner." by ".$_SESSION["Name"]." on ".$_REQUEST["PurchaseDate"]."</li>";
 
-        $UserAction = "<li>".$_SESSION["Name"]." created invoice with no ".$InvoiceNo."  at ".date("d-m-Y H:i:s")."</li>";
-        $sql="update userlog set UserAction=CONCAT(UserAction,'".$UserAction."') where LogID=".$_SESSION["SessionId"];
-        mysql_query($sql);	 
+            $sql= "update products set Fields='".json_encode($data)."' 
+            ,Productlog	=CONCAT(Productlog,'".$Productlog."')
+            where ProductID=".$_REQUEST["Product"];
+            mysql_query($sql);
+
+            $UserAction = "<li>".$_SESSION["Name"]." created invoice with no ".$InvoiceNo."  at ".date("d-m-Y H:i:s")."</li>";
+            $sql="update userlog set UserAction=CONCAT(UserAction,'".$UserAction."') where LogID=".$_SESSION["SessionId"];
+            mysql_query($sql);	 
+        }
+    }
+    else{
+        $text ="Invoice No Already Exists"; 
     }
 }
 ?>
@@ -70,6 +79,7 @@ if ($_REQUEST['mode']=="Add" && $TransactionID=="")
     <head>
         <title><?php echo $_SESSION["CompanyName"]; ?></title>
         <?php echo fnCss(); ?>
+         <?php echo fnDatePickerCSS(); ?>
         <?php echo fnDataTableCSS(); ?>
     </head>
     <body>
@@ -99,7 +109,7 @@ if ($_REQUEST['mode']=="Add" && $TransactionID=="")
                             <?php if($_REQUEST["mode"]=="added"){ ?>
                                 <div class="alert alert-success alert-dismissable">
                                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true"><i class="fa fa-remove"></i></button>
-                                    Success! <strong><?php echo "Product Added Successfully"; ?></strong>
+                                    Success! <strong><?php echo "Invoice Generated Successfully"; ?></strong>
                                 </div>
                             <?php } ?>
                             <?php if($TransactionID!=""){ ?>
@@ -108,10 +118,10 @@ if ($_REQUEST['mode']=="Add" && $TransactionID=="")
                                     Success! <strong><?php echo "Click to Print Invoice"; ?></strong></a>
                                 </div>
                             <?php } ?>         
-                            <?php if($_REQUEST["mode"]=="deleted"){ ?>
-                                <div class="alert alert-success alert-dismissable">
+                            <?php if($text!=""){ ?>
+                                <div class="alert alert-danger alert-dismissable">
                                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true"><i class="fa fa-remove"></i></button>
-                                    Success! <strong><?php echo "Product Deleted Successfully"; ?></strong>
+                                    Error! <strong><?php echo $text; ?></strong>
                                 </div>
                             <?php } ?>                                                     
                             
@@ -205,7 +215,7 @@ if ($_REQUEST['mode']=="Add" && $TransactionID=="")
                                      <?php if($TransactionID=="") { ?>  
                                     <div class="form-group col-md-4">
                                         <label>Owner</label>
-                                        <input type="text" class="form-control" name="Owner" required value="<?php echo $_REQUEST['Owner']; ?>" />                                            
+                                        <input type="text" class="form-control" name="OwnerDet" required value="<?php echo $_REQUEST['OwnerDet']; ?>" />                                            
                                     </div>
                                     <div class="form-group col-md-4">
                                         <label>Purchase Date</label>
@@ -213,6 +223,7 @@ if ($_REQUEST['mode']=="Add" && $TransactionID=="")
                                             <input type="text" 
                                                     class="form-control " 
                                                     name="PurchaseDate" 
+                                                    <?php if($_REQUEST["PurchaseDate"]!="") echo "value='".$_REQUEST["PurchaseDate"]."'"; ?>
                                                     required/>  
                                             <span class="input-group-addon">
                                                 <span class="fa fa-calendar"></span>
@@ -224,6 +235,7 @@ if ($_REQUEST['mode']=="Add" && $TransactionID=="")
                                         <div class="input-group date">
                                             <input type="text" 
                                                     class="form-control " 
+                                                    <?php if($_REQUEST["DueDate"]!="") echo "value='".$_REQUEST["DueDate"]."'"; ?>
                                                     name="DueDate" 
                                                     required/>  
                                             <span class="input-group-addon">

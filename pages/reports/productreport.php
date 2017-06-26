@@ -1,5 +1,4 @@
-<?php
-        
+<?php        
     include('../../includes/connection.php');
     include('../../includes/helpers.php');
     include('../../includes/templates.php');
@@ -63,7 +62,7 @@ $filter = array();
                                                         "Name"=>$obj->ProductFieldName));
                                                         echo ' <div class="form-group col-md-3">
                                                                 <label>'.$obj->ProductFieldName.'</label>
-                                                                    <select class="form-control" name="'.$obj->ProductFieldKey.'" onchange="fnSubmit();">
+                                                                    <select class="form-control" onchange="fnSubmit();"  name="'.$obj->ProductFieldKey.'" onchange="fnSubmit();">
                                                                         '.fnGetFilter($obj->ProductFieldName,$obj->ProductFieldKey,$CategoryID ).'
                                                                     </select>                                               
                                                             </div>';
@@ -77,7 +76,108 @@ $filter = array();
                                                             </div>';
                                                 echo '<textarea name="filters" style="display:none;">'.json_encode($filter).'</textarea>';          
                                     } ?>
+                                       <?php if($_REQUEST["Category"]!="") { 
+                                        $sql = "select * from products p inner join categories c on p.CategoryID =c.CategoryID 
+                                                where p.Deleted=0";
+                                        if($_REQUEST["Category"]!=""){
+                                            $sql= $sql." and p.CategoryID=".$_REQUEST["Category"];
+                                        }
+                                        $sql.= " order by p.ProductID";
+                                        $res=mysql_query($sql);
+                                        $numrows=mysql_num_rows($res);
+                                        $objFields=mysql_fetch_object($res);
+                                        $data = json_decode($objFields->Fields, TRUE);
+                                echo '<div id="divLoading">
+                                        <p>
+                                        Loading, please wait...
+                                        <i class="fa fa-spinner fa-spin fa-2x fa-fw"></i>
+                                    </p></div>';                                        
+                                       ?>
+                                       <div class="col-md-12" style="width:100%;overflow-x:scroll">
+<table width="100%" class="table table-striped table-bordered table-hover" id="dataTable-example">
+                                <thead>
+                                    <tr>
+                                        <?php
+                                        $headers = array();
+                                            if($numrows>0)
+                                            {
+                                                foreach(array_keys($data) as $key) {
+                                                    $cls="nprn";      
+                                                    if(strlen($key)>10){
+                                                        $cls="cell";
+                                                    }
+                                                    echo "<th style='white-space: nowrap;' class='".$cls."'>".$key."</th>";
+                                                    array_push($headers,$key);
+                                                }                                                
+                                            }
+                                        ?>
 
+                                </thead>
+                                <tbody>
+                                <?php
+                              
+                                        	if($numrows>0)
+                                            {
+                                                $cnt=0;
+                                                $res=mysql_query($sql);
+                                                while($obj=mysql_fetch_object($res))
+                                                { 
+                                                    $cnt++;
+                                                    $showdata =true;
+                                                    if(count($filter)>0){
+                                                         $data = json_decode($obj->Fields, TRUE);
+                                                        
+                                                         for($k=0;$k<count($filter);$k++){
+                                                            $filterkey = $_REQUEST[$filter[$k]["Key"]];
+                                                  
+                                                            $filterdata = $filter[$k]["Name"];
+                                                            if($filterkey !=""){
+                                                                if($filterkey!=$data[$filterdata]){
+                                                                    $showdata= false;
+                                                                }
+                                                            }
+                                                         }
+                                                    }
+
+                                                    if($cnt%2==0) $class=""; else $class="class=alt";
+                                                    $data = json_decode($obj->Fields, TRUE);
+                                                    
+                                        
+                                                    if($showdata && count($data)>0) {
+                                                        
+                                                    ?>
+                                                       
+                                                    <tr <?php echo $class; ?>>
+                                                                                    
+                                                        
+                                                            <?php 
+                                                            $count=0;
+                                                            
+
+                                                                foreach($headers as $value) {
+                                                            $cls="nprn";                                                                   $cls="";
+                                                           if(strlen($data[$value])>10){
+                                                               $cls="cell";
+                                                           }
+                                                                    echo "<td><span class='".$cls."'>".$data[$value]."</span></td>";
+                                                                }
+                                                           
+                                                           ?>
+                                                        
+                                                    </tr>  
+                                                    <?php
+                                                }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                echo '<tr id="no" class="alt"><td colspan="8"><b style="color:red;">No Product found.</b></td></tr>';
+                                            }                                
+                                ?>
+                                </tbody>
+                            </table>
+                            </div>
+                            <?php } ?>
                                     </form>
                                 </div>
                                 <!-- /.col-lg-6 (nested) -->
@@ -96,7 +196,20 @@ $filter = array();
         </div>
     </body>
     <?php echo fnScript(); ?>
+        <?php echo fnDataTableScript(); ?>
             <script>
+                $(document).ready(function() {
+                    if($("#no")[0] === undefined) {
+                        $("#dataTable-example").on( 'draw.dt', function () {
+                            $("#divLoading").hide();
+                                }).DataTable({
+                                    "bSort": false
+                                });
+                        }
+                        else{
+                            $("#divLoading").hide();
+                        }
+            });
         function fnSubmit(){
              document.adminForm.target="_self";
             document.adminForm.action="productreport.php";
@@ -104,22 +217,26 @@ $filter = array();
         }
 
         function fnReport(arg){
-            document.adminForm.target="_blank";
-            if(arg==1){
-                document.adminForm.action="../reports/previewreport.php?mode=Product&type=excel";
-                document.adminForm.submit();
-            }
-            if(arg==2){
-                document.adminForm.action="../reports/previewreport.php?mode=Product&type=csv";
-                document.adminForm.submit();  
-            }            
-            if(arg==3){
-                document.adminForm.action="../reports/previewreport.php?mode=Product&type=word";
-                document.adminForm.submit();  
-            }
-            if(arg==4){
-                document.adminForm.action="../reports/previewreport.php?mode=Product&type=pdf";
-                document.adminForm.submit();  
+            if($("#no")[0] === undefined) {
+                document.adminForm.target="_blank";
+                if(arg==1){
+                    document.adminForm.action="../reports/previewreport.php?mode=Product&type=excel";
+                    document.adminForm.submit();
+                }
+                if(arg==2){
+                    document.adminForm.action="../reports/previewreport.php?mode=Product&type=csv";
+                    document.adminForm.submit();  
+                }            
+                if(arg==3){
+                    document.adminForm.action="../reports/previewreport.php?mode=Product&type=word";
+                    document.adminForm.submit();  
+                }
+                if(arg==4){
+                    document.adminForm.action="../reports/previewreport.php?mode=Product&type=pdf";
+                    document.adminForm.submit();  
+                }
+            }else{
+                alert("No data available to generate report.");
             }
         }                
     </script>

@@ -129,6 +129,113 @@ $filter = array();
                                                                <a href="javascript:void(0)" onclick="fnReport(3)"><img src="../../images/word.png"alt="word" /></a>  
                                                                <a href="javascript:void(0)" onclick="fnReport(4)"><img src="../../images/pdf.png"alt="pdf" /></a>                                          
                                                             </div>';
+
+               echo '<div id="divLoading">
+                                        <p>
+                                        Loading, please wait...
+                                        <i class="fa fa-spinner fa-spin fa-2x fa-fw"></i>
+                                    </p></div>';   
+       ?>
+       <?php 
+       echo '<div class="col-md-12" style="width:100%;overflow-x:scroll">
+       <table width="100%" class="table table-striped table-bordered table-hover" id="dataTable-example">';
+        $sql="select * from productfields pf inner join fieldmapping fm on pf.ProductFieldID = fm.ProductFieldID
+                                        where fm.CategoryID=".$CategoryID." and fm.Deleted=0 order by fm.DisplayOrder";
+                                        $res = mysql_query($sql);
+
+
+
+                                        $data = array();
+
+                                        $sql = "select * from producttransactions pt inner join products p on p.ProductID=pt.ProductID 
+                                        inner join categories c on p.CategoryID =c.CategoryID 
+                                        where p.Deleted=0";
+                                        if($_REQUEST["Category"]!=""){
+                                            $sql= $sql." and p.CategoryID=".$_REQUEST["Category"];
+                                        }
+                                        if($_REQUEST["Product"]!=""){
+                                            $sql= $sql." and p.ProductID=".$_REQUEST["Product"];
+                                        }        
+                                        $sql.= " order by p.ProductID";
+
+                                        $res=mysql_query($sql);
+                                        $numrows=mysql_num_rows($res); 
+ if($numrows>0){
+                                                                                echo "<thead>";
+                                        echo "<tr>";
+                                        $header = array("S.No","Product Name","Invoice No","Owner","Purchase Date","Purchase Value","Due Date","Job Ref","LPO Ref","Quota Ref","Charge Details","Status");   
+
+                                        foreach($header as $key){
+                                            $cls="nprn";  
+                                            if(strlen($key)>10){
+                                                $cls="cell";
+                                            }
+                                            echo "<th  style='white-space: nowrap;' class='".$cls."'>".$key."</th>";  
+                                        }
+
+                                        echo "</tr>";
+                                        echo "</thead>";
+ }
+        echo "<tbody>";
+                                        if($numrows>0)
+                                        {
+                                            $cnt=0;
+                                    
+                                            while($obj=mysql_fetch_object($res))
+                                            {
+                                                $cnt++; 
+                                                $showdata =true;
+                                                $filter=json_decode($_REQUEST['filters'],TRUE);
+                                                if(count($filter)>0){
+                                                    $allFields = json_decode($obj->Fields, TRUE);
+                                                
+                                                    for($k=0;$k<count($filter);$k++) {
+                                                        $filterkey = $_REQUEST[$filter[$k]["Key"]];
+                                                
+                                                        $filterdata = $filter[$k]["Name"];
+                                                        if($filterkey !="") {
+                                                            if($filterkey!=$allFields[$filterdata]){
+                                                                $showdata= false;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+
+                                                if($showdata){
+                                                    echo "<tr>";
+                                                    $datum = json_decode($obj->Fields, TRUE);
+                                                    $dataVal = array();
+                                                    $dataVal[0]=$cnt;
+                                                    $dataVal[1]=$datum[$obj->ProductPrimaryName];
+                                                    $dataVal[2]=$obj->Owner;
+                                                    $dataVal[3]=$obj->InvoiceNo;
+                                                    $dataVal[4]=ConvertToCustomDate($obj->PurchaseDate);
+                                                    $dataVal[5]=$obj->PurchaseValue;
+                                                    $dataVal[6]=ConvertToCustomDate($obj->DueDate);
+                                                    $dataVal[7]=$obj->JobRef;
+                                                    $dataVal[8]=$obj->LPORef;
+                                                    $dataVal[9]=$obj->QuotaRef;
+                                                    $dataVal[10]=$obj->ChargeDetails;
+                                                    $dataVal[11]=$obj->Status==1 ? "Returned" : "Rented";
+
+                                                    foreach($dataVal as $key){
+                                                        $cls="nprn";  
+                                                        if(strlen($key)>9){
+                                                            $cls="cell";
+                                                        }
+                                                        echo "<td class='".$cls."'>".$key."</td>";  
+                                                    }
+
+                                                    echo "</tr>";
+                                                }
+                                            }                                                                                                                                                                                
+                                        } 
+                                        else
+                                            {
+                                                echo '<tr  id="no" style="background-color: white!important;"><td><b style="color:red;">No Product History found.</b></td></tr>';
+                                            } 
+                                        echo "</tbody>";
+                                        echo "</table></div>";            
        ?>
                                     </form>
                                 </div>
@@ -148,7 +255,20 @@ $filter = array();
         </div>
     </body>
     <?php echo fnScript(); ?>
-            <script>
+    <?php echo fnDataTableScript(); ?>
+    <script>
+                $(document).ready(function() {
+                         if($("#no")[0] === undefined) {
+                            $("#dataTable-example").on( 'init.dt', function () {
+                                        $("#divLoading").hide();
+                                    } ).DataTable({
+                            "bSort": false
+                                    });
+                         }
+                         else{
+                               $("#divLoading").hide(); 
+                         }
+    });
         function fnSubmit(){
              document.adminForm.target="_self";
             document.adminForm.action="producthistoryreport.php";
@@ -156,6 +276,7 @@ $filter = array();
         }
 
         function fnReport(arg){
+             if($("#no")[0] === undefined) {
             document.adminForm.target="_blank";
             if(arg==1){
                 document.adminForm.action="../reports/previewreport.php?mode=ProductHistory&type=excel";
@@ -173,8 +294,11 @@ $filter = array();
                 document.adminForm.action="../reports/previewreport.php?mode=ProductHistory&type=pdf";
                 document.adminForm.submit();  
             }            
-        }   
-
+       
+        }else{
+             alert("No data available to generate report.");
+        } 
+ }  
         
     </script>
 </html>
