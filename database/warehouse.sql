@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jun 23, 2017 at 11:13 AM
+-- Generation Time: Jun 26, 2017 at 01:38 PM
 -- Server version: 5.1.53
 -- PHP Version: 5.3.4
 
@@ -133,14 +133,14 @@ INSERT INTO `productfields` (`ProductFieldID`, `ProductFieldName`, `ProductField
 (7, 'Quota Ref', 'QuotaRef', 1, 0, 0, 1, 1, 0),
 (8, 'Charge Details', 'ChargeDetails', 4, 0, 0, 1, 1, 0),
 (9, 'Purchase Value', 'PurchaseValue', 5, 0, 0, 1, 1, 0),
-(10, 'Status', 'Status', 2, 0, 0, 1, 1, 0),
+(10, 'Status', 'Status', 2, 0, 1, 1, 1, 0),
 (11, 'Tool Ref No', 'ToolRefNo', 1, 1, 0, 0, 1, 0),
 (12, 'Sno of the item', 'Snooftheitem', 1, 1, 0, 0, 1, 0),
 (13, '12NC', '12NC', 1, 1, 0, 0, 1, 0),
 (14, 'Description', 'Description', 4, 1, 0, 0, 1, 0),
 (15, 'Qty', 'Qty', 5, 0, 0, 1, 1, 0),
 (16, 'Country', 'Country', 1, 1, 0, 0, 1, 0),
-(17, 'Tools Status', 'ToolsStatus', 2, 1, 0, 0, 1, 0),
+(17, 'Tools Status', 'ToolsStatus', 2, 1, 1, 0, 1, 0),
 (18, 'Calibration Interval', 'CalibrationInterval', 1, 0, 0, 0, 1, 0),
 (19, 'Calibration Vendor', 'CalibrationVendor', 1, 0, 0, 0, 1, 0),
 (20, 'Calibration Date', 'CalibrationDate', 6, 0, 0, 0, 1, 0),
@@ -241,7 +241,7 @@ CREATE TABLE IF NOT EXISTS `products` (
 --
 
 INSERT INTO `products` (`ProductID`, `CategoryID`, `Fields`, `Productlog`, `CreatedBy`, `CreatedOn`, `LastUpdatedBy`, `LastUpdatedOn`, `Status`, `Deleted`) VALUES
-(1, 1, '{"S.No":"1","Tool Ref No":"M04P004B","Sno of the item":"136279","12NC":"N/A","Description":"Unfors XI MAM W/AL scanning detector","Qty":"1","Purchase Date":"","Purchase Value":"300","Owner":"Abdulelah Ahmed","Country":"Yemen","Tools Status":"Returned","Calibration Interval":"12 Months","Calibration Vendor":"Frank Shield","Calibration Date":"14/Jun/2014","Calibration Due Date":"14/Jun/2015","Calibrated Date":"","Calibration Certificate No":"234234","Remark":"Returned for credit","Previous location":"","FSE Update":"Returns","Status":"Returned","Invoice No":"324324","Charge Details":"Returned for credit","Quota Ref":"234","Job Ref":"234","LPO Ref":"234","Due Date":"18/Oct/2015","Calibration Certificate Image":"test.txt"}', '<li>Product Created by Suresh Raju on 2017-06-23 10:45:27</li><li>Product Updated by Suresh Raju on 2017-06-23 10:45:47</li>', 1, '2017-06-23 16:15:27', 1, '2017-06-23 16:15:47', 1, 0),
+(1, 1, '{"S.No":"1","Tool Ref No":"M04P004B","Sno of the item":"136279","12NC":"N/A","Description":"Unfors XI MAM W/AL scanning detector","Qty":"1","Purchase Date":"28/May/2017","Purchase Value":"87","Owner":"Test","Country":"Yemen","Tools Status":"Returned","Calibration Interval":"12 Months","Calibration Vendor":"Frank Shield","Calibration Date":"14/Jun/2014","Calibration Due Date":"14/Jun/2015","Calibrated Date":"","Calibration Certificate No":"234234","Remark":"Returned for credit","Previous location":"","FSE Update":"Returns","Status":"Rented","Invoice No":"123","Charge Details":"Rented M04P004B From 28-05-2017 to 03-06-2017 , 87","Quota Ref":"87","Job Ref":"8787","LPO Ref":"87","Due Date":"03/Jun/2017","Calibration Certificate Image":"test.txt"}', '<li>Product Created by Suresh Raju on 2017-06-23 10:45:27</li><li>Product Updated by Suresh Raju on 2017-06-23 10:45:47</li><li>Product Rented to Test by Suresh Raju on 28/May/2017</li>', 1, '2017-06-23 16:15:27', 1, '2017-06-23 16:15:47', 1, 0),
 (2, 1, '{"S.No":2,"Tool Ref No":"M06S004","Sno of the item":"92","12NC":"452230035472","Description":"EDL tool","Qty":"1","Purchase Date":"","Purchase Value":"1711.94","Owner":"Abdulelah Ahmed","Country":"Yemen","Tools Status":"Active no calibration needed","Calibration Interval":"No Calibration","Calibration Vendor":"","Calibration Date":"","Calibration Due Date":"01/Jan/1971","Calibrated Date":"","Calibration Certificate Image":"test.txt","Calibration Certificate No":"234234","Remark":"In possession of FSE","Previous location":"","FSE Update":"Annual tool count conducted in Dec 2016 and tool confirm in stock","Status":"In Stock","Invoice No":"324325","Charge Details":"Returned for credit","Quota Ref":"234","Job Ref":"234","LPO Ref":"234","Due Date":"19/Oct/2015"}', '<li>Product Created by Suresh Raju on 2017-06-23 10:45:27</li>', 1, '2017-06-23 16:15:27', 0, '0000-00-00 00:00:00', 1, 0),
 (3, 1, '{"S.No":3,"Tool Ref No":"M24S002","Sno of the item":"170","12NC":"N/A","Description":"pressure gauge","Qty":"1","Purchase Date":"","Purchase Value":"1","Owner":"Abdulelah Ahmed","Country":"Yemen","Tools Status":"Active no calibration needed","Calibration Interval":"No Calibration","Calibration Vendor":"","Calibration Date":"","Calibration Due Date":"01/Jan/1971","Calibrated Date":"","Calibration Certificate Image":"test.txt","Calibration Certificate No":"234234","Remark":"In possession of FSE","Previous location":"","FSE Update":"Annual tool count conducted in Dec 2016 and tool confirm in stock","Status":"In Stock","Invoice No":"324326","Charge Details":"Returned for credit","Quota Ref":"234","Job Ref":"234","LPO Ref":"234","Due Date":"20/Oct/2015"}', '<li>Product Created by Suresh Raju on 2017-06-23 10:45:27</li>', 1, '2017-06-23 16:15:27', 0, '0000-00-00 00:00:00', 1, 0),
 (4, 1, '{"S.No":4,"Tool Ref No":"M25S002","Sno of the item":"126","12NC":"N/A","Description":"Drilling machine-AEG","Qty":"1","Purchase Date":"","Purchase Value":"1","Owner":"Abdulelah Ahmed","Country":"Yemen","Tools Status":"Active no calibration needed","Calibration Interval":"No Calibration","Calibration Vendor":"","Calibration Date":"","Calibration Due Date":"01/Jan/1971","Calibrated Date":"","Calibration Certificate Image":"test.txt","Calibration Certificate No":"234234","Remark":"In possession of FSE","Previous location":"","FSE Update":"Annual tool count conducted in Dec 2016 and tool confirm in stock","Status":"In Stock","Invoice No":"324327","Charge Details":"Returned for credit","Quota Ref":"234","Job Ref":"234","LPO Ref":"234","Due Date":"21/Oct/2015"}', '<li>Product Created by Suresh Raju on 2017-06-23 10:45:27</li>', 1, '2017-06-23 16:15:27', 0, '0000-00-00 00:00:00', 1, 0),
@@ -249,7 +249,7 @@ INSERT INTO `products` (`ProductID`, `CategoryID`, `Fields`, `Productlog`, `Crea
 (6, 1, '{"S.No":6,"Tool Ref No":"M45S003","Sno of the item":"149","12NC":"N/A","Description":"He transfer line","Qty":"1","Purchase Date":"","Purchase Value":"1","Owner":"Abdulelah Ahmed","Country":"Yemen","Tools Status":"Active no calibration needed","Calibration Interval":"No Calibration","Calibration Vendor":"","Calibration Date":"","Calibration Due Date":"01/Jan/1971","Calibrated Date":"","Calibration Certificate Image":"test.txt","Calibration Certificate No":"234234","Remark":"In possession of FSE","Previous location":"","FSE Update":"Annual tool count conducted in Dec 2016 and tool confirm in stock","Status":"In Stock","Invoice No":"324329","Charge Details":"Returned for credit","Quota Ref":"234","Job Ref":"234","LPO Ref":"234","Due Date":"23/Oct/2015"}', '<li>Product Created by Suresh Raju on 2017-06-23 10:45:27</li>', 1, '2017-06-23 16:15:27', 0, '0000-00-00 00:00:00', 1, 0),
 (7, 1, '{"S.No":7,"Tool Ref No":"M56S002","Sno of the item":"159","12NC":"452215021651","Description":"Cold head maintenance kit","Qty":"1","Purchase Date":"","Purchase Value":"10850.39","Owner":"Abdulelah Ahmed","Country":"Yemen","Tools Status":"Active no calibration needed","Calibration Interval":"No Calibration","Calibration Vendor":"","Calibration Date":"","Calibration Due Date":"01/Jan/1971","Calibrated Date":"","Calibration Certificate Image":"test.txt","Calibration Certificate No":"234234","Remark":"In possession of FSE","Previous location":"","FSE Update":"Annual tool count conducted in Dec 2016 and tool confirm in stock","Status":"In Stock","Invoice No":"324330","Charge Details":"Returned for credit","Quota Ref":"234","Job Ref":"234","LPO Ref":"234","Due Date":"24/Oct/2015"}', '<li>Product Created by Suresh Raju on 2017-06-23 10:45:27</li>', 1, '2017-06-23 16:15:27', 0, '0000-00-00 00:00:00', 1, 0),
 (8, 1, '{"S.No":8,"Tool Ref No":"M62S001","Sno of the item":"166","12NC":"N/A","Description":"vacuum cleaner - sanyo","Qty":"1","Purchase Date":"","Purchase Value":"1","Owner":"Abdulelah Ahmed","Country":"Yemen","Tools Status":"Active no calibration needed","Calibration Interval":"No Calibration","Calibration Vendor":"","Calibration Date":"","Calibration Due Date":"01/Jan/1971","Calibrated Date":"","Calibration Certificate Image":"test.txt","Calibration Certificate No":"234234","Remark":"In possession of FSE","Previous location":"","FSE Update":"Annual tool count conducted in Dec 2016 and tool confirm in stock","Status":"In Stock","Invoice No":"324331","Charge Details":"Returned for credit","Quota Ref":"234","Job Ref":"234","LPO Ref":"234","Due Date":"25/Oct/2015"}', '<li>Product Created by Suresh Raju on 2017-06-23 10:45:27</li>', 1, '2017-06-23 16:15:27', 0, '0000-00-00 00:00:00', 1, 0),
-(9, 1, '{"S.No":9,"Tool Ref No":"NO serial","Sno of the item":"N/A","12NC":"812210658261","Description":"ASSY TESLA METER","Qty":"1","Purchase Date":"","Purchase Value":"27927.9","Owner":"Abdulelah Ahmed","Country":"Yemen","Tools Status":"Returned","Calibration Interval":"12 Months","Calibration Vendor":"","Calibration Date":"","Calibration Due Date":"01/Jan/1971","Calibrated Date":"","Calibration Certificate Image":"test.txt","Calibration Certificate No":"234234","Remark":"Returned for credit","Previous location":"","FSE Update":"Returns","Status":"Returned","Invoice No":"324332","Charge Details":"Returned for credit","Quota Ref":"234","Job Ref":"234","LPO Ref":"234","Due Date":"26/Oct/2015"}', '<li>Product Created by Suresh Raju on 2017-06-23 10:45:27</li>', 1, '2017-06-23 16:15:27', 0, '0000-00-00 00:00:00', 1, 0),
+(9, 1, '{"S.No":9,"Tool Ref No":"NO serial","Sno of the item":"N/A","12NC":"812210658261","Description":"ASSY TESLA METER","Qty":"1","Purchase Date":"14/Jun/2017","Purchase Value":"132","Owner":"342","Country":"Yemen","Tools Status":"Returned","Calibration Interval":"12 Months","Calibration Vendor":"","Calibration Date":"","Calibration Due Date":"01/Jan/1971","Calibrated Date":"","Calibration Certificate Image":"test.txt","Calibration Certificate No":"234234","Remark":"Returned for credit","Previous location":"","FSE Update":"Returns","Status":"Rented","Invoice No":"12309","Charge Details":"Rented NO serial From 14-06-2017 to 14-06-2017 , 23","Quota Ref":"231","Job Ref":"231","LPO Ref":"231","Due Date":"14/Jun/2017"}', '<li>Product Created by Suresh Raju on 2017-06-23 10:45:27</li><li>Product Rented to 342 by Suresh Raju on 14/Jun/2017</li>', 1, '2017-06-23 16:15:27', 0, '0000-00-00 00:00:00', 1, 0),
 (10, 1, '{"S.No":10,"Tool Ref No":"PH-GU-00042","Sno of the item":"83210061","12NC":"N/A","Description":"Dig.Multimeter","Qty":"1","Purchase Date":"","Purchase Value":"","Owner":"Abdulelah Ahmed","Country":"Yemen","Tools Status":"Returned","Calibration Interval":"12 Months","Calibration Vendor":"","Calibration Date":"","Calibration Due Date":"01/Jan/1971","Calibrated Date":"","Calibration Certificate Image":"test.txt","Calibration Certificate No":"234234","Remark":"Returned for credit","Previous location":"","FSE Update":"Returns","Status":"Returned","Invoice No":"324333","Charge Details":"Returned for credit","Quota Ref":"234","Job Ref":"234","LPO Ref":"234","Due Date":"27/Oct/2015"}', '<li>Product Created by Suresh Raju on 2017-06-23 10:45:27</li>', 1, '2017-06-23 16:15:27', 0, '0000-00-00 00:00:00', 1, 0),
 (11, 1, '{"S.No":11,"Tool Ref No":"PH-GU-00043","Sno of the item":"11700055","12NC":"N/A","Description":"Scopemeter","Qty":"1","Purchase Date":"","Purchase Value":"2982","Owner":"Abdulelah Ahmed","Country":"Yemen","Tools Status":"Active & Calibrated","Calibration Interval":"12 Months","Calibration Vendor":"Haris Al Afaq","Calibration Date":"30/Jun/2014","Calibration Due Date":"30/Jun/2015","Calibrated Date":"","Calibration Certificate Image":"test.txt","Calibration Certificate No":"234234","Remark":"In possession of FSE","Previous location":"","FSE Update":"Annual tool count conducted in Dec 2016 and tool confirm in stock","Status":"In Stock","Invoice No":"324334","Charge Details":"Returned for credit","Quota Ref":"234","Job Ref":"234","LPO Ref":"234","Due Date":"28/Oct/2015"}', '<li>Product Created by Suresh Raju on 2017-06-23 10:45:27</li>', 1, '2017-06-23 16:15:27', 0, '0000-00-00 00:00:00', 1, 0),
 (12, 1, '{"S.No":12,"Tool Ref No":"PH-GU-00044","Sno of the item":"108930","12NC":"N/A","Description":"Dig.MAS Meter","Qty":"1","Purchase Date":"","Purchase Value":"","Owner":"Abdulelah Ahmed","Country":"Yemen","Tools Status":"Returned","Calibration Interval":"12 Months","Calibration Vendor":"","Calibration Date":"","Calibration Due Date":"01/Jan/1971","Calibrated Date":"","Calibration Certificate Image":"test.txt","Calibration Certificate No":"234234","Remark":"Returned for credit","Previous location":"","FSE Update":"Returns","Status":"Returned","Invoice No":"324335","Charge Details":"Returned for credit","Quota Ref":"234","Job Ref":"234","LPO Ref":"234","Due Date":"29/Oct/2015"}', '<li>Product Created by Suresh Raju on 2017-06-23 10:45:27</li>', 1, '2017-06-23 16:15:27', 0, '0000-00-00 00:00:00', 1, 0),
@@ -890,7 +890,7 @@ CREATE TABLE IF NOT EXISTS `producttransactions` (
   `Status` varchar(100) NOT NULL DEFAULT '0',
   `Deleted` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`TransactionID`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=566 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=574 ;
 
 --
 -- Dumping data for table `producttransactions`
@@ -1462,7 +1462,15 @@ INSERT INTO `producttransactions` (`TransactionID`, `ProductID`, `Owner`, `Purch
 (562, 562, 'T. Dharmaraj.', '0000-00-00', '2017-06-23 16:15:29', '2017-05-03', '324887', '234', '234', '234', 'Returned for credit', '688', '0', 0),
 (563, 563, 'T. Dharmaraj.', '0000-00-00', '2017-06-23 16:15:29', '2017-05-04', '324888', '234', '234', '234', 'Returned for credit', '69', '0', 0),
 (564, 564, 'T. Dharmaraj.', '0000-00-00', '2017-06-23 16:15:29', '2017-05-05', '324889', '234', '234', '234', 'Returned for credit', '263', '0', 0),
-(565, 615, 'y', '0000-00-00', '2017-06-23 16:18:35', '0000-00-00', 'y', 'y', 'y', 'y', 'y', '0', '0', 0);
+(565, 615, 'y', '0000-00-00', '2017-06-23 16:18:35', '0000-00-00', 'y', 'y', 'y', 'y', 'y', '0', '0', 0),
+(566, 1, 'Test', '2017-05-28', '2017-06-26 18:33:02', '2017-06-03', '123', '8787', '87', '87', 'Rented M04P004B From 28-05-2017 to 03-06-2017 , 87', '87', '0', 0),
+(567, 9, '342', '2017-06-14', '2017-06-26 18:41:51', '2017-06-14', '12309', '231', '231', '231', 'Rented NO serial From 14-06-2017 to 14-06-2017 , 23', '132', '0', 0),
+(568, 0, 'Test', '2017-06-03', '2017-06-26 18:50:03', '2017-06-29', '12332', '231', '231', '213', 'Rented  From 03-06-2017 to 29-06-2017 , 23', '213', '0', 0),
+(569, 0, 'Test', '2017-06-03', '2017-06-26 18:50:03', '2017-06-29', '12332', '231', '231', '213', 'Rented  From 03-06-2017 to 29-06-2017 , 23', '213', '0', 0),
+(570, 0, 'Test', '2017-06-02', '2017-06-26 18:50:42', '2017-06-09', '321', '213', '213', '231', 'Rented  From 02-06-2017 to 09-06-2017 , 123', '123', '0', 0),
+(571, 0, 'Test', '2017-06-02', '2017-06-26 18:50:42', '2017-06-09', '321', '213', '213', '231', 'Rented  From 02-06-2017 to 09-06-2017 , 123', '123', '0', 0),
+(572, 0, 'Test', '2017-05-29', '2017-06-26 18:53:42', '2017-06-15', '123322332', '231', '21', '231', 'Rented  From 29-05-2017 to 15-06-2017 , 231', '231', '0', 0),
+(573, 0, 'Test', '2017-05-29', '2017-06-26 18:53:42', '2017-06-15', '123322332', '231', '21', '231', 'Rented  From 29-05-2017 to 15-06-2017 , 231', '231', '0', 0);
 
 -- --------------------------------------------------------
 
@@ -1491,7 +1499,7 @@ CREATE TABLE IF NOT EXISTS `settings` (
 --
 
 INSERT INTO `settings` (`CompanyName`, `Logo`, `Address`, `ContactNo`, `Fax`, `CurrencyType`, `Email`, `FromEmail`, `AccountNo`, `Bank`, `BankAddress`, `SwiftCode`, `IBAN`) VALUES
-('Global Pack Shipping & Freight Services L.L.C', 'logo.png', 'Test Company', '9876543210,987659876', '9876543210,987659876', 'AED', 'test@test.com', 'test@test.com', 'AED', 'Bank', 'Bank Address', 'Swift Code', 'IBAN');
+('Global Pack Shipping & Freight Services L.L.C', '1logo.jpg', 'Test Company', '9876543210,987659876', '9876543210,987659876', 'AED', 'test@test.com', 'test@test.com', 'AED', 'Bank', 'Bank Address', 'Swift Code', 'IBAN');
 
 -- --------------------------------------------------------
 
@@ -1504,18 +1512,26 @@ CREATE TABLE IF NOT EXISTS `userlog` (
   `LoggedInUser` int(11) NOT NULL,
   `LoggedInTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `IPAddress` varchar(30) NOT NULL,
+  `MACAddress` varchar(50) NOT NULL,
   `Browser` varchar(30) NOT NULL,
   `LogoutTime` datetime NOT NULL,
   `UserAction` text NOT NULL,
   PRIMARY KEY (`LogID`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9 ;
 
 --
 -- Dumping data for table `userlog`
 --
 
-INSERT INTO `userlog` (`LogID`, `LoggedInUser`, `LoggedInTime`, `IPAddress`, `Browser`, `LogoutTime`, `UserAction`) VALUES
-(1, 1, '2017-06-23 16:10:54', '127.0.0.1', 'Chrome 58', '0000-00-00 00:00:00', '<li>Suresh Raju logged in at 23-06-2017 10:40:54</li><li>Suresh Raju did bulk upload  at 23-06-2017 10:41:12</li><li>Suresh Raju updated Product with ID 1  at 23-06-2017 10:41:51</li><li>Suresh Raju did bulk upload  at 23-06-2017 10:45:29</li><li>Suresh Raju updated Product with ID 1  at 23-06-2017 10:45:47</li><li>Suresh Raju added Product with ID 615  at 23-06-2017 10:48:35</li>');
+INSERT INTO `userlog` (`LogID`, `LoggedInUser`, `LoggedInTime`, `IPAddress`, `MACAddress`, `Browser`, `LogoutTime`, `UserAction`) VALUES
+(1, 1, '2017-06-23 16:10:54', '127.0.0.1', '', 'Chrome 58', '0000-00-00 00:00:00', '<li>Suresh Raju logged in at 23-06-2017 10:40:54</li><li>Suresh Raju did bulk upload  at 23-06-2017 10:41:12</li><li>Suresh Raju updated Product with ID 1  at 23-06-2017 10:41:51</li><li>Suresh Raju did bulk upload  at 23-06-2017 10:45:29</li><li>Suresh Raju updated Product with ID 1  at 23-06-2017 10:45:47</li><li>Suresh Raju added Product with ID 615  at 23-06-2017 10:48:35</li>'),
+(2, 1, '2017-06-26 12:53:01', '127.0.0.1', '', 'Chrome 58', '2017-06-26 13:16:00', '<li>Suresh Raju logged in at 26-06-2017 07:23:01</li>'),
+(3, 1, '2017-06-26 13:02:37', '127.0.0.1', '', 'Chrome 58', '0000-00-00 00:00:00', '<li>Suresh Raju logged in at 26-06-2017 07:32:37</li>'),
+(4, 1, '2017-06-26 13:17:04', '127.0.0.1', 'AC-D1-B8-C4-16-1F', 'Chrome 58', '0000-00-00 00:00:00', '<li>Suresh Raju logged in at 26-06-2017 07:47:04</li>'),
+(5, 1, '2017-06-26 13:25:57', '127.0.0.1', 'AC-D1-B8-C4-16-1F', 'Chrome 58', '0000-00-00 00:00:00', '<li>Suresh Raju logged in at 26-06-2017 07:55:56</li>'),
+(6, 1, '2017-06-26 13:53:51', '127.0.0.1', 'AC-D1-B8-C4-16-1F', 'Chrome 58', '0000-00-00 00:00:00', '<li>Suresh Raju logged in at 26-06-2017 08:23:51</li>'),
+(7, 1, '2017-06-26 15:50:08', '127.0.0.1', 'AC-D1-B8-C4-16-1F', 'Chrome 58', '0000-00-00 00:00:00', '<li>Suresh Raju logged in at 26-06-2017 10:20:08</li>'),
+(8, 1, '2017-06-26 17:27:17', '127.0.0.1', 'AC-D1-B8-C4-16-1F', 'Chrome 58', '0000-00-00 00:00:00', '<li>Suresh Raju logged in at 26-06-2017 11:57:17</li><li>Suresh Raju created invoice with no 123  at 26-06-2017 13:03:02</li><li>Suresh Raju created invoice with no 12309  at 26-06-2017 13:11:51</li>');
 
 -- --------------------------------------------------------
 
