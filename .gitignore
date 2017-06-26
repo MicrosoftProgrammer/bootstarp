@@ -12,3 +12,4 @@ includes/*.xls
 includes/*.csv
 includes/*.doc
 includes/*.docx
+includes/PHPExcel/MPDF57/**/*.*

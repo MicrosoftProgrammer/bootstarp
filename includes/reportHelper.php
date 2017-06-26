@@ -5,9 +5,7 @@
 
     define('EOL',(PHP_SAPI == 'cli') ? PHP_EOL : '<br />');
 
-
-
-    function CreateReport($header,$data,$reportType,$filename){
+    function CreateReport($header,$data,$reportType,$filename,$type="Product"){
         $objPHPExcel = new PHPExcel();
         $objPHPExcel->getProperties()->setCreator($_SESSION["CompanyName"]);
 
@@ -23,9 +21,7 @@
         $objDrawing->setName($_SESSION["CompanyName"]);
         $objDrawing->setDescription($_SESSION["CompanyName"]);
         $logo = '../../images/'.$_SESSION["Logo"]; 
-        $objDrawing->setPath($logo);
-        $objDrawing->setOffsetX(8);    
-        $objDrawing->setOffsetY(300);  
+        $objDrawing->setPath($logo); 
         $objDrawing->setCoordinates('A1');
         $objDrawing->setHeight(75); 
         $objDrawing->setWorksheet($objPHPExcel->getActiveSheet()); 
@@ -40,26 +36,55 @@
 
         $rowCount++;
 
-        foreach($data as $datum){
-            $cols=0;
-            foreach($header as $key){
-                $objPHPExcel->getActiveSheet()->SetCellValue($columnarray[$cols].$rowCount, $datum[$key]); 
-                $cols++;
+        if($type=="Product" || $type=="ProductHistory" || $type=="date"){
+            foreach($data as $datum){
+                $cols=0;            
+                foreach($header as $key){
+                    $objPHPExcel->getActiveSheet()->SetCellValue($columnarray[$cols].$rowCount, $datum[$key]); 
+                    $cols++;
+                }
+                $rowCount++;
             }
-            $rowCount++;
         }
+        else if($type=="Overview"){
+            foreach($data as $datum => $value){
+                $cols=0;            
+                $objPHPExcel->getActiveSheet()->SetCellValue($columnarray[$cols].$rowCount, $datum); 
+                $cols++;
+                $objPHPExcel->getActiveSheet()->SetCellValue($columnarray[$cols].$rowCount, $value); 
+                $cols++;              
+                $rowCount++;
+            }            
+        }      
 
         foreach (range(0, count($header)) as $col) {
             $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn($col)->setAutoSize(true);                
         }
 
-        if($reportType=="excel"){
-            $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
-            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-            header('Content-Disposition: attachment;filename="'.$filename.'.xlsx"');
-            header('Cache-Control: max-age=0');
+        $range = "A1:".$columnarray[$cols]."1";
+        $objPHPExcel->getActiveSheet()
+            ->getStyle($range)
+            ->getNumberFormat()
+            ->setFormatCode( PHPExcel_Style_NumberFormat::FORMAT_TEXT );
 
+        $objPHPExcel->getDefaultStyle()
+            ->getAlignment()
+            ->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
+
+        $range = "A2:".$columnarray[$cols]."2";
+        $objPHPExcel->getActiveSheet()
+            ->getStyle($range)
+            ->getFont()->setBold(true)
+            ->setSize(12);             
+
+        if($reportType=="excel"){
+            $filename = $filename.".xlsx";
+            $objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            header("Content-Disposition: attachment;filename={$filename}");
+            header('Cache-Control: max-age=0');
             $objWriter->save('php://output');
+            exit();
         }
         if($reportType=="csv"){
             $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'CSV');
@@ -68,6 +93,7 @@
             header('Cache-Control: max-age=0');
 
             $objWriter->save('php://output');
+            exit();
         }
         if($reportType=="pdf"){
             $rendererName = PHPExcel_Settings::PDF_RENDERER_MPDF;
@@ -89,6 +115,7 @@
 
             $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'PDF');
             $objWriter->save('php://output');
+            exit();
         }
     }
 ?>

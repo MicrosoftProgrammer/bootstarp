@@ -119,7 +119,7 @@ $filter = array();
                                                             </div>';   
                                                 }
             
-echo '<table width="100%" class="table table-striped table-bordered table-hover" id="dataTable-example">';
+                                echo '<table width="100%" class="table table-striped table-bordered table-hover" id="dataTable-example">';
                                     if($sumheader!="" && $groupheader!="") {
                                         $sql="select * from productfields pf inner join fieldmapping fm on pf.ProductFieldID = fm.ProductFieldID
                                         where fm.CategoryID=".$CategoryID." and fm.Deleted=0 order by fm.DisplayOrder";
