@@ -95,27 +95,5 @@
             $objWriter->save('php://output');
             exit();
         }
-        if($reportType=="pdf"){
-            $rendererName = PHPExcel_Settings::PDF_RENDERER_MPDF;
-            $rendererLibraryPath = '../../includes/PHPExcel/MPDF57/';
-            if (!PHPExcel_Settings::setPdfRenderer(
-                    $rendererName,
-                    $rendererLibraryPath
-                )) {
-                die(
-                    'NOTICE: Please set the $rendererName and $rendererLibraryPath values' .
-                    '<br />' .
-                    'at the top of this script as appropriate for your directory structure'
-                );
-            }
-
-            header('Content-Type: application/pdf');
-            header('Content-Disposition: attachment;filename="'.$filename.'.pdf"');
-            header('Cache-Control: max-age=0');
-
-            $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'PDF');
-            $objWriter->save('php://output');
-            exit();
-        }
     }
 ?>
