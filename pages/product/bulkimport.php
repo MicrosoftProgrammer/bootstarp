@@ -176,21 +176,36 @@
                                                 <?php fnDropDown("categories","CategoryName","CategoryID","Category"); ?>
                                             </select>                                               
                                         </div>
+                                        <?php if($_REQUEST["Category"]!="") { ?>    
                                         <div class="form-group col-md-6">
-                                            <?php if($_REQUEST["Category"]!="") { ?>    
+                                            
 <a href="../product/exportTemplate.php?CategoryID=<?php echo $_REQUEST['Category']; ?>">Get Template</a>
-                                            <?php } ?>                             
+                                                                     
                                         </div>
 
                                         <div class="form-group col-md-12">
                                             <label>Import Excel File</label>
                                             <input type="file" class="form-control" name="file" required />                                            
                                         </div>
-                                        
+                                        <?php 
+                                                                                        $sql="select *, pft.ProductFieldType as Type from productfields pf 
+                                                inner join fieldmapping fm on pf.ProductFieldID = fm.ProductFieldID
+                                                inner join productfieldtype pft on pf.ProductFieldType = pft.ProductFieldTypeID   
+                                                where fm.CategoryID=".$_REQUEST["Category"]." and fm.Deleted=0 order by fm.DisplayOrder";
+                                                $res = mysql_query($sql);
+                                                $fieldrows = mysql_num_rows($res);
+                                                if($fieldrows >0){
+                                        ?>
                                         <div class="form-group col-md-12">
                                             <button type="submit" class="btn btn-primary">Submit</button>
                                             <button type="reset" class="btn btn-danger">Reset</button>
                                         </div>
+                                         <?php }else{
+                                                echo '<div class="form-group col-md-12">
+                                                    <b style="color:red;">
+                                                    Please add product fields to import products.</b></div>';
+                                         }
+                                         } ?>   
                                     </form>
                                 </div>
                                 <!-- /.col-lg-6 (nested) -->

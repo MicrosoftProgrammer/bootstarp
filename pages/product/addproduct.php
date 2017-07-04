@@ -52,7 +52,7 @@
             $json[$key]=$value;
         }
 
-        $json["S.No"]=$row++;
+        $json["S.No"]=$row+1;
 
        $json=json_encode($json);       
 
@@ -137,12 +137,14 @@
                                         </div>
                                         <?php
                                             $CategoryID = $_REQUEST["Category"];
+                                            $fieldrows=0;
                                             if($CategoryID!==""){
                                                 $sql="select *, pft.ProductFieldType as Type from productfields pf 
                                                 inner join fieldmapping fm on pf.ProductFieldID = fm.ProductFieldID
                                                 inner join productfieldtype pft on pf.ProductFieldType = pft.ProductFieldTypeID   
                                                 where fm.CategoryID=".$CategoryID." and fm.Deleted=0 order by fm.DisplayOrder";
                                                 $res = mysql_query($sql);
+                                                $fieldrows = mysql_num_rows($res);
                                                 while($obj=mysql_fetch_object($res)){
                                                      $isRequired="";
                                                       if($obj->IsRequired=="1"){
@@ -224,12 +226,21 @@
                                                     } 
 
                                                 }
+                                                
+                                                if($CategoryID!=="" && $fieldrows >0){
+                                                            echo '<div class="form-group col-md-12">
+                                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                                        <button type="reset" class="btn btn-danger">Reset</button>
+                                                    </div>';
+                                                }
+                                                else{
+                                                    echo '<div class="form-group col-md-12">
+                                                    <b style="color:red;">
+                                                    Please add product fields to add products.</b></div>';
+                                                }
                                             }
+
                                         ?>
-                                        <div class="form-group col-md-12">
-                                            <button type="submit" class="btn btn-primary">Submit</button>
-                                            <button type="reset" class="btn btn-danger">Reset</button>
-                                        </div>
                                     </form>
                                 </div>
                                 <!-- /.col-lg-6 (nested) -->

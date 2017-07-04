@@ -193,38 +193,8 @@
             }   
            // print_r($data); 
            if($_REQUEST["type"]=="pdf"){                
-                $HTMLoutput = "";
-                ob_end_clean();
-
-                $HTMLoutput = "<table>";
-                if($_REQUEST["RequestedMode"]=="Product" || $_REQUEST["RequestedMode"]=="ProductHistory" || $_REQUEST["RequestedMode"]=="date"){
-                    foreach($data as $datum){
-                        $HTMLoutput = $HTMLoutput."<tr>";       
-                        foreach($header as $key){
-                            $HTMLoutput = $HTMLoutput."<td>".$datum[$key]."</td>"; 
-                        }
-                        $HTMLoutput = $HTMLoutput."</tr>"; 
-                    }
-                }
-                else if($_REQUEST["RequestedMode"]=="Overview"){
-                    foreach($data as $datum => $value){
-                        $cols=0;            
-                        $objPHPExcel->getActiveSheet()->SetCellValue($columnarray[$cols].$rowCount, $datum); 
-                        $cols++;
-                        $objPHPExcel->getActiveSheet()->SetCellValue($columnarray[$cols].$rowCount, $value); 
-                        $cols++;              
-                        $rowCount++;
-                    }            
-                } 
-                $HTMLoutput = $HTMLoutput."</table>"; 
-
-
-                //Convert HTML 2 PDF by using MPDF PHP library
-                include '../../includes/PHPExcel/mpdf/mpdf.php';
-                $mpdf=new mPDF(); 
-
-                $mpdf->WriteHTML($HTMLoutput);
-                $mpdf->Output('filename.pdf','D');             
+                include('../../includes/pdf/PDFCreator.php');               
+                PdfReportGeneration($header,$data,$_REQUEST["RequestedMode"],$filename);            
            }
            else{
                 CreateReport($header,$data,$_REQUEST["type"],$filename,$_REQUEST["RequestedMode"]);      

@@ -508,4 +508,13 @@ function GetMAC(){
     return substr($Content, strpos($Content,'\\')-20, 17);
 }
 
+function GetFieldCount($CategoryID){
+$sql="select *, pft.ProductFieldType as Type from productfields pf 
+    inner join fieldmapping fm on pf.ProductFieldID = fm.ProductFieldID
+    inner join productfieldtype pft on pf.ProductFieldType = pft.ProductFieldTypeID   
+    where fm.CategoryID=".$CategoryID." and fm.Deleted=0 order by fm.DisplayOrder";
+    $res = mysql_query($sql);
+    return mysql_num_rows($res);
+}
+
 ?>
