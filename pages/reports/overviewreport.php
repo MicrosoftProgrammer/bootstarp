@@ -137,8 +137,9 @@ $filter = array();
 
                                         echo "<thead>";
                                         echo "<tr>";
-                                        echo "<th>".$sumheader."</th>";
+                                       
                                         echo "<th>".$groupheader."</th>";
+                                         echo "<th>".$sumheader."</th>";
                                         echo "</tr>";
                                         echo "</thead>";
 

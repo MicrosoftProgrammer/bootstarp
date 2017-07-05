@@ -145,7 +145,7 @@
                 $res=mysql_query($sql);
                 $numrows=mysql_num_rows($res); 
                 if($numrows>0){
-                    $header = array("S.No","Product Name","Invoice No","Owner","Purchase Date","Purchase Value","Due Date","Job Ref","LPO Ref","Quota Ref","Charge Details","Status");   
+                    $header = array("S.No","Product Name","Owner","Invoice No","Purchase Date","Purchase Value","Due Date","Job Ref","LPO Ref","Quota Ref","Charge Details","Status");   
                     $cnt=0;
             
                     while($obj=mysql_fetch_object($res))
@@ -241,6 +241,7 @@
                             Preview Report
                             <span class="pull-right col-md-3 operation">
                                 <a href="javascript:fnDownload()"><i class="fa fa-download fa-2x pull-right">&nbsp;&nbsp;</i></a>
+                                <a href="javascript:fnPrint()"><i class="fa fa-print fa-2x pull-right">&nbsp;&nbsp;</i></a>
                             </span>
                         </div>
                         <!-- /.panel-heading -->
@@ -532,6 +533,12 @@
         {
             document.adminForm.action="previewreport.php?mode=Download";
             document.adminForm.submit();               
+        }
+
+        function fnPrint()
+        {
+            $("#panel-body").removeAttr('style');
+            window.print();              
         }
 
         $(document).ready(function() {

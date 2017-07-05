@@ -6,9 +6,12 @@
 
     if ($_REQUEST["mode"]=="Add")
     { 
-        $sql="select max(ProductID) from products";
+        $CategoryID = $_REQUEST["Category"];
+
+        $sql="select max(ProductID) as maxID from products where CategoryID=".$CategoryID;
         $res=mysql_query($sql);
-        $row = mysql_num_rows($res);
+        $obj = mysql_fetch_object($res);
+        $totalrow = $obj->maxID;
 
         $files = array();
         $fileImage = array();
@@ -47,16 +50,15 @@
        $keys = substr($keys, 0, -1);     
        $keys = explode (",", $keys);      
        $json = array_combine($keys, array_values(array_map('trim',$data)));
-
         foreach ($fileImage as $key => $value){
             $json[$key]=$value;
         }
 
-        $json["S.No"]=$row+1;
+        $json["S.No"]=$totalrow+1;
 
        $json=json_encode($json);       
 
-        $CategoryID = $_REQUEST["Category"];
+        
         $UserID = $_SESSION["UserID"];
         $Productlog = "<li>Product Created by ".$_SESSION["Name"]." on ".date("Y-m-d H:i:s")."</li>";
         $sql = "INSERT INTO products (CategoryID,Fields,CreatedBy,Productlog)
@@ -138,7 +140,7 @@
                                         <?php
                                             $CategoryID = $_REQUEST["Category"];
                                             $fieldrows=0;
-                                            if($CategoryID!==""){
+                                            if($CategoryID!=""){
                                                 $sql="select *, pft.ProductFieldType as Type from productfields pf 
                                                 inner join fieldmapping fm on pf.ProductFieldID = fm.ProductFieldID
                                                 inner join productfieldtype pft on pf.ProductFieldType = pft.ProductFieldTypeID   
@@ -227,7 +229,8 @@
 
                                                 }
                                                 
-                                                if($CategoryID!=="" && $fieldrows >0){
+                                              
+                                                    if($fieldrows >0){
                                                             echo '<div class="form-group col-md-12">
                                                         <button type="submit" class="btn btn-primary">Submit</button>
                                                         <button type="reset" class="btn btn-danger">Reset</button>
@@ -238,6 +241,7 @@
                                                     <b style="color:red;">
                                                     Please add product fields to add products.</b></div>';
                                                 }
+                                                
                                             }
 
                                         ?>

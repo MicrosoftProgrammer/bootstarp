@@ -88,7 +88,7 @@ if ($_REQUEST['mode']=="ret")
                             <?php } ?>                                                     
                             
                             <form name="adminForm" method="post"> 
-                            <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
+                            <table width="100%" class="table table-striped table-bordered table-hover" id="dataTable-example">
                                 <thead>
                                     <tr>
                                         <th>
@@ -115,7 +115,7 @@ if ($_REQUEST['mode']=="ret")
                                 <?php
                                         $sql = "select *,pt.Status as ProductStatus from producttransactions pt 
                                          where pt.Deleted=0 and pt.ProductID=0";
-                                        $sql.= " order by TransactionID";
+                                        $sql.= " order by TransactionID desc";
                                         $res=mysql_query($sql);
                                         $numrows=mysql_num_rows($res);
                                         	if($numrows>0)
@@ -194,6 +194,14 @@ if ($_REQUEST['mode']=="ret")
     <?php echo fnScript(); ?>
     <?php echo fnDataTableScript(); ?>
     <script>
+            $(document).ready(function() {
+        $("#dataTable-example").DataTable({
+            responsive: true,
+            "aaSorting": [],
+            columnDefs: [ { orderable: false, targets: [0,1] } ]
+        });
+    });
+
         function fnStatus(arg)
         {
 	        if(confirm("Are you sure want to return?"))

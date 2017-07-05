@@ -26,6 +26,7 @@
                 <tr>
                     <td colspan="3">
                         <img style="height:100px;"  src='../../images/<?php echo $_SESSION["Logo"] ?>' alt="Logo" class="img-responsive" />
+                        <b><?php echo $_SESSION["CompanyName"]; ?></b>
                     </td>
                 </tr>
                 <tr>

@@ -201,7 +201,7 @@ $filter = array();
                                         if($numrows >0){
                                                      echo "<thead>";
                                         echo "<tr>";
-                                        $header = array("S.No","Product Name","Invoice No","Owner","Purchase Date","Purchase Value","Due Date","Job Ref","LPO Ref","Quota Ref","Charge Details","Status");   
+                                        $header = array("S.No","Product Name","Owner","Invoice No","Purchase Date","Purchase Value","Due Date","Job Ref","LPO Ref","Quota Ref","Charge Details","Status");   
 
                                         foreach($header as $key){
                                             $cls="nprn";  
