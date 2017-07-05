@@ -4,7 +4,12 @@
     // Include the main TCPDF library (search for installation path).
     include('reports/tcpdf_include.php');
     include('tcpdf.php');
-set_time_limit(600);
+$original_mem = ini_get('memory_limit');
+ 
+// then set it to the value you think you need (experiment)
+ini_set('memory_limit','640M');
+ 
+ini_set('max_execution_time', 300);
     function PdfReportGeneration($header,$data,$type,$filename){
 
     // create new PDF document
@@ -103,7 +108,7 @@ set_time_limit(600);
                     $class='style="background-color:#FFFFFF;"';
 
                 $html =$html.'<tr '.$class.'>';
-
+                $html =$html.'<td style="padding:2px;">'.$cnt.'</td>';
                 $html =$html.'<td style="padding:2px;">'.$datum.'</td>';
                 $html =$html.'<td style="padding:2px;">'.$value.'</td>';
 

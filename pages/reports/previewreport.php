@@ -196,6 +196,10 @@
                 include('../../includes/pdf/PDFCreator.php');               
                 PdfReportGeneration($header,$data,$_REQUEST["RequestedMode"],$filename);            
            }
+           if($_REQUEST["type"]=="word"){                
+                include('word.php');               
+                CreateWordDoc($header,$data,$_REQUEST["RequestedMode"],$filename);            
+           }
            else{
                 CreateReport($header,$data,$_REQUEST["type"],$filename,$_REQUEST["RequestedMode"]);      
            }                                                                    
