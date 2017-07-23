@@ -11,6 +11,7 @@ $filter = array();
     <title><?php echo $_SESSION["CompanyName"]; ?></title>
         <?php echo fnCss(); ?>
          <?php echo fnDatePickerCss(); ?>
+            
     </head>
     <body>
         <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
@@ -294,13 +295,18 @@ $filter = array();
     </body>
      <?php echo fnScript(); ?>
     <?php echo fnDataTableScript(); ?>
+ <?php echo fnDataTableExportScript(); ?>
     <script>
         $(document).ready(function() {
             if($("#no")[0] === undefined) {
             $("#dataTable-example").on( 'init.dt', function () {                 
                     $("#divLoading").hide();
                 } ).DataTable({
-                     "bSort": false
+                         "bSort": false,
+                                    dom: 'Bfrtip',
+                                       buttons: [
+                                               'copy', 'csv', 'excel', 'pdf', 'print'
+                                        ]
             });
             }
             else{

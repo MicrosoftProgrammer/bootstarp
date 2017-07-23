@@ -197,13 +197,18 @@ $filter = array();
     </body>
     <?php echo fnScript(); ?>
         <?php echo fnDataTableScript(); ?>
+ <?php echo fnDataTableExportScript(); ?>
             <script>
                 $(document).ready(function() {
                     if($("#no")[0] === undefined) {
                         $("#dataTable-example").on( 'draw.dt', function () {
                             $("#divLoading").hide();
                                 }).DataTable({
-                                    "bSort": false
+                                    "bSort": false,
+                                    dom: 'Bfrtip',
+                                       buttons: [
+                                          'copy', 'csv', 'excel', 'pdf', 'print'
+                                        ]
                                 });
                         }
                         else{

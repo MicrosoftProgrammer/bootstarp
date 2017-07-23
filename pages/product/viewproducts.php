@@ -224,7 +224,7 @@ $headers= array();
                                 <thead>
                                     <tr>
                                         <th>
-                                            <input type="checkbox" id="checkAll" />
+                                            <input type="checkbox" id="example-select-all" />
                                         </th>
                                         <?php
                                             if($numrows>0)
@@ -355,23 +355,35 @@ $headers= array();
     </body>
     <?php echo fnScript(); ?>
     <?php echo fnDataTableScript(); ?>
+        <?php echo fnDataTableExportScript(); ?>
     <script>
      if($("#no")[0] === undefined) {
         $('#example thead th.search').each(function() {
             var title = $('#example thead th').eq($(this).index()).text();
             $(this).html('<input type="text" class="form-control" placeholder="Search" />');
         });
+
+
         
         // DataTable
         var example = 
             $('#example').on( 'init.dt', function () {
                     $("#divLoading").hide();
                 } ).DataTable({
+                    "lengthMenu": [[10, 50, 100, -1], [10, 50, 100, "All"]],
+                        "bSort": false,
+                                    dom: 'lBfrtip',
+                                       buttons: [
+                                          'copy', 'csv', 'excel', 'pdf', 'print'
+                                        ],
                 "autoWidth": false,
                 //"responsive" :true,
                 "columnDefs": [ {
                     "targets": 0,
-                    "orderable": false
+                    "orderable": false,
+                       'render': function (data, type, full, meta){
+       return '<input type="checkbox" name="id[]" value="' + $('<div/>').text(data).html() + '">';
+   }
                 },
             {
                 "targets": [ <?php echo $cols; ?> ],
@@ -380,6 +392,26 @@ $headers= array();
              ],
                 order: [ 1, 'asc' ]            
             });
+
+           $('#example-select-all').on('click', function(){
+      // Get all rows with search applied
+      var rows = example.rows({ 'search': 'applied' }).nodes();
+      // Check/uncheck checkboxes for all rows in the table
+      $('input[type="checkbox"]', rows).prop('checked', this.checked);
+   });
+
+    $('#example tbody').on('change', 'input[type="checkbox"]', function(){
+      // If checkbox is not checked
+      if(!this.checked){
+         var el = $('#example-select-all').get(0);
+         // If "Select all" control is checked and has 'indeterminate' property
+         if(el && el.checked && ('indeterminate' in el)){
+            // Set visual state of "Select all" control
+            // as 'indeterminate'
+            el.indeterminate = true;
+         }
+      }
+   });
 
         example.columns().eq(0).each(function(colIdx) {
             $('input', example.column(colIdx).header()).on('keyup change', function() {

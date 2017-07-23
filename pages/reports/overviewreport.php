@@ -216,9 +216,15 @@ $filter = array();
     </body>
     <?php echo fnScript(); ?>
     <?php echo fnDataTableScript(); ?>
+    <?php echo fnDataTableExportScript(); ?>
     <script>
     $(document).ready(function() {
         $("#dataTable-example").DataTable({
+             "bSort": false,
+                                    dom: 'Bfrtip',
+                                       buttons: [
+                                            'copy', 'csv', 'excel', 'pdf', 'print'
+                                        ]
         });
     });
         function fnSubmit(){

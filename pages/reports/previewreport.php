@@ -27,6 +27,10 @@
                 if($_REQUEST["Category"]!=""){
                     $sql= $sql." and p.CategoryID=".$_REQUEST["Category"];
                 }
+
+                if($_REQUEST["chkSelect"]!=""){
+                    $sql= $sql." and p.ProductID in(".$_REQUEST["chkSelect"].")";
+                }
                 $sql.= " order by p.ProductID";
                 $res=mysql_query($sql);
                 $numrows=mysql_num_rows($res);
@@ -259,6 +263,7 @@
                             <input type="hidden" name="FromDate" value="<?php echo $_REQUEST["FromDate"]; ?>" />
                             <input type="hidden" name="ToDate" value="<?php echo $_REQUEST["ToDate"]; ?>" />
                             <input type="hidden" name="RequestedMode" value="<?php echo $_REQUEST["mode"]; ?>" />
+                            <input type="hidden" name="chkSelect" value="<?php echo implode (", ", $_REQUEST["chkSelect"]); ?>" />
                             <?php 
                                 $filter=json_decode($_REQUEST['filters'],TRUE);
                                 if(count($filter)>0){
@@ -296,11 +301,15 @@
                                     echo "</thead>";
                                     echo "<tbody>";
                                     $data = array();
+                                    $str = implode (", ", $_REQUEST["chkSelect"]);
 
                                     $sql = "select * from products p inner join categories c on p.CategoryID =c.CategoryID 
                                     where p.Deleted=0";
                                     if($_REQUEST["Category"]!=""){
                                         $sql= $sql." and p.CategoryID=".$_REQUEST["Category"];
+                                    }
+                                    if($str!=""){
+                                        $sql= $sql." and p.ProductID in(".$str.")";
                                     }
                                     $sql.= " order by p.ProductID";
                                     $res=mysql_query($sql);
