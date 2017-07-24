@@ -79,11 +79,11 @@ if ($_REQUEST['mode']=="del")
                                             <input type="checkbox" id="checkAll" />
                                         </th>
                                         <th>
-                                            Name
+                                            Category
                                         </th>
                                     
                                         <th>
-                                            Description
+                                            Client
                                         </th>
                                         <th>
                                             Action
@@ -92,8 +92,8 @@ if ($_REQUEST['mode']=="del")
                                 </thead>
                                 <tbody>
                                 <?php
-                                        $sql = "select * from categories where Deleted=0";
-                                        $sql.= " order by CategoryName";
+                                        $sql = "select * from categories c left join client cl on cl.ClientID=c.ClientID where c.Deleted=0";
+                                        $sql.= " order by c.CategoryName";
                                         $res=mysql_query($sql);
                                         $numrows=mysql_num_rows($res);
                                         	if($numrows>0)
@@ -113,7 +113,7 @@ if ($_REQUEST['mode']=="del")
                                                             <?php echo $obj->CategoryName; ?>
                                                         </td>
                                                         <td>
-                                                            <?php echo $obj->CategoryDescription; ?>
+                                                            <?php echo $obj->ClientName; ?>
                                                         </td>
                                                         <td class="action">
                                                             <a href='../category/editcategory.php?mode=edit&Id=<?php echo $obj->CategoryID; ?>'>

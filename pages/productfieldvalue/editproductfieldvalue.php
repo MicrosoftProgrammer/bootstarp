@@ -83,6 +83,12 @@
                             <div class="row">
                                 <div class="col-md-12">
                                      <form name="adminForm" method="post" action="editproductfieldvalue.php?mode=update&Id=<?php echo($_REQUEST['Id']); ?>" enctype="multipart/form-data">   
+                                                                                                            <div class="form-group col-md-6">
+                                        <label>Client Name</label>
+                                            <select class="form-control" name="Client" onchange="fnSubmit();" required>
+                                                <?php fnDropDown("Client","ClientName","ClientID","Client"); ?>
+                                            </select>                                               
+                                    </div>
                                       <div class="form-group col-md-6">
                                             <label>Category Name</label>
                                             <select class="form-control" name="Category" onchange="fnSubmit();" required>

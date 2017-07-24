@@ -41,6 +41,12 @@ $filter = array();
                             <div class="row">
                                 <div class="col-md-12">
                                    <form name="adminForm" method="post" action="reportgenerator.php?mode=Product" enctype="multipart/form-data">   
+                                                                                                       <div class="form-group col-md-3">
+                                        <label>Client Name</label>
+                                            <select class="form-control" name="Client" onchange="fnSubmit();" required>
+                                                <?php fnDropDown("Client","ClientName","ClientID","Client"); ?>
+                                            </select>                                               
+                                    </div>
                                         <div class="form-group col-md-3">
                                             <label>Category Name</label>
                                             <select class="form-control" name="Category" onchange="fnSubmit();" required>
@@ -70,7 +76,7 @@ $filter = array();
                                                 }
                                                                         
                                                 echo '<textarea name="filters" style="display:none;">'.json_encode($filter).'</textarea>';          
-                                    } ?>
+                                     ?>
                                      <div class="form-group col-md-4">
                                         <label>Product Name</label>
                                             <select class="form-control" name="Product" onchange="fnSubmit();" >  
@@ -236,7 +242,7 @@ $filter = array();
                                             } 
                                         echo "</tbody>";
                                         echo "</table></div>";            
-       ?>
+    }   ?>
                                     </form>
                                 </div>
                                 <!-- /.col-lg-6 (nested) -->

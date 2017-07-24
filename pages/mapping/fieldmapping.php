@@ -120,6 +120,12 @@
                             <div class="row">
                                 <div class="col-md-12">
                                    <form name="adminForm" method="post" action="fieldmapping.php?mode=update" enctype="multipart/form-data">   
+                                                                                                          <div class="form-group col-md-3">
+                                        <label>Client Name</label>
+                                            <select class="form-control" name="Client" onchange="fnSubmit();" required>
+                                                <?php fnDropDown("Client","ClientName","ClientID","Client"); ?>
+                                            </select>                                               
+                                    </div>
                                         <div class="form-group col-md-4">
                                             <label>Category Name</label>
                                             <select class="form-control" id="Category" name="Category" onchange="fnSubmit();" required>

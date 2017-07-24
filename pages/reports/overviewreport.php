@@ -41,6 +41,12 @@ $filter = array();
                             <div class="row">
                                 <div class="col-md-12">
                                    <form name="adminForm" method="post" enctype="multipart/form-data">   
+                                                                                                       <div class="form-group col-md-3">
+                                        <label>Client Name</label>
+                                            <select class="form-control" name="Client" onchange="fnSubmit();" required>
+                                                <?php fnDropDown("Client","ClientName","ClientID","Client"); ?>
+                                            </select>                                               
+                                    </div>
                                         <div class="form-group col-md-3">
                                             <label>Category Name</label>
                                             <select class="form-control" name="Category" onchange="fnSubmit();" required>

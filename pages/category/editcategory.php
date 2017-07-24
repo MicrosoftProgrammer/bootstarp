@@ -16,6 +16,7 @@
     { 
         $name = $_REQUEST["CategoryName"];
         $description = $_REQUEST["CategoryDescription"];
+        $Client = $_REQUEST["Client"];
         
         $sql="select * from categories where CategoryName='".$name."' and CategoryID!=".$_REQUEST['Id'];
         $res=mysql_query($sql);
@@ -25,6 +26,7 @@
         {
             $sql = "UPDATE categories SET ";
             $sql.= "CategoryName	=	'".$_REQUEST['CategoryName']."', ";
+            $sql.= "ClientID	=	'".$_REQUEST['Client']."', ";
             $sql.= "CategoryDescription	=	'".$_REQUEST['CategoryDescription']."'";
             $sql.= " where CategoryID='".$_REQUEST['Id']."'";	
             mysql_query($sql);				
@@ -74,15 +76,23 @@
                             <div class="row">
                                 <div class="col-md-12">
                                      <form name="adminForm" method="post" action="editcategory.php?mode=update&Id=<?php echo($_REQUEST['Id']); ?>" enctype="multipart/form-data">   
+                                        <div class="form-group col-md-4 drop">
+                                            <label>Client Name</label>
+                                            <select class="form-control" name="Client" id="Client" required>
+                                                <?php
+                                                if($_REQUEST["Client"]==""){
+                                                    $_REQUEST["Client"] =$obj->ClientID;
+                                                }
+
+                                                 fnDropDown("Client","ClientName","ClientID","Client"); ?>
+                                            </select>   
+                                        </div>
                                         <div class="form-group col-md-6">
                                             <label>Category Name</label>
                                             <input type="text" class="form-control" name="CategoryName" required value="<?php echo $obj->CategoryName; ?>" />                                            
                                         </div>
                                         
-                                        <div class="form-group col-md-12">
-                                            <label>Category Description</label>
-                                             <textarea class="form-control" name="CategoryDescription" ><?php echo $obj->CategoryDescription; ?></textarea>
-                                        </div>
+                                             <imput name="CategoryDescription" type="hidden"/>
                                         <div class="form-group col-md-12">
                                             <button type="submit" class="btn btn-primary">Submit</button>
                                             <button type="reset" class="btn btn-danger">Reset</button>

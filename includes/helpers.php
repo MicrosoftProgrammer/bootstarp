@@ -155,7 +155,11 @@ function fnDatePickerScript(){
 function fnDropDown($TableName,$ColumnName,$ColumnID,$VariableName)
 {
     echo '<option value="" >Select</option>';
-    $sql = "select * from ".strtolower($TableName)." where Deleted=0";        
+    $sql = "select * from ".strtolower($TableName)." where Deleted=0";      
+
+    if(strtolower($TableName)=="categories"){
+        $sql =$sql." and ClientID=".$_REQUEST["Client"];
+    }  
     
     $res=mysql_query($sql);
     $numrows=mysql_num_rows($res);
@@ -233,7 +237,8 @@ function fnFieldDropDown($FieldMappingID,$VariableName)
 
 function GetData($TableName,$ColumnID,$QueryID,$ReturnName)
 {
-    $sql = "select * from ".strtolower($TableName)." where ".$ColumnID."=".$QueryID;
+    $sql = "select * from ".strtolower($TableName)." where ".$ColumnID."='".$QueryID."'";
+
     $res=mysql_query($sql);
     $obj=mysql_fetch_object($res);
     return $obj->$ReturnName;
