@@ -55,7 +55,14 @@
                                                             $count=0;
                                                             echo "<table class='table table-hover table-bordered'>";
                                                             $data = json_decode($obj->Fields, TRUE);
-                                                           foreach($data as $key => $value) {
+                                                           foreach($data as $key => $value) {    
+                                                               $sql1="select * from productfields where ProductFieldName='".$key."' and ProductFieldType=10 and deleted=0";
+                                                            
+                                                                $res1=mysql_query($sql1);
+                                                                $numrows1=mysql_num_rows($res1);
+                                                               if($numrows1 > 0){
+                                                                   $value="<a href='../../images/products/".$value."'>".$value."</a>";
+                                                               }                                                           
                                                                if($count%2==0)
                                                                 echo '<tr>';
                                                             echo "<th>".$key."</th>";

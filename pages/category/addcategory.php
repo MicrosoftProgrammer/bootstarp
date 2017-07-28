@@ -19,7 +19,7 @@ $error="";
         if($num==0)
         {
             $sql = "INSERT INTO client (ClientName)
-            VALUES ('$CategoryName')";        
+            VALUES ('$ClientName')";        
             mysql_query($sql);     
 
             $ClientID = mysql_insert_id();       

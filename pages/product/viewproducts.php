@@ -388,7 +388,7 @@ $headers= array();
                     "targets": 0,
                     "orderable": false,
                        'render': function (data, type, full, meta){
-       return '<input type="checkbox" name="id[]" value="' + $('<div/>').text(data).html() + '">';
+       return '<input type="checkbox" name="id[]" value="' + $(data).val() + '">';
    }
                 },
             {

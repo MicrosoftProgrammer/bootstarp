@@ -148,10 +148,13 @@
                                                 array_push($fieldnames,$obj->ProductFieldName);
                                                 array_push($fieldkeys,$obj->ProductFieldKey);                        
                                             }
+
+                                           
                                         ?>                                        
-                                        <li <?php if($obj->unmapped=="0" && $obj->CategoryID==$_REQUEST['Category']) echo 'id='.$obj->FieldMappingID.''; ?> class="form-group col-md-3 <?php if($obj->unmapped!="0" || $obj->CategoryID!=$_REQUEST['Category']) echo 'unsortable'; ?>" style="list-style:none">
+                                        <li <?php if($obj->unmapped=="0" && $obj->CategoryID==$_REQUEST['Category']) echo 'id='.$obj->FieldMappingID.''; ?> class="form-group col-md-3 <?php if(($obj->unmapped!="0" || $obj->CategoryID!=$_REQUEST['Category']) &&  $obj->MandatoryField!="1") echo 'unsortable'; ?>" style="list-style:none">
                                             <label class="checkbox-inline">
-                                                <input <?php if($obj->MandatoryField=="1") echo 'class="mandatory"';?> name="field[]" <?php if($obj->unmapped==0 && ($obj->CategoryID==$_REQUEST['Category'] || $obj->MandatoryField=="1")) echo "checked"; ?> value="<?php echo $obj->ProductFieldID; ?>" type="checkbox"><?php echo $obj->ProductFieldName; ?>
+                                                <input <?php if($obj->MandatoryField=="1") echo 'class="mandatory"';?> name="field[]" <?php if($obj->unmapped==0 && ($obj->CategoryID==$_REQUEST['Category'] || $obj->MandatoryField=="1")) echo "checked"; ?> value="<?php echo $obj->ProductFieldID; ?>" type="checkbox"><?php echo $obj->ProductFieldName;
+                                                 ?>
                                             </label>
                                         </li>
                                         <?php } ?>
