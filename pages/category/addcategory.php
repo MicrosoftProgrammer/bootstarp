@@ -9,7 +9,7 @@ $error="";
     $CategoryName = str_replace("'","`",$_REQUEST["CategoryName"]);
     $CategoryDescription = str_replace("'","`",$_REQUEST["CategoryDescription"]);
     $ClientName = str_replace("'","`",$_REQUEST["ClientName"]);
-    $ClientID = $_REQUEST["ClientID"];
+    $ClientID = $_REQUEST["Client"];
 
     if($ClientName!=""){
         $sql="select * from client where ClientName='".$ClientName."'";
@@ -38,10 +38,11 @@ $error="";
         if($num==0)
         {
             $sql = "INSERT INTO categories (CategoryName,CategoryDescription,ClientID)
-            VALUES ('$CategoryName','$CategoryDescription','$ClientID')";        
+            VALUES ('$CategoryName','$CategoryDescription','$ClientID')";
+      
             mysql_query($sql);
             
-            header("location:viewcategories.php?mode=added");
+           header("location:viewcategories.php?mode=added");
         }
         else
         {

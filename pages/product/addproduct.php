@@ -90,7 +90,7 @@
         $sql="update userlog set UserAction=CONCAT(UserAction,'".$UserAction."') where LogID=".$_SESSION["SessionId"];
         mysql_query($sql);
         
-        header("location:viewproducts.php?mode=added");   
+        header("location:viewproducts.php?mode=added&Category=".$CategoryID."&Client=".$_REQUEST["Client"]);   
    }
 ?>
 <!DOCTYPE html>

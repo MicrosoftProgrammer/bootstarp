@@ -61,7 +61,7 @@
                                                                 $res1=mysql_query($sql1);
                                                                 $numrows1=mysql_num_rows($res1);
                                                                if($numrows1 > 0){
-                                                                   $value="<a href='../../images/products/".$value."'>".$value."</a>";
+                                                                   $value="<img src='../../images/products/".$value."' alt='".$value."' />";
                                                                }                                                           
                                                                if($count%2==0)
                                                                 echo '<tr>';

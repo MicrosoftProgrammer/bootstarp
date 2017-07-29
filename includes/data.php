@@ -8,6 +8,7 @@ if($_REQUEST["mode"]=="sorting"){
     foreach ($orderlist as $k=>$order) {
         $sql="update fieldmapping set DisplayOrder='$k' where FieldMappingID=".$order;
         mysql_query($sql);
+        echo $sql;
     }   
 }
 

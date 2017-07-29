@@ -133,9 +133,27 @@
                                             </select>                                               
                                         </div>
                                          <div class="form-group col-md-12">
+                                         <?php 
+                                         $sql="select * from fieldmapping where CategoryID=".$_REQUEST['Category'];
+                                         $res=mysql_query($sql);
+                                         $rows = mysql_num_rows($res);
+                                         ?>
                                         <?php if($_REQUEST['Category']!="") { 
-                                        $sql= "select *,fm.deleted as unmapped,pf.ProductFieldID as ProductFieldID from productfields pf left join fieldmapping fm
-                                        on fm.ProductFieldID = pf.ProductFieldID where pf.Deleted=0 order by fm.CategoryID,fm.DisplayOrder";
+                                            if($rows >0){
+                                      $sql= "select *,fm.deleted as unmapped,pf.ProductFieldID as ProductFieldID from productfields 
+                                        pf left join fieldmapping fm
+                                        on fm.ProductFieldID = pf.ProductFieldID and pf.Deleted=0 and 
+                                        (fm.CategoryID=".$_REQUEST['Category']."  or fm.deleted IS NULL)
+                                        order by fm.DisplayOrder 
+                                        ";
+                                            }
+                                            else{
+                                        $sql= "select *,deleted as unmapped,ProductFieldID as ProductFieldID from productfields 
+                                        where Deleted=0 order by ProductFieldID
+                                        ";
+                                               }
+
+
                                         $res=mysql_query($sql);
                                         echo '<ul>
                                                 <li id="draggable" class="ui-state-highlight">Drag and Drop to change order</li>
