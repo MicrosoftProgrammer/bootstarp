@@ -45,7 +45,9 @@
         }
 
         $data = $_POST;
+        
         unset($data["Category"]);
+        unset($data["Client"]);
 
        $keys = substr($keys, 0, -1);     
        $keys = explode (",", $keys);      
@@ -58,7 +60,6 @@
 
        $json=json_encode($json);       
 
-        
         $UserID = $_SESSION["UserID"];
         $Productlog = "<li>Product Created by ".$_SESSION["Name"]." on ".date("Y-m-d H:i:s")."</li>";
         $sql = "INSERT INTO products (CategoryID,Fields,CreatedBy,Productlog)
