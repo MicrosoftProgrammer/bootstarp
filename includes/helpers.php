@@ -126,7 +126,7 @@ function fnDataTableExportScript(){
              <script src="//cdn.datatables.net/buttons/1.3.1/js/buttons.html5.min.js"></script>
     ';
 
-    return $html;
+    return "";
 }
 
 
@@ -238,7 +238,6 @@ function fnFieldDropDown($FieldMappingID,$VariableName)
 function GetData($TableName,$ColumnID,$QueryID,$ReturnName)
 {
     $sql = "select * from ".strtolower($TableName)." where ".$ColumnID."='".$QueryID."'";
-
     $res=mysql_query($sql);
     $obj=mysql_fetch_object($res);
     return $obj->$ReturnName;

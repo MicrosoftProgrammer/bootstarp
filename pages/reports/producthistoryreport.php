@@ -270,11 +270,11 @@ $filter = array();
                                         $("#divLoading").hide();
                                     } ).DataTable({
                             "bSort": false,
-                                         "bSort": false,
-                                    dom: 'Bfrtip',
-                                       buttons: [
-                                         'copy', 'csv', 'excel', 'pdf', 'print'
-                                        ]
+                                        //  "bSort": false,
+                                    // dom: 'Bfrtip',
+                                    //    buttons: [
+                                    //      'copy', 'csv', 'excel', 'pdf', 'print'
+                                    //     ]
                                     });
                          }
                          else{

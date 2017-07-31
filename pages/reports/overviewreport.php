@@ -227,10 +227,10 @@ $filter = array();
     $(document).ready(function() {
         $("#dataTable-example").DataTable({
              "bSort": false,
-                                    dom: 'Bfrtip',
-                                       buttons: [
-                                            'copy', 'csv', 'excel', 'pdf', 'print'
-                                        ]
+                                    // dom: 'Bfrtip',
+                                    //    buttons: [
+                                    //         'copy', 'csv', 'excel', 'pdf', 'print'
+                                    //     ]
         });
     });
         function fnSubmit(){

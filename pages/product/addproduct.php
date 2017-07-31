@@ -18,7 +18,7 @@
         $invalid = array();
         if(count($_FILES)>0){
             foreach(array_keys($_FILES) as $file){
-                $name = GetData("productfields","ProductFieldKey","'".$file."'","ProductFieldName");
+                $name = GetData("productfields","ProductFieldKey",$file,"ProductFieldName");
                 $files[]=$name;
             }
             $cnt=0;

@@ -378,10 +378,10 @@ $headers= array();
                 } ).DataTable({
                     "lengthMenu": [[10, 50, 100, -1], [10, 50, 100, "All"]],
                         "bSort": false,
-                                    dom: 'lBfrtip',
-                                       buttons: [
-                                          'copy', 'csv', 'excel', 'pdf', 'print'
-                                        ],
+                                    // dom: 'lBfrtip',
+                                    //    buttons: [
+                                    //       'copy', 'csv', 'excel', 'pdf', 'print'
+                                    //     ],
                 "autoWidth": false,
                 //"responsive" :true,
                 "columnDefs": [ {

@@ -211,10 +211,10 @@ $filter = array();
                             $("#divLoading").hide();
                                 }).DataTable({
                                     "bSort": false,
-                                    dom: 'Bfrtip',
-                                       buttons: [
-                                          'copy', 'csv', 'excel', 'pdf', 'print'
-                                        ]
+                                    // dom: 'Bfrtip',
+                                    //    buttons: [
+                                    //       'copy', 'csv', 'excel', 'pdf', 'print'
+                                    //     ]
                                 });
                         }
                         else{
