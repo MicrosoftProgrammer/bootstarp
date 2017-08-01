@@ -216,7 +216,9 @@
                                                         echo ' <div class="form-group col-md-4">
                                                                     <label>'.$obj->ProductFieldName.'</label>
                                                                     <input type="file" class="form-control" value="'.$productfield[$obj->ProductFieldName].'" name="'.$obj->ProductFieldKey.'" />  
-                                                                    <a target="_blank" href="../../images/products/'.$productfield[$obj->ProductFieldName].'">'.$productfield[$obj->ProductFieldName].'</a>                                       
+                                                                    <a target="_blank" href="../../images/products/'.$productfield[$obj->ProductFieldName].'">
+                                                                    <img src="../../images/products/'.$productfield[$obj->ProductFieldName].'" width="100" alt="'.$productfield[$obj->ProductFieldName].'" />
+                                                                    </a>                                       
                                                                 </div>';
                                                     } 
                                                     else  if($obj->Type=="Select"){

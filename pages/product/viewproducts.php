@@ -306,7 +306,12 @@ $headers= array();
                                                             
                                                            
                                                                 foreach($headers as $value) {
-                                                                    echo "<td><span class='cell'>".$data[$value]."</span></td>";
+                                                                    if (strpos($value, 'Image') !== false) {
+                                                                       echo "<td><a href='../../images/products/".$data[$value]."'><img src='../../images/products/".$data[$value]."' width='100' alt='".$data[$value]."' /></a></td>"; 
+                                                                    }
+                                                                    else{
+                                                                        echo "<td><span class='cell'>".$data[$value]."</span></td>";
+                                                                    }
                                                                 }
                                                            
                                                            ?>
