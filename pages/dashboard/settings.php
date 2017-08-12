@@ -24,7 +24,7 @@
         $file =post_img($_FILES['file']['name'], $_FILES['file']['tmp_name'],"../../images");
         $Fax = str_replace("'","`",$_REQUEST["Fax"]);
         $CurrencyType = str_replace("'","`",$_REQUEST["CurrencyType"]);
-        $AccountNo = str_replace("'","`",$_REQUEST["CurrencyType"]);
+        $AccountNo = str_replace("'","`",$_REQUEST["AccountNo"]);
         $Bank = str_replace("'","`",$_REQUEST["Bank"]);
         $SwiftCode = str_replace("'","`",$_REQUEST["SwiftCode"]);  
         $BankAddress = str_replace("'","`",$_REQUEST["BankAddress"]);
@@ -47,7 +47,6 @@
             $sql.= "IBAN	=	'".$IBAN."', ";                        
             $sql.= "FromEmail	=	'".$FromEmail."'";
             mysql_query($sql);				
-
             $text ="Info Updated Successfully";
       
     }
