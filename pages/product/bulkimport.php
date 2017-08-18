@@ -37,11 +37,16 @@
                        $com = array_combine( $header, $Row );
                         foreach (array_combine( $header, $Row ) as $name => $value) {       
                             $value = str_replace('"','`',$value);                 
-                            if($name=="Calibration Due Date"){                         
-                                $date = ConvertToStdDate(str_replace("/","-",$com["Calibration Date"]));
-                                $date = strtotime($date);
-                                $new_date = strtotime('+ 1 year', $date);
-                                $jsonArray[$name] =  date('d/M/Y', $new_date);
+                            if($name=="Calibration Due Date"){     
+                                if($com["Calibration Date"]!=""){                    
+                                    $date = ConvertToStdDate(str_replace("/","-",$com["Calibration Date"]));
+                                    $date = strtotime($date);
+                                    $new_date = strtotime('+ 1 year', $date);
+                                    $jsonArray[$name] =  date('d/M/Y', $new_date);
+                                }
+                                else{
+                                   $jsonArray[$name] =  ""; 
+                                }
                             }
                             else if($name=="S.No"){                                    
                                 $jsonArray[$name] =  $row++;
